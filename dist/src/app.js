@@ -361,6 +361,7 @@ function visibleCollection(route) {
 function renderSection(route) {
   setActiveNav(route);
   setViewSection(route);
+  normalizeSkillFilters(route);
   const items = visibleCollection(route);
   const allItems = collectionForRoute(route);
   const actions = route === "teams" ? `<a class="primary-button" href="#/builder">Create Team!</a>` : "";
@@ -377,7 +378,7 @@ function renderSection(route) {
 
 function renderFilters(route) {
   if (route === "teams") return renderTeamFilters();
-  if (route === "skills" || route === "traits") return renderSkillFilters();
+  if (route === "skills" || route === "traits") return renderSkillFilters(route);
   if (route === "star-players") return renderStarFilters();
   if (route === "inducements") return renderInducementFilters();
   return "";
@@ -421,13 +422,26 @@ function renderTeamFilters() {
   `;
 }
 
-function renderSkillFilters() {
-  const tags = uniqueSorted([...state.data.skills, ...state.data.traits].flatMap((page) => page.tags ?? []));
+function skillFilterCategories(route) {
+  const source = route === "traits" ? state.data.traits : state.data.skills;
+  const tags = uniqueSorted(source.flatMap((page) => page.tags ?? []));
   const groupCategories = (state.data.skillGroups ?? []).map((group) => group.category);
-  const categories = uniqueSorted([
-    ...groupCategories,
+  return uniqueSorted([
+    ...(route === "skills" ? groupCategories : []),
     ...tags.filter((tag) => !["Active", "Passive"].includes(tag)),
   ]);
+}
+
+function normalizeSkillFilters(route) {
+  if (route !== "skills" && route !== "traits") return;
+  const categories = skillFilterCategories(route);
+  if (state.skillFilters.category !== "all" && !categories.includes(state.skillFilters.category)) {
+    state.skillFilters.category = "all";
+  }
+}
+
+function renderSkillFilters(route) {
+  const categories = skillFilterCategories(route);
   const f = state.skillFilters;
   return `
     <div class="filter-panel compact-panel" data-filter-panel="skills">
