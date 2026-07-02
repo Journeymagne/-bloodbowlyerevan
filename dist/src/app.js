@@ -76,7 +76,7 @@ const sectionTitles = {
   cheatsheets: "Cheatsheets",
   inducements: "Inducements",
   "star-players": "Star Players",
-  pages: "General Information",
+  pages: "References",
 };
 
 const sectionDescriptions = {
@@ -87,7 +87,7 @@ const sectionDescriptions = {
   cheatsheets: "Compact tables and match aids used during play.",
   inducements: "Inducements and match extras available in the league.",
   "star-players": "Star player costs, availability groups, keywords and abilities.",
-  pages: "Skill table and randomizer.",
+  pages: "Skill and kick-off reference tables.",
 };
 
 const quickPreviews = new Map([
@@ -345,7 +345,12 @@ function collectionForRoute(route) {
   if (route === "cheatsheets") return state.data.cheatsheets;
   if (route === "inducements") return state.data.inducements;
   if (route === "star-players") return state.data.starPlayers;
-  if (route === "pages") return state.data.pages.filter((page) => page.kind === "page" && page.title === "Skill Table");
+  if (route === "pages") {
+    const order = ["Skill Table", "Kick-off Table"];
+    return state.data.pages
+      .filter((page) => page.kind === "page" && order.includes(page.title))
+      .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
+  }
   return [];
 }
 
