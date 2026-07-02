@@ -4,4 +4,7 @@ tags:
   - Agility
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+Once per turn this player may re-roll one Agility test made to Dodge. In base rules it also affects Stumble results; in Gata League that defensive part is handled by Evasive.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

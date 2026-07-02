@@ -3,4 +3,7 @@ tags:
   - Trait
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+This player suffers -1 when attempting to Rush.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

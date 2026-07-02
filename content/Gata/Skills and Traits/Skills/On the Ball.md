@@ -4,4 +4,7 @@ tags:
   - Passing
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+When an opponent declares a Pass Action, this player may move up to 3 squares before the pass roll, without Rushing. One open receiving player with this skill may also move up to 3 squares after kick deviation and before the kick-off event, unless a touchback occurs.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

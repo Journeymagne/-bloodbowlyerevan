@@ -228,11 +228,17 @@ function isInducementVisible(page) {
   return state.inducementFilters.tag === "all" || (page.tags ?? []).includes(state.inducementFilters.tag);
 }
 
+function skillGroupMatches(page, category) {
+  if ((page.tags ?? []).includes(category)) return true;
+  return (state.data.skillGroups ?? [])
+    .some((group) => group.category === category && (group.skills ?? []).includes(page.title));
+}
+
 function isSkillVisible(page) {
   if (!matchesQuery(page)) return false;
   const tags = page.tags ?? [];
   const { category, application } = state.skillFilters;
-  if (category !== "all" && !tags.includes(category)) return false;
+  if (category !== "all" && !skillGroupMatches(page, category)) return false;
   if (application !== "all" && !tags.includes(application)) return false;
   return true;
 }
@@ -401,7 +407,11 @@ function renderTeamFilters() {
 
 function renderSkillFilters() {
   const tags = uniqueSorted([...state.data.skills, ...state.data.traits].flatMap((page) => page.tags ?? []));
-  const categories = tags.filter((tag) => !["Active", "Passive"].includes(tag));
+  const groupCategories = (state.data.skillGroups ?? []).map((group) => group.category);
+  const categories = uniqueSorted([
+    ...groupCategories,
+    ...tags.filter((tag) => !["Active", "Passive"].includes(tag)),
+  ]);
   const f = state.skillFilters;
   return `
     <div class="filter-panel compact-panel" data-filter-panel="skills">

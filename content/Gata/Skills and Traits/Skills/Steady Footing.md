@@ -4,4 +4,7 @@ tags:
   - General
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+Whenever this player would be Knocked Down or Fall Over, roll a D6. On 6, they remain standing; if this happens during their activation, they may continue and no Turnover is caused.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

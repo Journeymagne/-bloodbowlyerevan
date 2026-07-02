@@ -4,8 +4,10 @@ tags:
   - Passing
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+While at least one player with Leader is available on the pitch at the relevant start timing, the team may gain one Leader re-roll. It is lost if all Leader players leave play before it is used.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
 
 ## Gata League change
-- Leader: Triggers at the start of a drive.
 - Leader: Triggers at the start of a drive.

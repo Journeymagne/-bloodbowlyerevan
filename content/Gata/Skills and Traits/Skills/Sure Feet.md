@@ -4,4 +4,7 @@ tags:
   - General
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+Once per turn this player may re-roll one failed Rush roll.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

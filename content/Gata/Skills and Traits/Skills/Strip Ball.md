@@ -4,4 +4,7 @@ tags:
   - General
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+When this player Blocks a ball-carrier and Pushes them Back, the ball is dropped in the pushed-to square and bounces before the target becomes Prone, if applicable.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

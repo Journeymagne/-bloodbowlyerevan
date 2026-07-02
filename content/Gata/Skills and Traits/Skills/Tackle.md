@@ -4,4 +4,7 @@ tags:
   - General
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+Opponents Dodging away from this player's tackle zone cannot use Dodge. When this player Blocks, the target cannot count Dodge against Stumble results. In Gata League, Tackle also cancels Evasive.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

@@ -4,4 +4,7 @@ tags:
   - General
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+Gata trait. Any Injury-table result for this player is treated as Dead. When the player dies, resolve a bomb explosion in their square, then place two Brimstone Horrors in the nearest available squares.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

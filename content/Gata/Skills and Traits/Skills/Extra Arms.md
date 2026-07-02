@@ -4,4 +4,7 @@ tags:
   - Mutation
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+This player may add +1 to Agility tests to catch, pick up or intercept the ball.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

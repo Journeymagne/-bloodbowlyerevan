@@ -4,4 +4,7 @@ tags:
   - Agility
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+Gata Agility skill. When this player is blocked, Stumble results are treated as Push Back, and the dedicated defensive block result is treated as a normal push result. Tackle cancels this skill.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/

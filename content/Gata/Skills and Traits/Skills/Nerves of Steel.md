@@ -4,4 +4,7 @@ tags:
   - General
 ---
 
-Base wording: use the Blood Bowl 2025 reference at https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
+## Rule summary
+This player ignores modifiers for being Marked when attempting to catch the ball or make a Passing Ability test.
+
+Full reference: https://bloodbowlbase.ru/bb2025/core_rules/skills_and_traits/
