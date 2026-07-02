@@ -87,7 +87,7 @@ const sectionDescriptions = {
   cheatsheets: "Compact tables and match aids used during play.",
   inducements: "Inducements and match extras available in the league.",
   "star-players": "Star player costs, availability groups, keywords and abilities.",
-  pages: "General reference pages and useful external links.",
+  pages: "Skill table and randomizer.",
 };
 
 const quickPreviews = new Map([
@@ -345,7 +345,7 @@ function collectionForRoute(route) {
   if (route === "cheatsheets") return state.data.cheatsheets;
   if (route === "inducements") return state.data.inducements;
   if (route === "star-players") return state.data.starPlayers;
-  if (route === "pages") return state.data.pages.filter((page) => page.kind === "page");
+  if (route === "pages") return state.data.pages.filter((page) => page.kind === "page" && page.title === "Skill Table");
   return [];
 }
 
