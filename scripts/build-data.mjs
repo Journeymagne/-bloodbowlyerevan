@@ -28,6 +28,47 @@ const sectionLabels = new Map([
 ]);
 
 const skillCategories = ["Agility", "Devious", "General", "Mutation", "Passing", "Strength"];
+const experimentalTeamTitles = new Set([
+  "Cathay",
+  "Kislev",
+  "Nurglings",
+  "Savage Orc",
+  "Slaanesh",
+  "Tzeentch",
+]);
+const coreTeamTitles = new Set([
+  "Amazon",
+  "Black Orc",
+  "Brettonia",
+  "Chaos Chosen",
+  "Chaos Dwarfs",
+  "Chaos Renegade",
+  "Dark Elf",
+  "Dwarf",
+  "Elven Union",
+  "Gnome",
+  "Goblin",
+  "Halfling",
+  "High Elf",
+  "Human",
+  "Imperial Nobility",
+  "Khorne",
+  "Lizardmen",
+  "Necromantic Horror",
+  "Norse",
+  "Nurgle",
+  "Ogre",
+  "Old World Alliance",
+  "Orc",
+  "Shambling Undead",
+  "Skaven",
+  "Slann",
+  "Snotling",
+  "Tomb Kings",
+  "Underworld Denizens",
+  "Vampire",
+  "Wood Elves",
+]);
 const virtualLinks = new Map([
   ["Team List", "#/teams"],
   ["Teams", "#/teams"],
@@ -98,6 +139,12 @@ const canonicalLabels = new Map(Object.entries({
 function canonicalLabel(value = "") {
   const clean = stripFormatting(value);
   return canonicalLabels.get(clean.toLowerCase()) ?? clean;
+}
+
+function teamTypeTag(title) {
+  if (experimentalTeamTitles.has(title)) return "Experimental";
+  if (coreTeamTitles.has(title)) return "Core";
+  return "";
 }
 
 function normalizeCost(value = "") {
@@ -596,6 +643,11 @@ for (const file of files) {
   const raw = await fs.readFile(file, "utf8");
   const { body, tags } = parseFrontmatter(raw);
   const section = getSection(relativePath);
+  const kind = getKind(section);
+  const typeTag = kind === "team" ? teamTypeTag(title) : "";
+  const pageTags = typeTag
+    ? [...new Set([...tags.filter((tag) => !["Core", "Experimental"].includes(tag)), typeTag])]
+    : tags;
 
   rawPages.push({
     id: slugify(`${section}-${title}`),
@@ -603,8 +655,8 @@ for (const file of files) {
     path: relativePath.replaceAll(path.sep, "/"),
     section,
     sectionLabel: sectionLabels.get(section) || "General Information",
-    kind: getKind(section),
-    tags,
+    kind,
+    tags: pageTags,
     body: body.trim(),
     empty: body.trim().length === 0,
   });
@@ -651,7 +703,8 @@ const pages = rawPages.map((page) => {
     html: page.empty ? "" : markdownToHtml(page.body, pageByTitle, { preserveLineBreaks: page.kind === "inducement" }),
     text: stripFormatting(page.body),
     team: page.kind === "team" ? {
-      experimental: page.section === "Experimental" || page.section === "Р­РєСЃРїРµСЂРёРјРµРЅС‚Р°Р»СЊРЅС‹Рµ",
+      experimental: page.tags.includes("Experimental") || page.section === "Experimental" || page.section === "Р­РєСЃРїРµСЂРёРјРµРЅС‚Р°Р»СЊРЅС‹Рµ",
+      type: page.tags.includes("Experimental") ? "Experimental" : "Core",
       meta: extractTeamMeta(page.body),
       roster,
     } : undefined,

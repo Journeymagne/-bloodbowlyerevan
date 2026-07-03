@@ -87,7 +87,7 @@ const sectionDescriptions = {
   cheatsheets: "Compact tables and match aids used during play.",
   inducements: "Inducements and match extras available in the league.",
   "star-players": "Star player costs, availability groups, keywords and abilities.",
-  pages: "Skill and kick-off reference tables.",
+  pages: "Skill, kick-off, player advancement, special rules and match reference tables.",
 };
 
 const quickPreviews = new Map([
@@ -346,7 +346,7 @@ function collectionForRoute(route) {
   if (route === "inducements") return state.data.inducements;
   if (route === "star-players") return state.data.starPlayers;
   if (route === "pages") {
-    const order = ["Skill Table", "Kick-off Table"];
+    const order = ["Skill Table", "Kick-off Table", "Player Advancement", "Special Rules", "Prayers to Nuffle", "Weather", "Casualties"];
     return state.data.pages
       .filter((page) => page.kind === "page" && order.includes(page.title))
       .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
@@ -677,7 +677,7 @@ function renderLegal() {
 }
 
 function renderBuilder() {
-  setActiveNav("teams");
+  setActiveNav("builder");
   setViewSection("teams");
   const teams = state.data.teams;
   if (!state.builder.teamSlug && teams[0]) {
@@ -941,8 +941,12 @@ function renderRoute() {
 }
 
 async function init() {
-  const response = await fetch("public/data.json", { cache: "no-store" });
-  state.data = await response.json();
+  if (window.__REFERENCE_DATA__) {
+    state.data = window.__REFERENCE_DATA__;
+  } else {
+    const response = await fetch("public/data.json", { cache: "no-store" });
+    state.data = await response.json();
+  }
   if (generatedAt) {
     generatedAt.textContent = `Updated ${new Date(state.data.generatedAt).toLocaleDateString("en-GB")}`;
   }
