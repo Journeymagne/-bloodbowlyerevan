@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Woodland League
 ---
 
+
 **Name:** Rodney Roachbait
-**Availability:** Any Team
+**Availability:** Woodland League
 **Cost:** 100k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

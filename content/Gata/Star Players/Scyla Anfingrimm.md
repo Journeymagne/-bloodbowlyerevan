@@ -1,13 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Favoured of Khorne
   - Spawn
   - Big Guy
 ---
 
+
 **Name:** Scyla Anfingrimm
-**Availability:** Any Team
+**Availability:** Favoured of Khorne
 **Cost:** 230k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

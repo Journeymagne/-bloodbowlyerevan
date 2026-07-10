@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
+  - Old World Classic
 ---
 
+
 **Name:** Mighty Zug
-**Availability:** Any Team
+**Availability:** Lustrian Superleague, Old World Classic
 **Cost:** 150k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

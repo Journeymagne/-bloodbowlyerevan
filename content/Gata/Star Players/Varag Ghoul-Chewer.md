@@ -1,13 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
   - Orc
   - Blocker
 ---
 
+
 **Name:** Varag Ghoul-Chewer
-**Availability:** Any Team
+**Availability:** Badlands Brawl
 **Cost:** 215k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

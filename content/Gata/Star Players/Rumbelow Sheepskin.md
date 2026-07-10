@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Halfling Thimble Cup
 ---
 
+
 **Name:** Rumbelow Sheepskin
-**Availability:** Any Team
+**Availability:** Halfling Thimble Cup
 **Cost:** 130k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

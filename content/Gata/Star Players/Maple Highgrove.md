@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Woodland League
 ---
 
+
 **Name:** Maple Highgrove
-**Availability:** Any Team
+**Availability:** Woodland League
 **Cost:** 225k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

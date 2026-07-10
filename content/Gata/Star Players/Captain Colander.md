@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Captain Colander
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 150k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

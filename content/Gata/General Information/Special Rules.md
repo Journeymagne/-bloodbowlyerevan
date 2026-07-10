@@ -1,10 +1,6 @@
 This page lists team Special Rules that change gameplay, advancement, Team Value, or inducement access. League tags are intentionally not included here.
 
-## Architect of Fate
-
-Players on this team are sold for their full value. Each injury on the player adds +10k to their sale value.
-
-## Brawling Brutes
+## Brawlin' Brutes
 
 Teams with this rule earn SPP differently:
 
@@ -50,7 +46,10 @@ Teams with this rule can also buy Mortuary Assistant.
 
 ## Passing Virtuosos
 
-When a player on this team completes a successful Accurate pass, the receiver also earns 1 SPP.
+Teams with this rule earn SPP differently:
+
+- A player earns 2 SPP for scoring a Touchdown instead of 3 SPP.
+- A player earns 1 SPP for a Successful Catch.
 
 ## Swarming
 

@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Old World Classic
+  - World's Edge Superleague
 ---
 
+
 **Name:** Josef Bugman
-**Availability:** Any Team
+**Availability:** Old World Classic, World's Edge Superleague
 **Cost:** 140k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

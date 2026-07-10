@@ -7,6 +7,15 @@
     "import:gata": "python scripts/import-gata-content.py",
     "standardize": "node scripts/standardize-content.mjs",
     "build": "node scripts/build-data.mjs && node scripts/build-site.mjs",
-    "dev": "node scripts/build-data.mjs && node scripts/serve.mjs"
+    "dev": "node scripts/build-data.mjs && node scripts/serve.mjs",
+    "server": "node server/server.mjs",
+    "start": "npm run build && node server/server.mjs",
+    "site:up": "npm start",
+    "postgres:up": "docker-compose up -d",
+    "postgres:down": "docker-compose down",
+    "postgres:reset": "docker-compose down -v"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
   }
 }

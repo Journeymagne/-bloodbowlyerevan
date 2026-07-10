@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
+  - Underworld Challenge
   - Goblin
   - Special
 ---
 
+
 **Name:** Bomber Dribblesnot
-**Availability:** Any Team
+**Availability:** Badlands Brawl, Underworld Challenge
 **Cost:** 95k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

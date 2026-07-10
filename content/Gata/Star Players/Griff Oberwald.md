@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Old World Classic
 ---
 
+
 **Name:** Griff Oberwald
-**Availability:** Any Team
+**Availability:** Old World Classic
 **Cost:** 300k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
+  - World's Edge Superleague
 ---
 
+
 **Name:** Skrull Halfheight
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight, World's Edge Superleague
 **Cost:** 120k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

@@ -1,13 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Chaos Clash
   - Human
   - Blocker
 ---
 
+
 **Name:** Lord Borak the Despoiler
-**Availability:** Any Team
+**Availability:** Chaos Clash
 **Cost:** 300k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

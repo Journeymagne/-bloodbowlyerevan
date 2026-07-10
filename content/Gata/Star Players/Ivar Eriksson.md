@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Old World Classic
 ---
 
+
 **Name:** Ivar Eriksson
-**Availability:** Any Team
+**Availability:** Old World Classic
 **Cost:** 190k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

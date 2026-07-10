@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
 ---
 
+
 **Name:** Estelle la Veneaux
-**Availability:** Any Team
+**Availability:** Lustrian Superleague
 **Cost:** 205k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

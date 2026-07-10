@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Favoured of Nurgle
 ---
 
+
 **Name:** Bilerot Vomitflesh
-**Availability:** Any Team
+**Availability:** Favoured of Nurgle
 **Cost:** 140k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

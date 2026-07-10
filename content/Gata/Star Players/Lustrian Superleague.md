@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Lustrian Superleague
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

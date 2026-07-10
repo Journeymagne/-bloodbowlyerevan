@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Big Jobo Hairyfoot
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 120k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

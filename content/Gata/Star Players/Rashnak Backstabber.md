@@ -1,13 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
   - Goblin
   - Special
 ---
 
+
 **Name:** Rashnak Backstabber
-**Availability:** Any Team
+**Availability:** Badlands Brawl
 **Cost:** 170k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

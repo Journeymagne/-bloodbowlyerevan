@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Favoured of Nurgle
 ---
 
+
 **Name:** Guffle Pusmaw
-**Availability:** Any Team
+**Availability:** Favoured of Nurgle
 **Cost:** 195k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

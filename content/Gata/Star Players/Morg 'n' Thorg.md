@@ -6,8 +6,9 @@ tags:
   - Big Guy
 ---
 
+
 **Name:** Morg 'n' Thorg
-**Availability:** Any Team
+**Availability:** Any Team except Sylvanian Spotlight
 **Cost:** 360k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

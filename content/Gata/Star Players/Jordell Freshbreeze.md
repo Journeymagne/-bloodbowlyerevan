@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Elven Kingdom League
 ---
 
+
 **Name:** Jordell Freshbreeze
-**Availability:** Any Team
+**Availability:** Elven Kingdom League
 **Cost:** 275k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

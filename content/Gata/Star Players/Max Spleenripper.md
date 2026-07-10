@@ -1,13 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Favoured of Khorne
   - Human
   - Special
 ---
 
+
 **Name:** Max Spleenripper
-**Availability:** Any Team
+**Availability:** Favoured of Khorne
 **Cost:** 90k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

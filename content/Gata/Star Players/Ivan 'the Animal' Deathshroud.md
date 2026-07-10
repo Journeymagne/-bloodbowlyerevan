@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
 ---
 
+
 **Name:** Ivan 'the Animal' Deathshroud
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight
 **Cost:** 235k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

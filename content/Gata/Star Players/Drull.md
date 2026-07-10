@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
 ---
 
+
 **Name:** Drull
-**Availability:** Any Team
+**Availability:** Lustrian Superleague
 **Cost:** 
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

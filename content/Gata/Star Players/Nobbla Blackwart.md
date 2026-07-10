@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
+  - Underworld Challenge
   - Goblin
   - Special
 ---
 
+
 **Name:** Nobbla Blackwart
-**Availability:** Any Team
+**Availability:** Badlands Brawl, Underworld Challenge
 **Cost:** 70k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

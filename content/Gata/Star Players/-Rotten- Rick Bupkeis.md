@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** "Rotten" Rick Bupkeis
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 95k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

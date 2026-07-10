@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
+  - Old World Classic
 ---
 
+
 **Name:** Karla Von Kill
-**Availability:** Any Team
+**Availability:** Lustrian Superleague, Old World Classic
 **Cost:** 230k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

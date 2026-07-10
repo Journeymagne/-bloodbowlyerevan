@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Elijah Doom
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 210k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
 ---
 
+
 **Name:** Frank 'n' Stein
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight
 **Cost:** 185k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

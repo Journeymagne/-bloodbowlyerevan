@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Trottlesnot "The Impaler"
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 105k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

@@ -1,11 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Halfling Thimble Cup
+  - Old World Classic
+  - World's Edge Superleague
 ---
 
+
 **Name:** Grombrindal, The White Dwarf
-**Availability:** Any Team
+**Availability:** Halfling Thimble Cup, Old World Classic, World's Edge Superleague
 **Cost:** 200k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

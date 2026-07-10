@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Elven Kingdom League
 ---
 
+
 **Name:** Valen Swift
-**Availability:** Any Team
+**Availability:** Elven Kingdom League
 **Cost:** 
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

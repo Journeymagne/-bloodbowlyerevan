@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Favoured of Nurgle
 ---
 
+
 **Name:** Withergrasp Doubledrool
-**Availability:** Any Team
+**Availability:** Favoured of Nurgle
 **Cost:** 130k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

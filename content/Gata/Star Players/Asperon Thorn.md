@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Asperon Thorn
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 170k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

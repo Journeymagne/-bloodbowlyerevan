@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Woodland League
 ---
 
+
 **Name:** Deeproot Strongbranch
-**Availability:** Any Team
+**Availability:** Woodland League
 **Cost:** 255k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

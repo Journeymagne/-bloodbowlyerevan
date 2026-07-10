@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Underworld Challenge
 ---
 
+
 **Name:** Kreek 'the Verminator' Rustgouger
-**Availability:** Any Team
+**Availability:** Underworld Challenge
 **Cost:** 175k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

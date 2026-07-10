@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Underworld Challenge
 ---
 
+
 **Name:** Hakflem Skuttlespike
-**Availability:** Any Team
+**Availability:** Underworld Challenge
 **Cost:** 295k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

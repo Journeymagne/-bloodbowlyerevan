@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
+  - Favoured of Hashut
   - Dwarf
   - Blitzer
 ---
 
+
 **Name:** H'thark the Unstoppable
-**Availability:** Any Team
+**Availability:** Badlands Brawl, Favoured of Hashut
 **Cost:** 310k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

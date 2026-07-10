@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Old World Classic
 ---
 
+
 **Name:** Helmut Wulf
-**Availability:** Any Team
+**Availability:** Old World Classic
 **Cost:** 120k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Elven Kingdom League
+  - Lustrian Superleague
 ---
 
+
 **Name:** Zolcath the Zoat
-**Availability:** Any Team
+**Availability:** Elven Kingdom League, Lustrian Superleague
 **Cost:** 330k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

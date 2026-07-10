@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
 ---
 
+
 **Name:** Count Luthor von Drakenborg
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight
 **Cost:** 265k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

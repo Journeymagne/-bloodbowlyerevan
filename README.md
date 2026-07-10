@@ -27,6 +27,10 @@ The site contains:
 ```bash
 npm run build
 npm run dev
+npm run start
+npm run postgres:up
+npm run postgres:down
+npm run postgres:reset
 ```
 
 On Windows PowerShell, if `npm` is blocked by execution policy, use:
@@ -40,6 +44,49 @@ After `npm run dev`, the site runs at:
 
 ```text
 http://localhost:5173
+```
+
+For persistent users, saved teams and profile editing, run PostgreSQL with Docker Desktop and then start the site locally:
+
+```bash
+cp .env.example .env
+npm run postgres:up
+npm start
+```
+
+By default the site and API run at:
+
+```text
+http://localhost:3002
+```
+
+Useful environment variables in `.env`:
+
+- `APP_PORT` - public site/API port, default `3002`.
+- `DATABASE_URL` - Postgres connection string used by the app.
+- `DATABASE_CHECK_RETRIES`, `DATABASE_CHECK_DELAY_MS` - startup database connection retry settings.
+- `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` - database settings.
+- `ADMIN_LOGIN`, `ADMIN_PASSWORD`, `ADMIN_TELEGRAM` - seeded site admin account.
+
+`npm run postgres:up` starts only Postgres from `docker-compose.yml`. `npm start` builds the reference data and starts the site/API locally. The server reads `.env` and connects to Postgres through `localhost:${POSTGRES_PORT}`.
+
+On Windows you can also run:
+
+```powershell
+.\scripts\start-postgres.ps1
+.\scripts\start-site.ps1
+```
+
+Stop the database:
+
+```bash
+npm run postgres:down
+```
+
+Delete the local database data and recreate it from scratch on the next start:
+
+```bash
+npm run postgres:reset
 ```
 
 ## Optional Content Re-import

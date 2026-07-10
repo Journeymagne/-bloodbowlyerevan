@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
 ---
 
+
 **Name:** Glotl Stop
-**Availability:** Any Team
+**Availability:** Lustrian Superleague
 **Cost:** 250k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

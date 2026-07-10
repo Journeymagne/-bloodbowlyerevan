@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Tolly Clockringer
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 110k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

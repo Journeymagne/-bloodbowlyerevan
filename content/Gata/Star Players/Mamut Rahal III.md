@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Mamut Rahal III
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 290k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

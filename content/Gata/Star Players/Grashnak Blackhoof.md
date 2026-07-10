@@ -1,13 +1,14 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Chaos Clash
   - Minotaur
   - Big Guy
 ---
 
+
 **Name:** Grashnak Blackhoof
-**Availability:** Any Team
+**Availability:** Chaos Clash
 **Cost:** 255k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

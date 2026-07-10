@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Halfling Thimble Cup
+  - Old World Classic
 ---
 
+
 **Name:** Cindy Piewhistle
-**Availability:** Any Team
+**Availability:** Halfling Thimble Cup, Old World Classic
 **Cost:** 85k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

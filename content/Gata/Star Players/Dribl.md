@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
 ---
 
+
 **Name:** Dribl
-**Availability:** Any Team
+**Availability:** Lustrian Superleague
 **Cost:** 320k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

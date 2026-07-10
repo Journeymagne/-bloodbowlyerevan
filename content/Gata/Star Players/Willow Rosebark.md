@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Woodland League
 ---
 
+
 **Name:** Willow Rosebark
-**Availability:** Any Team
+**Availability:** Woodland League
 **Cost:** 160k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

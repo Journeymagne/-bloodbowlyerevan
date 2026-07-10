@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
 ---
 
+
 **Name:** Wilhelm Chaney
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight
 **Cost:** 200k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

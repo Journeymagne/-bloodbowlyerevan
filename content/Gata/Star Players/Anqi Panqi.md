@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
 ---
 
+
 **Name:** Anqi Panqi
-**Availability:** Any Team
+**Availability:** Lustrian Superleague
 **Cost:** 190k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

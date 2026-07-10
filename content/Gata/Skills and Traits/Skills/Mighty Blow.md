@@ -1,7 +1,7 @@
 ---
 tags:
   - Active
-  - General
+  - Strength
 ---
 
 ## Rule summary

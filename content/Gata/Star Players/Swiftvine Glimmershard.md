@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Woodland League
 ---
 
+
 **Name:** Swiftvine Glimmershard
-**Availability:** Any Team
+**Availability:** Woodland League
 **Cost:** 170k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

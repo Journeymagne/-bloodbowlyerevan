@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Underworld Challenge
 ---
 
+
 **Name:** Glart Smashrip
-**Availability:** Any Team
+**Availability:** Underworld Challenge
 **Cost:** 195k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

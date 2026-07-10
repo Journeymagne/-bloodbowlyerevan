@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
+  - Underworld Challenge
   - Goblin
   - Special
 ---
 
+
 **Name:** Fungus the Loon
-**Availability:** Any Team
+**Availability:** Badlands Brawl, Underworld Challenge
 **Cost:** 120k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

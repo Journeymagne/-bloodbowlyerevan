@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Underworld Challenge
 ---
 
+
 **Name:** Skitter Stab-Stab
-**Availability:** Any Team
+**Availability:** Underworld Challenge
 **Cost:** 185k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

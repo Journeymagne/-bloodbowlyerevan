@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
 ---
 
+
 **Name:** Bryce 'The Slice' Cambuel
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight
 **Cost:** 100k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

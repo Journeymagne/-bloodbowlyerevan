@@ -1,0 +1,7 @@
+.env
+.env.local
+node_modules/
+server-run*.log
+*.log
+.github-upload/
+_upload_git/

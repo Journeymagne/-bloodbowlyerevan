@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Chaos Clash
+  - Underworld Challenge
   - Spawn
   - Special
 ---
 
+
 **Name:** Gobbler Grimlich
-**Availability:** Any Team
+**Availability:** Chaos Clash, Underworld Challenge
 **Cost:** 210k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

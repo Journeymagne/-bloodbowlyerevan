@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
+  - Underworld Challenge
   - Goblin
   - Special
 ---
 
+
 **Name:** Scrappa Sorehead
-**Availability:** Any Team
+**Availability:** Badlands Brawl, Underworld Challenge
 **Cost:** 150k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

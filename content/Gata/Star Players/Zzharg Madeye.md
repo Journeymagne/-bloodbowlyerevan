@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Favoured of Hashut
 ---
 
+
 **Name:** Zzharg Madeye
-**Availability:** Any Team
+**Availability:** Favoured of Hashut
 **Cost:** 65k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

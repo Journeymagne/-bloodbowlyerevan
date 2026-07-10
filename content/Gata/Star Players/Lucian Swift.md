@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Elven Kingdom League
 ---
 
+
 **Name:** Lucian Swift
-**Availability:** Any Team
+**Availability:** Elven Kingdom League
 **Cost:** 340k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

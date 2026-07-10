@@ -1,13 +1,15 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Badlands Brawl
+  - Underworld Challenge
   - Troll
   - Big Guy
 ---
 
+
 **Name:** Ripper Bolgrot
-**Availability:** Any Team
+**Availability:** Badlands Brawl, Underworld Challenge
 **Cost:** 245k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

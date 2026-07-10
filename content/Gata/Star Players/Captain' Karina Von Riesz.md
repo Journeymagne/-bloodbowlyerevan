@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Sylvanian Spotlight
 ---
 
+
 **Name:** Captain' Karina Von Riesz
-**Availability:** Any Team
+**Availability:** Sylvanian Spotlight
 **Cost:** 175k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Old World Classic
+  - World's Edge Superleague
 ---
 
+
 **Name:** Barik Farblast
-**Availability:** Any Team
+**Availability:** Old World Classic, World's Edge Superleague
 **Cost:** 115k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

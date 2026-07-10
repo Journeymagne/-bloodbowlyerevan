@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Lustrian Superleague
 ---
 
+
 **Name:** Boa Kon'ssstriktr
-**Availability:** Any Team
+**Availability:** Lustrian Superleague
 **Cost:** 220k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

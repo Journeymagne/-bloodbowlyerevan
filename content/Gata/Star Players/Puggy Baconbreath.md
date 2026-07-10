@@ -1,11 +1,13 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - Halfling Thimble Cup
+  - Old World Classic
 ---
 
+
 **Name:** Puggy Baconbreath
-**Availability:** Any Team
+**Availability:** Halfling Thimble Cup, Old World Classic
 **Cost:** 170k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

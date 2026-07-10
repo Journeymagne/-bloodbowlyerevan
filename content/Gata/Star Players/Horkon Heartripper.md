@@ -1,11 +1,11 @@
 ---
 tags:
   - Star Player
-  - Any Team
 ---
 
+
 **Name:** Horkon Heartripper
-**Availability:** Any Team
+**Availability:** -
 **Cost:** 180k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

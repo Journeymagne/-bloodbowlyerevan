@@ -1,11 +1,12 @@
 ---
 tags:
   - Star Player
-  - Any Team
+  - World's Edge Superleague
 ---
 
+
 **Name:** Grim Ironjaw
-**Availability:** Any Team
+**Availability:** World's Edge Superleague
 **Cost:** 195k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |
