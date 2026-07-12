@@ -178,12 +178,17 @@ request; no certbot step is needed.
 
 ### GitHub secrets
 
-In the `Journeymagne/-bloodbowlyerevan` repo settings, add:
+Already set (as of this deploy) in the `Journeymagne/-bloodbowlyerevan`
+repo settings:
 
 - `SERVER_HOST` = `51.81.86.51`
-- `SSH_PRIVATE_KEY` = a private key authorized to SSH as `root` on the
-  server (reuse the `table-booker-project` deploy key, or generate a new
-  keypair and add the public half to the server's `authorized_keys`)
+- `SSH_PRIVATE_KEY` = a dedicated ed25519 keypair generated for this
+  deploy (not shared with `table-booker-project`); its public half is in
+  root's `~/.ssh/authorized_keys` on the server
+
+If this key is ever rotated, generate a new keypair, add the public half
+to the server's `authorized_keys`, and update the `SSH_PRIVATE_KEY`
+secret with `gh secret set SSH_PRIVATE_KEY -R Journeymagne/-bloodbowlyerevan < path/to/key`.
 
 ### Ongoing deploys
 
