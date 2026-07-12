@@ -116,3 +116,64 @@ These are not blockers for deployment, but they should be decided before present
 ## Legal Note
 
 The site is an unofficial fan reference and should not present itself as affiliated with Games Workshop. Base Blood Bowl wording should be linked or summarized instead of copied wholesale.
+
+## VPS Deployment (bb.shitpostsoftware.com)
+
+This is the live deployment path for the full app (Node server + Postgres,
+with accounts and saved teams), on the existing VPS at `51.81.86.51`,
+following the same pattern used for `table-booker-project`.
+
+### One-time server setup
+
+Run these once on `51.81.86.51`:
+
+```bash
+mkdir -p /opt/bloodbowl-league
+git clone https://github.com/Journeymagne/-bloodbowlyerevan.git /opt/bloodbowl-league
+cd /opt/bloodbowl-league
+cp .env.example .env
+# edit .env: set real POSTGRES_PASSWORD, ADMIN_PASSWORD, ADMIN_TELEGRAM, APP_PORT=3002
+docker compose up -d
+npm install
+npm run build
+pm2 start server/server.mjs --name bloodbowl-league
+pm2 save
+```
+
+Then configure nginx and TLS:
+
+```bash
+cp deploy/nginx/bb.shitpostsoftware.com.conf /etc/nginx/sites-available/bb.shitpostsoftware.com.conf
+ln -s /etc/nginx/sites-available/bb.shitpostsoftware.com.conf /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+certbot --nginx -d bb.shitpostsoftware.com
+```
+
+### GitHub secrets
+
+In the `Journeymagne/-bloodbowlyerevan` repo settings, add:
+
+- `SERVER_HOST` = `51.81.86.51`
+- `SSH_PRIVATE_KEY` = a private key authorized to SSH as `root` on the
+  server (reuse the `table-booker-project` deploy key, or generate a new
+  keypair and add the public half to the server's `authorized_keys`)
+
+### Ongoing deploys
+
+Every push to `main` runs `.github/workflows/deploy.yml`, which pulls,
+rebuilds, and restarts the `bloodbowl-league` pm2 process automatically.
+
+### Smoke test
+
+After the first deploy and after each subsequent one:
+
+```bash
+curl -f https://bb.shitpostsoftware.com/api/health
+```
+
+Expected: `{"ok":true}`
+
+Also open `https://bb.shitpostsoftware.com/` in a browser, confirm the
+site renders with a valid TLS certificate, then register a test account
+and save a team to confirm the Postgres-backed API path works
+end-to-end.
