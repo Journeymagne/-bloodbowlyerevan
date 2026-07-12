@@ -132,7 +132,9 @@ mkdir -p /opt/bloodbowl-league
 git clone https://github.com/Journeymagne/-bloodbowlyerevan.git /opt/bloodbowl-league
 cd /opt/bloodbowl-league
 cp .env.example .env
-# edit .env: set real POSTGRES_PASSWORD, ADMIN_PASSWORD, ADMIN_TELEGRAM, APP_PORT=3002
+# edit .env: set real POSTGRES_PASSWORD, then update the password inside
+# DATABASE_URL to match it (the app reads DATABASE_URL, not POSTGRES_PASSWORD,
+# directly); also set ADMIN_PASSWORD, ADMIN_TELEGRAM; leave APP_PORT=3002
 docker compose up -d
 npm install
 npm run build
