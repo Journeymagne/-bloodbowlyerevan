@@ -1,11 +1,7 @@
 ---
 tags:
-  - Star Player
-  - Any Team
-  - Ogre
   - Big Guy
 ---
-
 
 **Name:** Grak
 **Availability:** Any Team

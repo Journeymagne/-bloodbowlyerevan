@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Lustrian Superleague
 ---
-
 
 **Name:** Estelle la Veneaux
 **Availability:** Lustrian Superleague

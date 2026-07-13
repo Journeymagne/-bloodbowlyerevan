@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Old World Classic
 ---
-
 
 **Name:** Griff Oberwald
 **Availability:** Old World Classic

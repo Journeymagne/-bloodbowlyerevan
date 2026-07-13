@@ -1,12 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Underworld Challenge
-  - Goblin
-  - Special
 ---
-
 
 **Name:** Nobbla Blackwart
 **Availability:** Badlands Brawl, Underworld Challenge

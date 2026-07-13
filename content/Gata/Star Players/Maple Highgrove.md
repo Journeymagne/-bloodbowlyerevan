@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Woodland League
 ---
-
 
 **Name:** Maple Highgrove
 **Availability:** Woodland League

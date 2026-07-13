@@ -1,11 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Goblin
-  - Special
 ---
-
 
 **Name:** Rashnak Backstabber
 **Availability:** Badlands Brawl

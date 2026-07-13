@@ -1,8 +1,6 @@
 ---
 tags:
-  - Star Player
 ---
-
 
 **Name:** Mamut Rahal III
 **Availability:** -

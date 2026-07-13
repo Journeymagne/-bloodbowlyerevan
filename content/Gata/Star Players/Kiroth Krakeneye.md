@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
 ---
-
 
 **Name:** Kiroth Krakeneye
 **Availability:** Elven Kingdom League

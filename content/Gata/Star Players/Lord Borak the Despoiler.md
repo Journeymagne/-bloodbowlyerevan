@@ -1,11 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Chaos Clash
-  - Human
-  - Blocker
 ---
-
 
 **Name:** Lord Borak the Despoiler
 **Availability:** Chaos Clash

@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Favoured of Hashut
 ---
-
 
 **Name:** Zzharg Madeye
 **Availability:** Favoured of Hashut

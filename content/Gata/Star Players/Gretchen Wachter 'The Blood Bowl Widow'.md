@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Gretchen Wachter 'The Blood Bowl Widow'
 **Availability:** Sylvanian Spotlight

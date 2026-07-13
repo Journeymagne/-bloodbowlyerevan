@@ -32,6 +32,18 @@ If the player has Mutation access only as a secondary access, or has no Mutation
 | Khorne | 8 | Horns, Iron Hard Skin, Prehensile Tail |
 | Tzeentch | 9 (6 in current notes) | Two Heads, Extra Arms, Very Long Legs |
 
+## Architect of Fate
+
+Players on this team are sold for their full value. Each injury on a player adds +10k to that player's sale value.
+
+When the team gains a Whining Point, roll a D6. On a 1, the team loses that Whining Point. On a 6, the team gains one additional Whining Point. This can trigger only once per sequence.
+
+Whining Points are not used in the current season.
+
+## Explosive Demise
+
+Treat any roll on the Casualty table for a player with this rule as Dead. When that player dies, resolve a bomb explosion in that player's square, then place two Brimstone Horrors in the nearest available squares.
+
 ## Low Cost Linemen
 
 When calculating Current Team Value, count the hiring fee of Lineman players on the team as 0 gold pieces. Any value gained from advancements or other increases still counts as normal.

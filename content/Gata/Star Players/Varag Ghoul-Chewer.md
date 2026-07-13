@@ -1,11 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Orc
-  - Blocker
 ---
-
 
 **Name:** Varag Ghoul-Chewer
 **Availability:** Badlands Brawl

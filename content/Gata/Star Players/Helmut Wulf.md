@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Old World Classic
 ---
-
 
 **Name:** Helmut Wulf
 **Availability:** Old World Classic

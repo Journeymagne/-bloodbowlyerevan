@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Favoured of Nurgle
 ---
-
 
 **Name:** Guffle Pusmaw
 **Availability:** Favoured of Nurgle

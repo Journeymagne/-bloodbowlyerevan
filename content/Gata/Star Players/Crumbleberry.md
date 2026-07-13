@@ -1,11 +1,7 @@
 ---
 tags:
-  - Star Player
-  - Any Team
-  - Halfling
   - Lineman
 ---
-
 
 **Name:** Crumbleberry
 **Availability:** Any Team

@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Old World Classic
-  - World's Edge Superleague
 ---
-
 
 **Name:** Barik Farblast
 **Availability:** Old World Classic, World's Edge Superleague

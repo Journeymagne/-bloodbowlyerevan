@@ -33,6 +33,20 @@
     loading: false,
     error: "",
   },
+  admin: {
+    users: [],
+    loaded: false,
+    loading: false,
+    error: "",
+    editingTeams: new Map(),
+  },
+  season: {
+    data: null,
+    loaded: false,
+    loading: false,
+    error: "",
+    activeTab: "registration",
+  },
   builder: {
     editingTeamId: "",
     teamSlug: "",
@@ -98,7 +112,7 @@ const sectionRoutes = new Map([
   ["star-players", "star-players"],
   ["pages", "pages"],
 ]);
-const staticRoutes = new Set(["builder", "legal", "my-teams"]);
+const staticRoutes = new Set(["builder", "legal", "my-teams", "season", "administration"]);
 
 function normalizeTheme(theme) {
   return themeIds.has(theme) ? theme : "dark-gata";
@@ -290,6 +304,9 @@ async function loadAuthSession() {
 
 function updateAuthButton() {
   if (!authButton) return;
+  document.querySelectorAll("[data-admin-nav]").forEach((link) => {
+    link.hidden = !state.auth.currentUser?.isAdmin;
+  });
   if (state.auth.currentUser) {
     authButton.textContent = state.auth.currentUser.login;
     authButton.title = `Signed in as ${state.auth.currentUser.login}`;
@@ -385,8 +402,11 @@ async function handleAuthSubmit(event) {
 
     setAuthToken(payload.token);
     state.auth.currentUser = payload.user;
+    state.myTeams.loaded = false;
+    state.season.loaded = false;
     updateAuthButton();
     closeAuthModal();
+    renderRoute();
   } catch (error) {
     setAuthError(error.message);
   }
@@ -434,12 +454,43 @@ async function logoutAuth() {
   }
   setAuthToken("");
   state.auth.currentUser = null;
+  state.myTeams = { items: [], loaded: false, loading: false, error: "" };
+  state.admin = { users: [], loaded: false, loading: false, error: "", editingTeams: new Map() };
+  state.season = { data: null, loaded: false, loading: false, error: "", activeTab: "registration" };
   updateAuthButton();
   closeAuthModal();
+  renderRoute();
 }
 
 function pageUrl(page) {
   return `#/${page.slug}`;
+}
+
+function playerUrl(userOrId) {
+  const id = typeof userOrId === "string" ? userOrId : userOrId?.id;
+  return `#/players/${encodeURIComponent(id || "")}`;
+}
+
+function playerTeamUrl(userOrId, teamOrId) {
+  const userId = typeof userOrId === "string" ? userOrId : userOrId?.id;
+  const teamId = typeof teamOrId === "string" ? teamOrId : teamOrId?.id;
+  return `#/players/${encodeURIComponent(userId || "")}/teams/${encodeURIComponent(teamId || "")}`;
+}
+
+function adminTeamEditUrl(userOrId, teamOrId) {
+  const userId = typeof userOrId === "string" ? userOrId : userOrId?.id;
+  const teamId = typeof teamOrId === "string" ? teamOrId : teamOrId?.id;
+  return `#/administration/users/${encodeURIComponent(userId || "")}/teams/${encodeURIComponent(teamId || "")}/edit`;
+}
+
+function renderPlayerLink(user) {
+  if (!user?.id) return `<span class="muted-text">-</span>`;
+  return `<a class="inline-rule-link" href="${playerUrl(user)}">${escapeHtml(user.login || "Player")}</a>`;
+}
+
+function renderPublicTeamLink(user, team) {
+  if (!user?.id || !team?.id) return `<span class="muted-text">${escapeHtml(team?.name || "-")}</span>`;
+  return `<a class="inline-rule-link" href="${playerTeamUrl(user, team)}">${escapeHtml(team.name || "Team")}</a>`;
 }
 
 function isSkillTablePage(page) {
@@ -494,6 +545,8 @@ function navRouteForPage(page) {
 
 function routeSection(route) {
   if (!route || route === "home") return "home";
+  if (route.startsWith("administration/")) return "administration";
+  if (route.startsWith("players/")) return "players";
   if (sectionRoutes.has(route)) return route;
   if (staticRoutes.has(route)) return route;
   const page = findPageBySlug(route);
@@ -569,8 +622,10 @@ const leagueAccessNames = [
 ];
 
 const specialRuleNames = [
+  "Architect of Fate",
   "Brawlin' Brutes",
   "Bribery and Corruption",
+  "Explosive Demise",
   "Favoured of...",
   "Low Cost Linemen",
   "Masters of Undeath",
@@ -1005,8 +1060,7 @@ function isTeamVisible(team) {
 }
 
 function isStarVisible(page) {
-  if (!matchesQuery(page)) return false;
-  return state.starFilters.tag === "all" || (page.tags ?? []).includes(state.starFilters.tag);
+  return matchesQuery(page);
 }
 
 function isInducementVisible(page) {
@@ -1126,7 +1180,7 @@ function collectionForRoute(route) {
 
 function visibleCollection(route) {
   const items = collectionForRoute(route);
-  if (route === "teams") return items.filter(isTeamVisible);
+  if (route === "teams") return items.filter(matchesQuery);
   if (route === "skills") return items.filter(isSkillVisible);
   if (route === "star-players") return items.filter(isStarVisible);
   if (route === "inducements") return items.filter(isInducementVisible);
@@ -1153,9 +1207,7 @@ function renderSection(route) {
 }
 
 function renderFilters(route) {
-  if (route === "teams") return renderTeamFilters();
   if (route === "skills") return renderSkillFilters(route);
-  if (route === "star-players") return renderStarFilters();
   if (route === "inducements") return renderInducementFilters();
   return "";
 }
@@ -1285,21 +1337,10 @@ function wireFilters(route) {
 
 function renderListCard(page, route) {
   if (route === "teams") {
-    return `
-      <a class="card compact" href="${pageUrl(page)}">
-        <h3>${escapeHtml(page.title)}</h3>
-        <p>${escapeHtml(page.team?.meta?.league ?? "League roster")}</p>
-      </a>
-    `;
+    return renderTeamCatalogCard(page);
   }
   if (route === "star-players") {
-    return `
-      <a class="card" href="${pageUrl(page)}">
-        <h3>${escapeHtml(page.title)}</h3>
-        <p>${escapeHtml([page.starPlayer?.cost, page.starPlayer?.availability].filter(Boolean).join(" · "))}</p>
-        <div class="meta-line">${badgeList(page.tags, 3)}</div>
-      </a>
-    `;
+    return renderStarPlayerCatalogCard(page);
   }
   if (route === "skills" || route === "traits") {
     return `
@@ -1316,6 +1357,183 @@ function renderListCard(page, route) {
       <p>${escapeHtml(preview)}</p>
       <div class="meta-line">${badgeList(page.tags, 3)}</div>
     </a>
+  `;
+}
+
+function renderCatalogField(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${value}</dd>
+    </div>
+  `;
+}
+
+function renderLimitedRuleLinks(items = [], limit = 3) {
+  const visible = items.slice(0, limit);
+  const extra = items.length - visible.length;
+  if (!visible.length) return `<span class="muted-text">-</span>`;
+  return `${renderRuleLinks(visible)}${extra > 0 ? `<span class="roster-pill roster-pill-muted">+${extra}</span>` : ""}`;
+}
+
+function renderLimitedRosterLinks(items = [], limit = 5) {
+  const visible = items.slice(0, limit);
+  const extra = items.length - visible.length;
+  if (!visible.length) return `<span class="muted-text">-</span>`;
+  return `${renderRosterLinks(visible)}${extra > 0 ? `<span class="roster-pill roster-pill-muted">+${extra}</span>` : ""}`;
+}
+
+function rowCostRange(rows = []) {
+  const costs = [...new Set(rows.map(rowCost).filter(Boolean))]
+    .sort((a, b) => costToNumber(a) - costToNumber(b));
+  if (!costs.length) return "-";
+  if (costs.length === 1) return costs[0];
+  return `${costs[0]}-${costs[costs.length - 1]}`;
+}
+
+function renderTeamCatalogCard(page) {
+  const rows = rowsForTeam(page);
+  const leagueOptions = teamLeagueOptions(page);
+  const specialRules = teamSpecialRuleTokens(page);
+  const positionPreview = rows.slice(0, 3).map((row) => row.position).filter(Boolean);
+  const extraPositions = rows.length - positionPreview.length;
+  return `
+    <article class="card catalog-card team-catalog-card">
+      <header class="catalog-card-head">
+        <div>
+          <span class="catalog-kicker">${escapeHtml(page.team?.type ?? page.tags?.[0] ?? "Team")}</span>
+          <h3><a class="catalog-card-title" href="${pageUrl(page)}">${escapeHtml(page.title)}</a></h3>
+        </div>
+      </header>
+      <dl class="catalog-card-stats">
+        ${renderCatalogField("Tier", escapeHtml(page.team?.meta?.league ?? "-"))}
+        ${renderCatalogField("Positions", escapeHtml(String(rows.length)))}
+        ${renderCatalogField("Rerolls", escapeHtml(page.team?.meta?.rerolls ?? "-"))}
+      </dl>
+      <section class="catalog-card-section">
+        <span>Players</span>
+        <p>${escapeHtml(positionPreview.join(", ") || "No roster rows")}${extraPositions > 0 ? ` +${extraPositions}` : ""}</p>
+      </section>
+      <section class="catalog-card-section">
+        <span>League access</span>
+        <div class="catalog-pill-row">${renderLimitedRuleLinks(leagueOptions, 2)}</div>
+      </section>
+      <section class="catalog-card-section">
+        <span>Special rules</span>
+        <div class="catalog-pill-row">${renderLimitedRuleLinks(specialRules, 3)}</div>
+      </section>
+      <footer class="catalog-card-actions">
+        <a class="primary-button compact-action" href="${pageUrl(page)}">Open</a>
+      </footer>
+    </article>
+  `;
+}
+
+function splitStarMarkdownTableRow(line = "") {
+  const trimmed = String(line).trim().replace(/^\|/, "").replace(/\|$/, "");
+  const cells = [];
+  let current = "";
+  let inWikiLink = false;
+  for (let index = 0; index < trimmed.length; index += 1) {
+    const pair = trimmed.slice(index, index + 2);
+    if (pair === "[[") {
+      inWikiLink = true;
+      current += pair;
+      index += 1;
+      continue;
+    }
+    if (pair === "]]") {
+      inWikiLink = false;
+      current += pair;
+      index += 1;
+      continue;
+    }
+    const char = trimmed[index];
+    if (char === "|" && !inWikiLink) {
+      cells.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  cells.push(current.trim());
+  return cells;
+}
+
+function cleanMarkdownCell(value = "") {
+  return String(value)
+    .replace(/\[\[[^\]|]+\|([^\]]+)\]\]/g, "$1")
+    .replace(/\[\[([^\]]+)\]\]/g, "$1")
+    .replace(/\*\*/g, "")
+    .replace(/`/g, "")
+    .trim();
+}
+
+function starPlayerTableData(page) {
+  const lines = String(page.body ?? "").split(/\r?\n/);
+  const headerIndex = lines.findIndex((line) => /\|\s*MA\s*\|\s*ST\s*\|\s*AG\s*\|\s*PA\s*\|\s*AR/i.test(line));
+  if (headerIndex === -1) return {};
+  const dataLine = lines.slice(headerIndex + 1).find((line) => {
+    const trimmed = line.trim();
+    return trimmed.startsWith("|") && !/^\|\s*-+/.test(trimmed);
+  });
+  if (!dataLine) return {};
+  const cells = splitStarMarkdownTableRow(dataLine).map(cleanMarkdownCell);
+  return {
+    ma: cells[0] ?? "",
+    st: cells[1] ?? "",
+    ag: cells[2] ?? "",
+    pa: cells[3] ?? "",
+    ar: cells[4] ?? "",
+    cost: cells[5] ?? "",
+    skills: splitList(cells[6] ?? ""),
+    keywords: splitList(cells[7] ?? ""),
+  };
+}
+
+function renderStarCatalogStats(star) {
+  return `
+    <dl class="catalog-stat-strip">
+      <div><dt>MA</dt><dd>${escapeHtml(star.ma || "-")}</dd></div>
+      <div><dt>ST</dt><dd>${escapeHtml(star.st || "-")}</dd></div>
+      <div><dt>AG</dt><dd>${escapeHtml(star.ag || "-")}</dd></div>
+      <div><dt>PA</dt><dd>${escapeHtml(star.pa || "-")}</dd></div>
+      <div><dt>AR</dt><dd>${escapeHtml(star.ar || "-")}</dd></div>
+    </dl>
+  `;
+}
+
+function renderStarPlayerCatalogCard(page) {
+  const star = starPlayerTableData(page);
+  const cost = page.starPlayer?.cost ?? star.cost ?? "-";
+  const availability = page.starPlayer?.availability ?? "-";
+  const keywords = star.keywords.length ? star.keywords : (page.tags ?? []).filter((tag) => tag !== "Star Player");
+  return `
+    <article class="card catalog-card star-catalog-card">
+      <header class="catalog-card-head">
+        <div>
+          <span class="catalog-kicker">Star Player</span>
+          <h3><a class="catalog-card-title" href="${pageUrl(page)}">${escapeHtml(page.title)}</a></h3>
+        </div>
+        <span class="catalog-price">${escapeHtml(cost)}</span>
+      </header>
+      ${renderStarCatalogStats(star)}
+      <section class="catalog-card-section">
+        <span>Availability</span>
+        <p>${escapeHtml(availability || "-")}</p>
+      </section>
+      <section class="catalog-card-section">
+        <span>Skills</span>
+        <div class="catalog-pill-row">${renderLimitedRosterLinks(star.skills, 5)}</div>
+      </section>
+      <section class="catalog-card-section">
+        <span>Keywords</span>
+        <div class="catalog-pill-row">${badgeList(keywords, 4)}</div>
+      </section>
+      <footer class="catalog-card-actions">
+        <a class="primary-button compact-action" href="${pageUrl(page)}">Open</a>
+      </footer>
+    </article>
   `;
 }
 
@@ -1390,9 +1608,11 @@ function ruleLookupKey(value = "") {
 
 const leagueAccessDisplayByKey = new Map(leagueAccessNames.map((name) => [ruleLookupKey(name), name]));
 const specialRuleDisplayByKey = new Map([
+  [ruleLookupKey("Architect of Fate"), "Architect of Fate"],
   [ruleLookupKey("Brawlin' Brutes"), "Brawlin' Brutes"],
   [ruleLookupKey("Brawling Brutes"), "Brawlin' Brutes"],
   [ruleLookupKey("Bribery and Corruption"), "Bribery and Corruption"],
+  [ruleLookupKey("Explosive Demise"), "Explosive Demise"],
   [ruleLookupKey("Favoured of..."), "Favoured of..."],
   [ruleLookupKey("Favoured of ..."), "Favoured of..."],
   [ruleLookupKey("Favored of..."), "Favoured of..."],
@@ -1949,7 +2169,7 @@ async function renderMyTeams() {
 
 function renderSavedTeamsTable(teams) {
   return `
-    <article class="content-panel compact-table-panel">
+    <article class="content-panel compact-table-panel my-teams-table-panel">
       <div class="table-scroll builder-table-scroll">
         <table class="my-teams-table compact-roster-table">
           <thead>
@@ -1968,6 +2188,9 @@ function renderSavedTeamsTable(teams) {
         </table>
       </div>
     </article>
+    <div class="my-teams-card-list">
+      ${teams.map(renderSavedTeamCard).join("")}
+    </div>
   `;
 }
 
@@ -1985,7 +2208,7 @@ function renderSavedTeamRow(team) {
       <td>
         <span class="saved-team-name-cell">
           ${team.logoData ? `<img src="${escapeHtml(team.logoData)}" alt="">` : ""}
-          <strong>${escapeHtml(team.name)}</strong>
+          <strong>${renderPublicTeamLink(state.auth.currentUser, team)}</strong>
         </span>
       </td>
       <td>${rosterTeam ? `<a class="inline-rule-link" href="${pageUrl(rosterTeam)}">${escapeHtml(rosterTeam.title)}</a>` : escapeHtml(team.baseTeamSlug || "-")}</td>
@@ -2002,6 +2225,37 @@ function renderSavedTeamRow(team) {
   `;
 }
 
+function renderSavedTeamCard(team) {
+  const base = state.data.teams.find((item) => item.slug === team.baseTeamSlug);
+  const draft = normalizeSavedRoster(team);
+  const rosterTeam = state.data.teams.find((item) => item.slug === draft.teamSlug) ?? base;
+  if (rosterTeam) {
+    ensureDraftPlayers(rosterTeam, draft);
+  }
+  const costs = rosterTeam ? calculateRosterCosts(rosterTeam, draft) : null;
+  const updated = team.updatedAt ? new Date(team.updatedAt).toLocaleDateString("en-GB") : "-";
+  return `
+    <article class="card saved-team-card">
+      <header class="saved-team-card-head">
+        ${team.logoData ? `<img src="${escapeHtml(team.logoData)}" alt="">` : ""}
+        <div>
+          <h3>${renderPublicTeamLink(state.auth.currentUser, team)}</h3>
+          <p>${rosterTeam ? `<a class="inline-rule-link" href="${pageUrl(rosterTeam)}">${escapeHtml(rosterTeam.title)}</a>` : escapeHtml(team.baseTeamSlug || "-")}</p>
+        </div>
+      </header>
+      <dl class="saved-team-card-stats">
+        <div><dt>Players</dt><dd>${costs ? costs.totalPlayersCount : "-"}</dd></div>
+        <div><dt>Total Cost</dt><dd>${costs ? `${costs.total}k` : "-"}</dd></div>
+        <div><dt>Updated</dt><dd>${escapeHtml(updated)}</dd></div>
+      </dl>
+      <div class="saved-team-actions">
+        <a class="primary-button compact-action" href="#/my-teams/${encodeURIComponent(team.id)}">Edit</a>
+        <button class="filter-button compact-action" type="button" data-delete-team="${escapeHtml(team.id)}">Delete</button>
+      </div>
+    </article>
+  `;
+}
+
 function wireMyTeams() {
   view.querySelector("[data-new-team]")?.addEventListener("click", () => {
     resetBuilderForTeam(state.data.teams[0]);
@@ -2015,28 +2269,1326 @@ function wireMyTeams() {
   });
 }
 
-async function renderSavedRoster(teamId, refresh = true) {
-  setActiveNav("my-teams");
+async function loadAdminUsers(force = false) {
+  if (!state.auth.currentUser?.isAdmin) {
+    state.admin = { users: [], loaded: true, loading: false, error: "", editingTeams: new Map() };
+    return;
+  }
+  if (state.admin.loaded && !force) return;
+  state.admin.loading = true;
+  state.admin.error = "";
+  try {
+    const payload = await apiRequest("/api/admin/users");
+    state.admin.users = payload.users ?? [];
+    state.admin.loaded = true;
+  } catch (error) {
+    state.admin.error = error.message;
+  } finally {
+    state.admin.loading = false;
+  }
+}
+
+async function renderAdministration() {
+  setActiveNav("administration");
+  setViewSection("administration");
+  view.innerHTML = `
+    ${renderHeader("Administration", "Players, profiles, and saved teams.", `<button class="primary-button" type="button" data-admin-refresh>Refresh</button>`)}
+    <div class="loading">Loading players...</div>
+  `;
+
+  if (!state.auth.currentUser) {
+    view.innerHTML = `
+      ${renderHeader("Administration", "Players, profiles, and saved teams.")}
+      <div class="empty-state">Log in as an admin to open Administration.</div>
+    `;
+    return;
+  }
+
+  if (!state.auth.currentUser.isAdmin) {
+    view.innerHTML = `
+      ${renderHeader("Administration", "Players, profiles, and saved teams.")}
+      <div class="empty-state">Admin access required.</div>
+    `;
+    return;
+  }
+
+  await loadAdminUsers(true);
+  if (state.admin.error) {
+    view.innerHTML = `
+      ${renderHeader("Administration", "Players, profiles, and saved teams.", `<button class="primary-button" type="button" data-admin-refresh>Refresh</button>`)}
+      <div class="empty-state">${escapeHtml(state.admin.error)}</div>
+    `;
+    wireAdministration();
+    return;
+  }
+
+  view.innerHTML = `
+    ${renderHeader("Administration", "Players, profiles, and saved teams.", `<button class="primary-button" type="button" data-admin-refresh>Refresh</button>`)}
+    ${renderAdminUsersTable(state.admin.users)}
+  `;
+  wireAdministration();
+}
+
+function renderAdminUsersTable(users) {
+  if (!users.length) return `<div class="empty-state">No players found.</div>`;
+  return `
+    <article class="content-panel compact-table-panel">
+      <div class="table-scroll builder-table-scroll">
+        <table class="admin-users-table compact-roster-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Telegram</th>
+              <th>Role</th>
+              <th>Saved Teams</th>
+              <th>Last Team Update</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${users.map(renderAdminUserRow).join("")}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  `;
+}
+
+function renderAdminUserRow(user) {
+  const updated = user.lastTeamUpdatedAt ? new Date(user.lastTeamUpdatedAt).toLocaleDateString("en-GB") : "-";
+  return `
+    <tr>
+      <td><strong>${renderPlayerLink(user)}</strong></td>
+      <td>${escapeHtml(user.telegram || "-")}</td>
+      <td>${user.isAdmin ? "Admin" : "Player"}</td>
+      <td>${user.savedTeamCount ?? 0}</td>
+      <td>${escapeHtml(updated)}</td>
+      <td><a class="primary-button compact-action" href="#/administration/users/${encodeURIComponent(user.id)}">Profile</a></td>
+    </tr>
+  `;
+}
+
+async function renderAdminUserProfile(userId) {
+  setActiveNav("administration");
+  setViewSection("administration");
+  view.innerHTML = `
+    ${renderHeader("Administration", "Player profile.", `<a class="primary-button" href="#/administration">Back</a>`)}
+    <div class="loading">Loading profile...</div>
+  `;
+
+  if (!state.auth.currentUser?.isAdmin) {
+    view.innerHTML = `
+      ${renderHeader("Administration", "Player profile.", `<a class="primary-button" href="#/administration">Back</a>`)}
+      <div class="empty-state">Admin access required.</div>
+    `;
+    return;
+  }
+
+  try {
+    const payload = await apiRequest(`/api/admin/users/${encodeURIComponent(userId)}`);
+    view.innerHTML = `
+      ${renderHeader(`Player "${payload.user.login}"`, "Saved teams and profile details.", `<a class="primary-button" href="#/administration">Back</a>`)}
+      <div class="admin-profile-grid">
+        ${renderAdminProfileCard(payload.user)}
+        <section class="content-panel season-card">
+          ${renderAdminCreateTeamForUserPanel(payload.user)}
+        </section>
+        <section class="content-panel season-card">
+          <h2>Saved Teams</h2>
+          ${renderAdminSavedTeamsTable(payload.teams ?? [], payload.user)}
+        </section>
+      </div>
+    `;
+    wireAdminUserProfile(payload.user);
+  } catch (error) {
+    view.innerHTML = `
+      ${renderHeader("Administration", "Player profile.", `<a class="primary-button" href="#/administration">Back</a>`)}
+      <div class="empty-state">${escapeHtml(error.message)}</div>
+    `;
+  }
+}
+
+function renderAdminProfileCard(user) {
+  const created = user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB") : "-";
+  const updated = user.lastTeamUpdatedAt ? new Date(user.lastTeamUpdatedAt).toLocaleDateString("en-GB") : "-";
+  return `
+    <aside class="side-panel admin-profile-card">
+      <h2>Profile</h2>
+      <dl class="stat-list">
+        <dt>Login</dt><dd>${renderPlayerLink(user)}</dd>
+        <dt>Telegram</dt><dd>${escapeHtml(user.telegram || "-")}</dd>
+        <dt>Role</dt><dd>${user.isAdmin ? "Admin" : "Player"}</dd>
+        <dt>Saved teams</dt><dd>${user.savedTeamCount ?? 0}</dd>
+        <dt>Created</dt><dd>${escapeHtml(created)}</dd>
+        <dt>Last team update</dt><dd>${escapeHtml(updated)}</dd>
+      </dl>
+    </aside>
+  `;
+}
+
+function renderAdminCreateTeamForUserPanel(user) {
+  const teams = state.data.teams ?? [];
+  return `
+    <h2>Create Team For Player</h2>
+    <p class="muted-text">Create a saved team in ${escapeHtml(user.login)}'s profile. It will not be committed to the season automatically.</p>
+    <div class="season-action-row admin-create-team-row">
+      <label class="filter-field">
+        <span>Rules team</span>
+        <select data-admin-create-team-base>
+          ${teams.map((team) => renderOption(team.slug, team.title, "")).join("")}
+        </select>
+      </label>
+      <label class="filter-field">
+        <span>Team name</span>
+        <input type="text" data-admin-create-team-name placeholder="New team name">
+      </label>
+      <button class="primary-button" type="button" data-admin-create-user-team="${escapeHtml(user.id)}">Create Team</button>
+    </div>
+  `;
+}
+
+function wireAdminUserProfile(user) {
+  view.querySelector("[data-admin-create-user-team]")?.addEventListener("click", async () => {
+    const baseTeamSlug = view.querySelector("[data-admin-create-team-base]")?.value;
+    const baseTeam = state.data.teams.find((team) => team.slug === baseTeamSlug);
+    if (!baseTeam) return;
+    const name = String(view.querySelector("[data-admin-create-team-name]")?.value ?? "").trim() || baseTeam.title;
+    try {
+      const payload = await apiRequest(`/api/admin/users/${encodeURIComponent(user.id)}/teams`, {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          baseTeamSlug,
+          roster: makeSeasonStarterRoster(baseTeam, name),
+        }),
+      });
+      state.admin.loaded = false;
+      location.hash = adminTeamEditUrl(user, payload.team);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+}
+
+function renderAdminSavedTeamsTable(teams, owner = null) {
+  if (!teams.length) return `<p>No saved teams yet.</p>`;
+  return `
+    <div class="table-scroll builder-table-scroll">
+      <table class="admin-teams-table compact-roster-table">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>Rules</th>
+            <th>Players</th>
+            <th>Total Cost</th>
+            <th>Updated</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${teams.map((team) => renderAdminSavedTeamRow(team, owner)).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderAdminSavedTeamRow(team, owner = null) {
+  const teamOwner = owner ?? team.owner ?? null;
+  const base = state.data.teams.find((item) => item.slug === team.baseTeamSlug);
+  const draft = normalizeSavedRoster(team);
+  const rosterTeam = state.data.teams.find((item) => item.slug === draft.teamSlug) ?? base;
+  if (rosterTeam) {
+    ensureDraftPlayers(rosterTeam, draft);
+  }
+  const costs = rosterTeam ? calculateRosterCosts(rosterTeam, draft) : null;
+  const updated = team.updatedAt ? new Date(team.updatedAt).toLocaleDateString("en-GB") : "-";
+  return `
+    <tr>
+      <td>
+        <span class="saved-team-name-cell">
+          ${team.logoData ? `<img src="${escapeHtml(team.logoData)}" alt="">` : ""}
+          <strong>${teamOwner ? renderPublicTeamLink(teamOwner, team) : escapeHtml(team.name)}</strong>
+        </span>
+      </td>
+      <td>${rosterTeam ? `<a class="inline-rule-link" href="${pageUrl(rosterTeam)}">${escapeHtml(rosterTeam.title)}</a>` : escapeHtml(team.baseTeamSlug || "-")}</td>
+      <td>${costs ? costs.totalPlayersCount : "-"}</td>
+      <td>${costs ? `${costs.total}k` : "-"}</td>
+      <td>${escapeHtml(updated)}</td>
+      <td>${state.auth.currentUser?.isAdmin && teamOwner ? `<a class="primary-button compact-action" href="${adminTeamEditUrl(teamOwner, team)}">Edit</a>` : `<span class="muted-text">-</span>`}</td>
+    </tr>
+  `;
+}
+
+async function renderPlayerProfile(userId) {
+  setActiveNav("season");
+  setViewSection("players");
+  view.innerHTML = `
+    ${renderHeader("Player Profile", "Saved teams and coach details.", `<a class="primary-button" href="#/season">Back</a>`)}
+    <div class="loading">Loading player...</div>
+  `;
+
+  if (!state.auth.currentUser) {
+    view.innerHTML = `
+      ${renderHeader("Player Profile", "Saved teams and coach details.")}
+      <div class="empty-state">Log in to view player profiles.</div>
+    `;
+    return;
+  }
+
+  try {
+    const payload = await apiRequest(`/api/players/${encodeURIComponent(userId)}`);
+    view.innerHTML = `
+      ${renderHeader(`Player "${payload.user.login}"`, "Saved teams and coach details.", `<a class="primary-button" href="#/season">Back</a>`)}
+      <div class="admin-profile-grid">
+        ${renderAdminProfileCard(payload.user)}
+        ${state.auth.currentUser?.isAdmin ? `<section class="content-panel season-card">${renderAdminCreateTeamForUserPanel(payload.user)}</section>` : ""}
+        <section class="content-panel season-card">
+          <h2>Saved Teams</h2>
+          ${renderPublicProfileTeamsTable(payload.user, payload.teams ?? [])}
+        </section>
+      </div>
+    `;
+    if (state.auth.currentUser?.isAdmin) {
+      wireAdminUserProfile(payload.user);
+    }
+  } catch (error) {
+    view.innerHTML = `
+      ${renderHeader("Player Profile", "Saved teams and coach details.", `<a class="primary-button" href="#/season">Back</a>`)}
+      <div class="empty-state">${escapeHtml(error.message)}</div>
+    `;
+  }
+}
+
+function renderPublicProfileTeamsTable(user, teams) {
+  if (!teams.length) return `<p>No saved teams yet.</p>`;
+  return `
+    <div class="table-scroll builder-table-scroll">
+      <table class="admin-teams-table compact-roster-table">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>Rules</th>
+            <th>Players</th>
+            <th>Total Cost</th>
+            <th>Updated</th>
+            ${state.auth.currentUser?.isAdmin ? "<th>Action</th>" : ""}
+          </tr>
+        </thead>
+        <tbody>
+          ${teams.map((team) => renderPublicProfileTeamRow(user, team)).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderPublicProfileTeamRow(user, team) {
+  const base = state.data.teams.find((item) => item.slug === team.baseTeamSlug);
+  const draft = normalizeSavedRoster(team);
+  const rosterTeam = state.data.teams.find((item) => item.slug === draft.teamSlug) ?? base;
+  if (rosterTeam) ensureDraftPlayers(rosterTeam, draft);
+  const costs = rosterTeam ? calculateRosterCosts(rosterTeam, draft) : null;
+  const updated = team.updatedAt ? new Date(team.updatedAt).toLocaleDateString("en-GB") : "-";
+  return `
+    <tr>
+      <td>
+        <span class="saved-team-name-cell">
+          ${team.logoData ? `<img src="${escapeHtml(team.logoData)}" alt="">` : ""}
+          <strong>${renderPublicTeamLink(user, team)}</strong>
+        </span>
+      </td>
+      <td>${rosterTeam ? `<a class="inline-rule-link" href="${pageUrl(rosterTeam)}">${escapeHtml(rosterTeam.title)}</a>` : escapeHtml(team.baseTeamSlug || "-")}</td>
+      <td>${costs ? costs.totalPlayersCount : "-"}</td>
+      <td>${costs ? `${costs.total}k` : "-"}</td>
+      <td>${escapeHtml(updated)}</td>
+      ${state.auth.currentUser?.isAdmin ? `<td><a class="primary-button compact-action" href="${adminTeamEditUrl(user, team)}">Edit</a></td>` : ""}
+    </tr>
+  `;
+}
+
+async function renderPublicTeamProfile(userId, teamId) {
+  setActiveNav("season");
+  setViewSection("players");
+  view.innerHTML = `
+    ${renderHeader("Team", "Saved roster.", `<a class="primary-button" href="${playerUrl(userId)}">Back</a>`)}
+    <div class="loading">Loading team...</div>
+  `;
+
+  if (!state.auth.currentUser) {
+    view.innerHTML = `
+      ${renderHeader("Team", "Saved roster.")}
+      <div class="empty-state">Log in to view saved teams.</div>
+    `;
+    return;
+  }
+
+  try {
+    const payload = await apiRequest(`/api/players/${encodeURIComponent(userId)}/teams/${encodeURIComponent(teamId)}`);
+    const draft = normalizeSavedRoster(payload.team);
+    const team = state.data.teams.find((item) => item.slug === draft.teamSlug) ?? state.data.teams[0];
+    ensureDraftLeagueChoice(team, draft);
+    ensureDraftPlayers(team, draft);
+    const costs = calculateRosterCosts(team, draft);
+    const actions = `
+      <a class="primary-button" href="${playerUrl(payload.user)}">Back</a>
+      ${state.auth.currentUser?.isAdmin ? `<a class="primary-button" href="${adminTeamEditUrl(payload.user, payload.team)}">Edit Team</a>` : ""}
+    `;
+    view.innerHTML = `
+      ${renderHeader(`Team "${payload.team.name}"`, `Coach: ${payload.user.login}`, actions)}
+      <div class="saved-roster-top-grid">
+        ${renderPublicTeamSummary(payload.user, payload.team, team, draft, costs)}
+        <section class="side-panel">
+          <h2>Coach</h2>
+          <p>${renderPlayerLink(payload.user)}</p>
+          ${renderTeamRuleAccess(team, draft)}
+        </section>
+      </div>
+      <section class="content-panel compact-table-panel">
+        <h2>Roster</h2>
+        ${renderPublicTeamRosterTable(team, draft)}
+      </section>
+    `;
+  } catch (error) {
+    view.innerHTML = `
+      ${renderHeader("Team", "Saved roster.", `<a class="primary-button" href="${playerUrl(userId)}">Back</a>`)}
+      <div class="empty-state">${escapeHtml(error.message)}</div>
+    `;
+  }
+}
+
+function renderPublicTeamSummary(user, savedTeam, team, draft, costs) {
+  return `
+    <aside class="builder-summary saved-roster-summary-panel side-panel">
+      ${draft.logoData ? `<div class="summary-logo-block"><img src="${escapeHtml(draft.logoData)}" alt=""></div>` : ""}
+      <div class="summary-title-block">
+        <h3>Roster Summary</h3>
+        <a class="builder-team-link" href="${playerTeamUrl(user, savedTeam)}">${escapeHtml(savedTeam.name)}</a>
+      </div>
+      <dl class="stat-list summary-stat-grid">
+        <dt>Coach</dt><dd>${renderPlayerLink(user)}</dd>
+        <dt>Rules</dt><dd><a class="inline-rule-link" href="${pageUrl(team)}">${escapeHtml(team.title)}</a></dd>
+        <dt>Active players</dt><dd>${costs.playersCount}</dd>
+        <dt>Total players</dt><dd>${costs.totalPlayersCount}</dd>
+        <dt>Team Rerolls</dt><dd>${draft.teamRerolls ?? 0}</dd>
+        <dt>Dedicated Fans</dt><dd>${countToNumber(draft.dedicatedFans)}</dd>
+        <dt>Treasury</dt><dd>${countToNumber(draft.treasury)}k</dd>
+        <dt>Total Cost</dt><dd>${costs.total}k</dd>
+      </dl>
+    </aside>
+  `;
+}
+
+function renderPublicTeamRosterTable(team, draft) {
+  const players = selectedRosterPlayers(team, draft);
+  if (!players.length) return `<p>No players in this team yet.</p>`;
+  return `
+    <div class="table-scroll builder-table-scroll">
+      <table class="compact-roster-table public-roster-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>MA</th>
+            <th>ST</th>
+            <th>AG</th>
+            <th>PA</th>
+            <th>AR</th>
+            <th>Skills</th>
+            <th>Cost</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${players.map((player, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td><strong>${escapeHtml(player.name)}</strong></td>
+              <td>${escapeHtml(player.row.position)}</td>
+              <td>${escapeHtml(statValueForDisplayByStat("ma", player.row.ma, player.statMods.ma ?? 0))}</td>
+              <td>${escapeHtml(statValueForDisplayByStat("st", player.row.st, player.statMods.st ?? 0))}</td>
+              <td>${escapeHtml(statValueForDisplayByStat("ag", player.row.ag, player.statMods.ag ?? 0))}</td>
+              <td>${escapeHtml(statValueForDisplayByStat("pa", player.row.pa, player.statMods.pa ?? 0))}</td>
+              <td>${escapeHtml(statValueForDisplayByStat("ar", player.row.ar, player.statMods.ar ?? 0))}</td>
+              <td class="skills-cell">${renderRosterLinks(skillNamesForPlayer(player.row, player))}</td>
+              <td>${playerCurrentCost(player.row, player, true)}k</td>
+              <td>${player.skipNextGame ? "Skip next game" : player.niglingInjury ? "Nigling injury" : "-"}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function wireAdministration() {
+  view.querySelector("[data-admin-refresh]")?.addEventListener("click", () => {
+    state.admin.loaded = false;
+    renderAdministration();
+  });
+}
+
+async function loadSeason(force = false) {
+  if (!state.auth.currentUser) {
+    state.season = { ...state.season, data: null, loaded: true, loading: false, error: "" };
+    return;
+  }
+  if (state.season.loaded && !force) return;
+  state.season.loading = true;
+  state.season.error = "";
+  try {
+    state.season.data = await apiRequest("/api/season");
+    state.season.loaded = true;
+  } catch (error) {
+    state.season.error = error.message;
+  } finally {
+    state.season.loading = false;
+  }
+}
+
+function seasonEntryMap(data) {
+  return new Map((data.entries ?? []).map((entry) => [entry.id, entry]));
+}
+
+function seasonEntryLabel(entry) {
+  if (!entry) return "-";
+  return `${entry.user.login} · ${entry.team.name}`;
+}
+
+function seasonTeamRulesLink(entry) {
+  const team = state.data.teams.find((item) => item.slug === entry?.team?.baseTeamSlug);
+  return team
+    ? `<a class="inline-rule-link" href="${pageUrl(team)}">${escapeHtml(team.title)}</a>`
+    : escapeHtml(entry?.team?.baseTeamSlug || "-");
+}
+
+function seasonTeamProfileLink(entry) {
+  return entry ? renderPublicTeamLink(entry.user, entry.team) : `<span class="muted-text">-</span>`;
+}
+
+function makeSeasonStarterRoster(team, name) {
+  const draft = emptyBuilderState(team);
+  draft.teamName = name || team.title;
+  draft.selectedLeague = teamLeagueOptions(team)[0] ?? "";
+  return draft;
+}
+
+const seasonTabDefinitions = [
+  { id: "registration", label: "Registration" },
+  { id: "fixture", label: "League Fixture" },
+  { id: "standings", label: "Standings" },
+  { id: "schedule", label: "Schedule" },
+  { id: "administration", label: "Administration", adminOnly: true },
+];
+
+function availableSeasonTabs() {
+  return seasonTabDefinitions.filter((tab) => !tab.adminOnly || state.auth.currentUser?.isAdmin);
+}
+
+function normalizeSeasonTab(tabId = "") {
+  const tabs = availableSeasonTabs();
+  return tabs.some((tab) => tab.id === tabId) ? tabId : tabs[0]?.id ?? "registration";
+}
+
+function renderSeasonTabs(activeTab) {
+  return `
+    <div class="season-tabs" role="tablist" aria-label="Season sections">
+      ${availableSeasonTabs().map((tab) => `
+        <button
+          class="season-tab ${tab.id === activeTab ? "active" : ""}"
+          type="button"
+          role="tab"
+          aria-selected="${tab.id === activeTab ? "true" : "false"}"
+          data-season-tab="${escapeHtml(tab.id)}"
+        >${escapeHtml(tab.label)}</button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderSeasonTabContent(data, activeTab) {
+  if (activeTab === "fixture") return renderLeagueFixture(data);
+  if (activeTab === "standings") return renderSeasonStandings(data);
+  if (activeTab === "schedule") return renderSeasonRounds(data);
+  if (activeTab === "administration" && state.auth.currentUser?.isAdmin) return renderSeasonAdmin(data);
+  return renderSeasonRegistration(data);
+}
+
+async function renderSeason(refresh = true) {
+  setActiveNav("season");
+  setViewSection("season");
+  view.innerHTML = `
+    ${renderHeader("Season", "Commit a team, manage Swiss pairings, and track league points.", `<button class="primary-button" type="button" data-season-refresh>Refresh</button>`)}
+    <div class="loading">Loading season...</div>
+  `;
+
+  await loadSeason(refresh);
+
+  if (!state.auth.currentUser) {
+    view.innerHTML = `
+      ${renderHeader("Season", "Commit a team, manage Swiss pairings, and track league points.")}
+      <div class="empty-state">Log in to commit your team to the season.</div>
+    `;
+    return;
+  }
+
+  if (state.season.error) {
+    view.innerHTML = `
+      ${renderHeader("Season", "Commit a team, manage Swiss pairings, and track league points.", `<button class="primary-button" type="button" data-season-refresh>Refresh</button>`)}
+      <div class="empty-state">${escapeHtml(state.season.error)}</div>
+    `;
+    wireSeason();
+    return;
+  }
+
+  const data = state.season.data ?? {};
+  const activeTab = normalizeSeasonTab(state.season.activeTab);
+  state.season.activeTab = activeTab;
+  view.innerHTML = `
+    ${renderHeader("Season", `${data.season?.name ?? "Season 1"} · Swiss pairing control`, `<button class="primary-button" type="button" data-season-refresh>Refresh</button>`)}
+    ${renderSeasonTabs(activeTab)}
+    ${renderSeasonTabContent(data, activeTab)}
+  `;
+  wireSeason();
+}
+
+function renderSeasonRegistration(data) {
+  return `
+    <div class="season-overview-grid">
+      ${renderSeasonCommitPanel(data)}
+      ${state.auth.currentUser?.isAdmin ? renderSeasonRegistrationAdminPanel(data) : ""}
+      <section class="content-panel season-card">
+        <h2>Registered Teams</h2>
+        ${renderSeasonEntriesTable(data, Boolean(state.auth.currentUser?.isAdmin))}
+      </section>
+    </div>
+  `;
+}
+
+function availableSeasonSavedTeams(data) {
+  const admin = data.admin ?? { savedTeams: [] };
+  const committedTeamIds = new Set((data.entries ?? []).map((entry) => entry.team.id));
+  const committedUserIds = new Set((data.entries ?? []).map((entry) => entry.user.id));
+  return admin.savedTeams.filter((team) => !committedTeamIds.has(team.id) && !committedUserIds.has(team.owner.id));
+}
+
+function renderSeasonRegistrationAdminPanel(data) {
+  const availableSavedTeams = availableSeasonSavedTeams(data);
+  return `
+    <section class="content-panel season-card">
+      <h2>Admin Registration</h2>
+      ${availableSavedTeams.length ? `
+        <p>Add any saved team to the active season.</p>
+        <div class="season-action-row">
+          <label class="filter-field">
+            <span>Saved team</span>
+            <select data-season-admin-team>
+              ${availableSavedTeams.map((team) => renderOption(team.id, `${team.owner.login} · ${team.name}`, "")).join("")}
+            </select>
+          </label>
+          <button class="primary-button" type="button" data-season-admin-add-team>Add Team</button>
+        </div>
+      ` : `<p>No eligible saved teams outside the season.</p>`}
+    </section>
+  `;
+}
+
+function renderSeasonCommitPanel(data) {
+  const myEntry = data.myEntry;
+  const teams = data.myTeams ?? [];
+  if (myEntry) {
+    return `
+      <section class="content-panel season-card">
+        <h2>Your Season Team</h2>
+        <div class="season-committed-team">
+          ${myEntry.team.logoData ? `<img src="${escapeHtml(myEntry.team.logoData)}" alt="">` : ""}
+          <div>
+            <strong>${escapeHtml(myEntry.team.name)}</strong>
+            <p>${seasonTeamRulesLink(myEntry)}</p>
+            <p class="muted-text">Committed as ${escapeHtml(myEntry.user.login)}.</p>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="content-panel season-card">
+      <h2>Commit Team</h2>
+      ${teams.length ? `
+        <p>Select one saved team to confirm its participation in the active season.</p>
+        <div class="season-action-row">
+          <label class="filter-field">
+            <span>Saved team</span>
+            <select data-season-commit-team>
+              ${teams.map((team) => renderOption(team.id, team.name, "")).join("")}
+            </select>
+          </label>
+          <button class="primary-button" type="button" data-season-commit>Commit</button>
+        </div>
+      ` : `
+        <p>No saved teams yet.</p>
+        <a class="primary-button" href="#/builder">Create Team</a>
+      `}
+    </section>
+  `;
+}
+
+function pairingEntry(data, entryId) {
+  return (data.entries ?? []).find((entry) => entry.id === entryId) ?? null;
+}
+
+function pairingTeamCell(data, entryId) {
+  const entry = pairingEntry(data, entryId);
+  if (!entry) return `<span class="muted-text">Empty</span>`;
+  return `
+    <span class="season-pairing-team">
+      <strong>${seasonTeamProfileLink(entry)}</strong>
+      <span>${renderPlayerLink(entry.user)} · ${seasonTeamRulesLink(entry)}</span>
+    </span>
+  `;
+}
+
+function pairingLeaguePoints(pairing) {
+  const home = pairing.homePoints ?? "-";
+  const away = pairing.awayPoints ?? "-";
+  return `${home} / ${away}`;
+}
+
+function pairingTouchdowns(pairing) {
+  const home = pairing.homeTouchdowns ?? "-";
+  const away = pairing.awayTouchdowns ?? "-";
+  return `${home} / ${away}`;
+}
+
+function currentFixtureForData(data) {
+  if (!data.myEntry) return null;
+  if (data.currentFixture) return data.currentFixture;
+  return [...(data.rounds ?? [])]
+    .filter((round) => round.status === "started")
+    .sort((a, b) => b.roundNumber - a.roundNumber)
+    .flatMap((round) => round.pairings)
+    .find((pairing) => pairing.homeEntryId === data.myEntry.id || pairing.awayEntryId === data.myEntry.id) ?? null;
+}
+
+function renderLeagueFixture(data) {
+  const myEntry = data.myEntry;
+  if (!myEntry) {
+    return `
+      <section class="content-panel season-card">
+        <h2>League Fixture</h2>
+        <p>Commit a team first to receive your active pairing.</p>
+      </section>
+    `;
+  }
+
+  const fixture = currentFixtureForData(data);
+  if (!fixture) {
+    return `
+      <section class="content-panel season-card">
+        <h2>League Fixture</h2>
+        <p>No active pairing yet. An admin needs to start a round first.</p>
+      </section>
+    `;
+  }
+
+  const home = pairingEntry(data, fixture.homeEntryId);
+  const away = pairingEntry(data, fixture.awayEntryId);
+  const isHome = fixture.homeEntryId === myEntry.id;
+  const opponent = isHome ? away : home;
+  return `
+    <section class="content-panel season-card">
+      <h2>League Fixture</h2>
+      <div class="fixture-headline">
+        <div>
+          <span class="muted-text">Round ${fixture.roundNumber} · Table ${fixture.tableNumber}</span>
+          <strong>${seasonTeamProfileLink(myEntry)}</strong>
+        </div>
+        <div>
+          <span class="muted-text">Opponent</span>
+          ${opponent ? `
+            <strong>${seasonTeamProfileLink(opponent)}</strong>
+            <p>${renderPlayerLink(opponent.user)} · ${seasonTeamRulesLink(opponent)}</p>
+          ` : `<strong>BYE</strong>`}
+        </div>
+      </div>
+
+      <div class="season-score-summary">
+        <span>Touchdowns: <strong>${escapeHtml(pairingTouchdowns(fixture))}</strong></span>
+        <span>League points: <strong>${escapeHtml(pairingLeaguePoints(fixture))}</strong></span>
+      </div>
+
+      ${opponent ? renderFixtureResultForm(fixture) : `<p>This is a one-team fixture. Admin-started one-team pairings are scored as a technical win.</p>`}
+    </section>
+  `;
+}
+
+function renderFixtureResultForm(pairing) {
+  return `
+    <div class="fixture-result-form" data-fixture-row="${escapeHtml(pairing.id)}">
+      <label class="filter-field">
+        <span>Home touchdowns</span>
+        <input type="number" min="0" step="1" value="${escapeHtml(pairing.homeTouchdowns ?? "")}" data-fixture-home-td>
+      </label>
+      <label class="filter-field">
+        <span>Away touchdowns</span>
+        <input type="number" min="0" step="1" value="${escapeHtml(pairing.awayTouchdowns ?? "")}" data-fixture-away-td>
+      </label>
+      <label class="table-checkbox fixture-checkbox">
+        <input type="checkbox" data-fixture-home-unable ${pairing.homeOpponentUnable ? "checked" : ""}>
+        <span>Award +2 to Home: Away could not field</span>
+      </label>
+      <label class="table-checkbox fixture-checkbox">
+        <input type="checkbox" data-fixture-away-unable ${pairing.awayOpponentUnable ? "checked" : ""}>
+        <span>Award +2 to Away: Home could not field</span>
+      </label>
+      <button class="primary-button" type="button" data-save-fixture="${escapeHtml(pairing.id)}">Submit Result</button>
+    </div>
+  `;
+}
+
+function renderSeasonEntriesTable(data, adminActions = false) {
+  const entries = data.entries ?? [];
+  if (!entries.length) return `<p>No teams committed yet.</p>`;
+  return `
+    <div class="table-scroll">
+      <table class="compact-roster-table season-table">
+        <thead>
+          <tr>
+            <th>Coach</th>
+            <th>Team</th>
+            <th>Rules</th>
+            ${adminActions ? "<th>Action</th>" : ""}
+          </tr>
+        </thead>
+        <tbody>
+          ${entries.map((entry) => `
+            <tr>
+              <td>${renderPlayerLink(entry.user)}</td>
+              <td><strong>${seasonTeamProfileLink(entry)}</strong></td>
+              <td>${seasonTeamRulesLink(entry)}</td>
+              ${adminActions ? `<td><button class="filter-button compact-action" type="button" data-season-remove-entry="${escapeHtml(entry.id)}">Remove</button></td>` : ""}
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderSeasonStandings(data) {
+  const standings = data.standings ?? [];
+  return `
+    <section class="content-panel season-card">
+      <h2>Standings</h2>
+      <p class="muted-text">Scoring: win 3, draw 1, technical win 2, loss 0, +1 for a 3+ TD gap, +1 for a shutout with at least one TD scored, +2 if the opponent could not field a team.</p>
+      ${standings.length ? `
+        <div class="table-scroll">
+          <table class="compact-roster-table season-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Coach</th>
+                <th>Team</th>
+                <th>Games</th>
+                <th>League Points</th>
+                <th>Byes</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${standings.map((standing) => `
+                <tr>
+                  <td>${standing.rank}</td>
+                  <td>${renderPlayerLink(standing.user)}</td>
+                  <td><strong>${renderPublicTeamLink(standing.user, standing.team)}</strong></td>
+                  <td>${standing.games}</td>
+                  <td>${standing.points}</td>
+                  <td>${standing.byes}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      ` : `<p>No committed teams yet.</p>`}
+    </section>
+  `;
+}
+
+function renderSeasonRounds(data, adminMode = false) {
+  const rounds = data.rounds ?? [];
+  if (!rounds.length) {
+    return `
+      <section class="content-panel season-card">
+        <h2>${adminMode ? "Pairing Controls" : "Schedule"}</h2>
+        <p>No rounds generated yet. An admin can generate Round 1 after teams are committed.</p>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="season-rounds">
+      ${rounds.map((round) => `
+        <article class="content-panel season-card">
+          <header class="season-round-header">
+            <div>
+              <h2>Round ${round.roundNumber}</h2>
+              <span class="season-status-pill" data-status="${escapeHtml(round.status)}">${escapeHtml(round.status)}</span>
+            </div>
+            ${adminMode ? renderSeasonRoundActions(round) : ""}
+          </header>
+          <div class="table-scroll">
+            <table class="compact-roster-table season-table">
+              <thead>
+                ${adminMode ? `
+                  <tr>
+                    <th>Table</th>
+                    <th>Home</th>
+                    <th>Away</th>
+                    <th>Result</th>
+                    <th>TD</th>
+                    <th>Bonuses</th>
+                    <th>League Points</th>
+                    <th>Action</th>
+                  </tr>
+                ` : `
+                  <tr>
+                    <th>Table</th>
+                    <th>Home</th>
+                    <th>TD</th>
+                    <th>League Points</th>
+                    <th>Away</th>
+                  </tr>
+                `}
+              </thead>
+              <tbody>
+                ${round.pairings.map((pairing) => renderSeasonPairingRow(data, round, pairing, adminMode)).join("")}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `).join("")}
+    </section>
+  `;
+}
+
+function renderSeasonRoundActions(round) {
+  return `
+    <div class="season-round-actions">
+      ${round.status === "draft" ? `
+        <button class="primary-button compact-action" type="button" data-season-start-round="${escapeHtml(round.id)}">Start Round</button>
+        <button class="filter-button compact-action" type="button" data-season-add-pairing="${escapeHtml(round.id)}">Add Empty Pairing</button>
+      ` : ""}
+      <button class="filter-button compact-action" type="button" data-season-delete-round="${escapeHtml(round.id)}">Delete Round</button>
+    </div>
+  `;
+}
+
+function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
+  const home = pairingEntry(data, pairing.homeEntryId);
+  const away = pairingEntry(data, pairing.awayEntryId);
+  const isBye = !away;
+  const homeValue = pairing.homePoints ?? "";
+  const awayValue = pairing.awayPoints ?? "";
+  if (!adminMode) {
+    return `
+      <tr>
+        <td>${pairing.tableNumber}</td>
+        <td>${pairingTeamCell(data, pairing.homeEntryId)}</td>
+        <td>${escapeHtml(pairingTouchdowns(pairing))}</td>
+        <td>${escapeHtml(pairingLeaguePoints(pairing))}</td>
+        <td>${isBye ? "<strong>BYE</strong>" : pairingTeamCell(data, pairing.awayEntryId)}</td>
+      </tr>
+    `;
+  }
+
+  const locked = round.status !== "draft";
+  const resultLocked = round.status !== "started";
+  return `
+    <tr data-pairing-row="${escapeHtml(pairing.id)}">
+      <td>${pairing.tableNumber}</td>
+      <td>${renderSeasonEntrySelect(data, "home-entry", pairing.homeEntryId, locked)}</td>
+      <td>${renderSeasonEntrySelect(data, "away-entry", pairing.awayEntryId, locked)}</td>
+      <td>
+        <select class="table-select" data-result-type ${resultLocked ? "disabled" : ""}>
+          ${renderOption("played", "Played", pairing.resultType)}
+          ${renderOption("technical_home", "Technical Home 1-0", pairing.resultType)}
+          ${renderOption("technical_away", "Technical Away 0-1", pairing.resultType)}
+        </select>
+      </td>
+      <td>
+        <div class="season-td-pair">
+          <input class="season-score-input" type="number" min="0" step="1" value="${escapeHtml(pairing.homeTouchdowns ?? "")}" data-home-td ${resultLocked ? "disabled" : ""}>
+          <input class="season-score-input" type="number" min="0" step="1" value="${escapeHtml(pairing.awayTouchdowns ?? "")}" data-away-td ${resultLocked ? "disabled" : ""}>
+        </div>
+      </td>
+      <td>
+        <div class="season-bonus-checks">
+          <label class="table-checkbox"><input type="checkbox" data-home-unable ${pairing.homeOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>+2 Home</span></label>
+          <label class="table-checkbox"><input type="checkbox" data-away-unable ${pairing.awayOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>+2 Away</span></label>
+        </div>
+      </td>
+      <td>${escapeHtml(pairingLeaguePoints(pairing))}</td>
+      <td>
+        <div class="table-actions">
+          <button class="filter-button compact-action" type="button" data-save-season-pairing="${escapeHtml(pairing.id)}">Save</button>
+          <button class="filter-button compact-action" type="button" data-delete-season-pairing="${escapeHtml(pairing.id)}">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function renderSeasonEntrySelect(data, name, selected, disabled = false) {
+  return `
+    <select class="table-select" data-${name} ${disabled ? "disabled" : ""}>
+      ${renderOption("", "Empty slot", selected ?? "")}
+      ${(data.entries ?? []).map((entry) => renderOption(entry.id, seasonEntryLabel(entry), selected ?? "")).join("")}
+    </select>
+  `;
+}
+
+function renderSeasonAdmin(data) {
+  const admin = data.admin ?? { users: [], savedTeams: [] };
+  const committedUserIds = new Set((data.entries ?? []).map((entry) => entry.user.id));
+  const availableSavedTeams = availableSeasonSavedTeams(data);
+  const availableUsers = admin.users.filter((user) => !committedUserIds.has(user.id));
+  const teams = state.data.teams ?? [];
+  return `
+    <div class="season-admin-stack">
+      <section class="content-panel season-card season-admin-panel">
+        <h2>Admin Controls</h2>
+        <div class="season-admin-grid">
+          <div class="season-admin-block">
+            <h3>Rounds</h3>
+            <p>Create pairings as drafts. Start Round locks the pairings and publishes League Fixtures.</p>
+            <button class="primary-button" type="button" data-season-generate-round>Generate Next Round</button>
+            <button class="filter-button" type="button" data-season-create-round>Create Empty Round</button>
+          </div>
+
+          <div class="season-admin-block">
+            <h3>Add Saved Team</h3>
+            ${availableSavedTeams.length ? `
+              <label class="filter-field">
+                <span>Saved team</span>
+                <select data-season-admin-team>
+                  ${availableSavedTeams.map((team) => renderOption(team.id, `${team.owner.login} · ${team.name}`, "")).join("")}
+                </select>
+              </label>
+              <button class="primary-button" type="button" data-season-admin-add-team>Add Team</button>
+            ` : `<p>No eligible saved teams outside the season.</p>`}
+          </div>
+
+          <div class="season-admin-block">
+            <h3>Create Team For Coach</h3>
+            ${availableUsers.length ? `
+              <label class="filter-field">
+                <span>Coach</span>
+                <select data-season-admin-user>
+                  ${availableUsers.map((user) => renderOption(user.id, user.login, "")).join("")}
+                </select>
+              </label>
+              <label class="filter-field">
+                <span>Rules team</span>
+                <select data-season-admin-base-team>
+                  ${teams.map((team) => renderOption(team.slug, team.title, "")).join("")}
+                </select>
+              </label>
+              <label class="filter-field">
+                <span>Team name</span>
+                <input type="text" data-season-admin-team-name placeholder="New roster name">
+              </label>
+              <button class="primary-button" type="button" data-season-admin-create-team>Create And Commit</button>
+            ` : `<p>Every coach already has one committed team.</p>`}
+          </div>
+        </div>
+      </section>
+
+      ${renderSeasonRounds(data, true)}
+
+      <section class="content-panel season-card">
+        <h2>Committed Teams</h2>
+        ${renderSeasonAdminEntries(data)}
+      </section>
+    </div>
+  `;
+}
+
+function renderSeasonAdminEntries(data) {
+  return renderSeasonEntriesTable(data, true);
+}
+
+function replaceSeasonData(payload) {
+  state.season.data = payload;
+  state.season.loaded = true;
+}
+
+function wireSeason() {
+  view.querySelector("[data-season-refresh]")?.addEventListener("click", () => {
+    state.season.loaded = false;
+    renderSeason(true);
+  });
+
+  view.querySelectorAll("[data-season-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.season.activeTab = normalizeSeasonTab(button.dataset.seasonTab);
+      renderSeason(false);
+    });
+  });
+
+  view.querySelector("[data-season-commit]")?.addEventListener("click", async () => {
+    const teamId = view.querySelector("[data-season-commit-team]")?.value;
+    if (!teamId) return;
+    try {
+      replaceSeasonData(await apiRequest("/api/season/commit", {
+        method: "POST",
+        body: JSON.stringify({ teamId }),
+      }));
+      renderSeason(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  view.querySelector("[data-season-admin-add-team]")?.addEventListener("click", async () => {
+    const teamId = view.querySelector("[data-season-admin-team]")?.value;
+    if (!teamId) return;
+    try {
+      replaceSeasonData(await apiRequest("/api/season/admin/entries", {
+        method: "POST",
+        body: JSON.stringify({ teamId }),
+      }));
+      renderSeason(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  view.querySelector("[data-season-admin-create-team]")?.addEventListener("click", async () => {
+    const userId = view.querySelector("[data-season-admin-user]")?.value;
+    const baseTeamSlug = view.querySelector("[data-season-admin-base-team]")?.value;
+    const baseTeam = state.data.teams.find((team) => team.slug === baseTeamSlug);
+    if (!userId || !baseTeam) return;
+    const name = String(view.querySelector("[data-season-admin-team-name]")?.value ?? "").trim() || baseTeam.title;
+    try {
+      replaceSeasonData(await apiRequest("/api/season/admin/create-team", {
+        method: "POST",
+        body: JSON.stringify({
+          userId,
+          name,
+          baseTeamSlug,
+          roster: makeSeasonStarterRoster(baseTeam, name),
+        }),
+      }));
+      state.myTeams.loaded = false;
+      renderSeason(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  view.querySelector("[data-season-generate-round]")?.addEventListener("click", async () => {
+    try {
+      replaceSeasonData(await apiRequest("/api/season/admin/rounds/generate", {
+        method: "POST",
+        body: "{}",
+      }));
+      renderSeason(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  view.querySelector("[data-season-create-round]")?.addEventListener("click", async () => {
+    try {
+      replaceSeasonData(await apiRequest("/api/season/admin/rounds", {
+        method: "POST",
+        body: "{}",
+      }));
+      renderSeason(false);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  view.querySelectorAll("[data-season-start-round]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/admin/rounds/${button.dataset.seasonStartRound}/start`, {
+          method: "POST",
+          body: "{}",
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+  view.querySelectorAll("[data-season-delete-round]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("Delete this round and all its pairings?")) return;
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/admin/rounds/${button.dataset.seasonDeleteRound}`, {
+          method: "DELETE",
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+  view.querySelectorAll("[data-season-add-pairing]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/admin/rounds/${button.dataset.seasonAddPairing}/pairings`, {
+          method: "POST",
+          body: JSON.stringify({ homeEntryId: "", awayEntryId: "" }),
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+  view.querySelectorAll("[data-save-fixture]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const row = button.closest("[data-fixture-row]");
+      const homeTouchdowns = row?.querySelector("[data-fixture-home-td]")?.value ?? "";
+      const awayTouchdowns = row?.querySelector("[data-fixture-away-td]")?.value ?? "";
+      if (homeTouchdowns === "" || awayTouchdowns === "") {
+        alert("Enter both touchdown values.");
+        return;
+      }
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/fixture/${button.dataset.saveFixture}`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            homeTouchdowns,
+            awayTouchdowns,
+            homeOpponentUnable: row?.querySelector("[data-fixture-home-unable]")?.checked ?? false,
+            awayOpponentUnable: row?.querySelector("[data-fixture-away-unable]")?.checked ?? false,
+          }),
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+  view.querySelectorAll("[data-save-season-pairing]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const row = button.closest("[data-pairing-row]");
+      const homeEntry = row?.querySelector("[data-home-entry]");
+      const awayEntry = row?.querySelector("[data-away-entry]");
+      const payload = {
+        resultType: row?.querySelector("[data-result-type]")?.value ?? "played",
+        homeTouchdowns: row?.querySelector("[data-home-td]")?.value ?? "",
+        awayTouchdowns: row?.querySelector("[data-away-td]")?.value ?? "",
+        homeOpponentUnable: row?.querySelector("[data-home-unable]")?.checked ?? false,
+        awayOpponentUnable: row?.querySelector("[data-away-unable]")?.checked ?? false,
+      };
+      if (homeEntry && !homeEntry.disabled) payload.homeEntryId = homeEntry.value;
+      if (awayEntry && !awayEntry.disabled) payload.awayEntryId = awayEntry.value;
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/admin/pairings/${button.dataset.saveSeasonPairing}`, {
+          method: "PATCH",
+          body: JSON.stringify(payload),
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+  view.querySelectorAll("[data-delete-season-pairing]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("Delete this pairing?")) return;
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/admin/pairings/${button.dataset.deleteSeasonPairing}`, {
+          method: "DELETE",
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+
+  view.querySelectorAll("[data-season-remove-entry]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("Remove this team from the season?")) return;
+      try {
+        replaceSeasonData(await apiRequest(`/api/season/admin/entries/${button.dataset.seasonRemoveEntry}`, {
+          method: "DELETE",
+        }));
+        renderSeason(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  });
+}
+
+async function renderSavedRoster(teamId, refresh = true, options = {}) {
+  const isAdminEdit = Boolean(options.adminOwnerId);
+  setActiveNav(isAdminEdit ? "administration" : "my-teams");
   setViewSection("teams");
   if (refresh) {
     view.innerHTML = `
-      ${renderHeader("My Teams", "Saved teams from your profile.")}
+      ${renderHeader(isAdminEdit ? "Administration" : "My Teams", isAdminEdit ? "Editing saved team." : "Saved teams from your profile.")}
       <div class="loading">Loading team...</div>
     `;
   }
-  await loadMyTeams(refresh);
   if (!state.auth.currentUser) {
     view.innerHTML = `
-      ${renderHeader("My Teams", "Saved teams from your profile.")}
+      ${renderHeader(isAdminEdit ? "Administration" : "My Teams", isAdminEdit ? "Editing saved team." : "Saved teams from your profile.")}
       <div class="empty-state">Log in to save and edit your teams.</div>
     `;
     return;
   }
 
-  const savedTeam = state.myTeams.items.find((item) => item.id === teamId);
+  let savedTeam = null;
+  let owner = state.auth.currentUser;
+  if (isAdminEdit) {
+    if (!state.auth.currentUser.isAdmin) {
+      view.innerHTML = `
+        ${renderHeader("Administration", "Editing saved team.", `<a class="primary-button" href="#/administration">Back</a>`)}
+        <div class="empty-state">Admin access required.</div>
+      `;
+      return;
+    }
+    state.admin.editingTeams ??= new Map();
+    savedTeam = !refresh ? state.admin.editingTeams.get(teamId) : null;
+    owner = savedTeam?._owner ?? owner;
+    if (!savedTeam) {
+      try {
+        const payload = await apiRequest(`/api/admin/teams/${encodeURIComponent(teamId)}`);
+        savedTeam = payload.team;
+        owner = payload.owner;
+        savedTeam._saveEndpoint = `/api/admin/teams/${encodeURIComponent(teamId)}`;
+        savedTeam._owner = owner;
+        state.admin.editingTeams.set(teamId, savedTeam);
+      } catch (error) {
+        view.innerHTML = `
+          ${renderHeader("Administration", "Editing saved team.", `<a class="primary-button" href="#/administration/users/${encodeURIComponent(options.adminOwnerId)}">Back</a>`)}
+          <div class="empty-state">${escapeHtml(error.message)}</div>
+        `;
+        return;
+      }
+    }
+  } else {
+    await loadMyTeams(refresh);
+    savedTeam = state.myTeams.items.find((item) => item.id === teamId);
+  }
+
   if (!savedTeam) {
     view.innerHTML = `
-      ${renderHeader("My Teams", "Saved teams from your profile.")}
+      ${renderHeader(isAdminEdit ? "Administration" : "My Teams", isAdminEdit ? "Editing saved team." : "Saved teams from your profile.")}
       <div class="empty-state">Saved team not found.</div>
     `;
     return;
@@ -2050,13 +3602,14 @@ async function renderSavedRoster(teamId, refresh = true) {
   ensureDraftPlayers(team, draft);
   const costs = calculateRosterCosts(team, draft);
   const warnings = rosterWarnings(team, draft, costs);
+  const backUrl = isAdminEdit ? `#/administration/users/${encodeURIComponent(owner?.id || options.adminOwnerId)}` : "#/my-teams";
+  const titlePrefix = isAdminEdit ? `Editing "${draft.teamName || savedTeam.name || team.title}"` : `Team "${draft.teamName || savedTeam.name || team.title}"`;
 
   view.innerHTML = `
-    ${renderHeader(`Team "${draft.teamName || savedTeam.name || team.title}"`, `${team.title} roster`, `<a class="primary-button" href="#/my-teams">Back</a>`)}
-    <div class="saved-roster-top-grid">
-      ${renderSavedRosterSummary(savedTeam, team, draft, costs, warnings)}
-      ${renderSavedRosterSettings(team, draft, costs, teams)}
-    </div>
+    ${renderHeader(titlePrefix, `${team.title} roster${isAdminEdit && owner ? ` · ${owner.login}` : ""}`, `<a class="primary-button" href="${backUrl}">Back</a>`)}
+    ${renderSavedRosterIdentity(team, draft, teams)}
+    ${renderSavedRosterSummary(savedTeam, team, draft, costs, warnings)}
+    ${renderSavedRosterPurchases(draft)}
     <div class="builder-layout builder-layout-main">
       <section class="builder-panel">
         <section class="builder-selected">
@@ -2071,19 +3624,15 @@ async function renderSavedRoster(teamId, refresh = true) {
       </section>
     </div>
   `;
-  wireSavedRoster(savedTeam, team, draft);
+  wireSavedRoster(savedTeam, team, draft, {
+    rerender: () => renderSavedRoster(teamId, false, options),
+  });
 }
 
 function renderSavedRosterSummary(savedTeam, team, draft, costs, warnings) {
   const autosave = autosaveStatusFor(savedTeam.id);
   return `
-    <aside class="builder-summary saved-roster-summary-panel side-panel">
-      ${draft.logoData ? `
-        <div class="summary-logo-block">
-          <img src="${escapeHtml(draft.logoData)}" alt="">
-          <button class="filter-button compact-action" type="button" data-roster-remove-logo>Remove logo</button>
-        </div>
-      ` : ""}
+    <aside class="builder-summary builder-summary-horizontal saved-roster-summary-panel side-panel">
       <div class="summary-title-block">
         <h3>Roster Summary</h3>
         <p class="autosave-status" data-autosave-status data-status="${escapeHtml(autosave.status)}">${escapeHtml(autosave.message)}</p>
@@ -2112,9 +3661,9 @@ function renderSavedRosterSummary(savedTeam, team, draft, costs, warnings) {
   `;
 }
 
-function renderSavedRosterSettings(team, draft, costs, teams) {
+function renderSavedRosterIdentity(team, draft, teams) {
   return `
-    <section class="roster-settings-panel side-panel">
+    <section class="builder-setup-panel roster-identity-panel side-panel">
       <div class="builder-form saved-roster-form">
         <label class="filter-field">
           <span>Team</span>
@@ -2130,14 +3679,33 @@ function renderSavedRosterSettings(team, draft, costs, teams) {
           <span>Logo, max 2 MB</span>
           <input type="file" accept="image/*" data-roster-logo>
         </label>
-        <label class="filter-field">
-          <span>Total Cost</span>
-          <input type="text" value="${costs.total}k" readonly>
-        </label>
+      </div>
+      ${draft.logoData ? `
+        <div class="builder-logo-inline roster-logo-inline">
+          <img class="builder-logo-preview" src="${escapeHtml(draft.logoData)}" alt="">
+          <button class="filter-button compact-action" type="button" data-roster-remove-logo>Remove logo</button>
+        </div>
+      ` : ""}
+      ${renderTeamRuleAccess(team, draft, "roster")}
+    </section>
+  `;
+}
+
+function renderSavedRosterPurchases(draft) {
+  return `
+    <section class="roster-controls-panel side-panel">
+      <h2>Purchases</h2>
+      <div class="builder-form roster-money-form">
         <label class="filter-field">
           <span>Treasury, k</span>
           <input type="number" step="10" value="${countToNumber(draft.treasury)}" data-roster-treasury>
         </label>
+        <label class="filter-field">
+          <span>Coach's Safe, k</span>
+          <input type="number" step="10" value="${countToNumber(draft.coachesSafe)}" data-roster-coaches-safe>
+        </label>
+      </div>
+      <div class="builder-tracker-list roster-tracker-list" aria-label="Roster purchase trackers">
         <label class="filter-field">
           <span>Starting rerolls</span>
           <div class="inline-stepper-control">
@@ -2154,13 +3722,10 @@ function renderSavedRosterSettings(team, draft, costs, teams) {
             <button class="filter-button" type="button" data-roster-team-reroll="1" ${countToNumber(draft.teamRerolls) >= builderStaffMaximums.teamRerolls ? "disabled" : ""}>+</button>
           </div>
         </label>
-      </div>
-      <div class="builder-addons compact-addons">
         ${renderRosterStaffControl("dedicatedFans", "Dedicated Fans", draft.dedicatedFans)}
         ${renderRosterStaffControl("assistantCoaches", "Assistant Coaches", draft.assistantCoaches)}
         ${renderRosterStaffControl("cheerleaders", "Cheerleaders", draft.cheerleaders)}
       </div>
-      ${renderTeamRuleAccess(team, draft, "roster")}
     </section>
   `;
 }
@@ -2338,13 +3903,17 @@ function renderRosterStepper(name, value, min, max, disabled = false) {
   `;
 }
 
-function wireSavedRoster(savedTeam, team, draft) {
+function wireSavedRoster(savedTeam, team, draft, options = {}) {
   const autosave = () => scheduleSavedRosterAutosave(savedTeam.id);
   const rerender = () => {
     syncRosterCountsFromPlayers(draft);
     updateSavedRosterFields(savedTeam, draft);
     autosave();
-    renderSavedRoster(savedTeam.id, false);
+    if (options.rerender) {
+      options.rerender();
+    } else {
+      renderSavedRoster(savedTeam.id, false);
+    }
   };
 
   view.querySelector("[data-roster-team]")?.addEventListener("change", (event) => {
@@ -2367,6 +3936,11 @@ function wireSavedRoster(savedTeam, team, draft) {
     updateSavedRosterFields(savedTeam, draft);
     const treasuryDisplay = view.querySelector("[data-treasury-display]");
     if (treasuryDisplay) treasuryDisplay.textContent = `${countToNumber(draft.treasury)}k`;
+    autosave();
+  });
+  view.querySelector("[data-roster-coaches-safe]")?.addEventListener("input", (event) => {
+    draft.coachesSafe = countToNumber(event.currentTarget.value);
+    updateSavedRosterFields(savedTeam, draft);
     autosave();
   });
   view.querySelector("[data-roster-league]")?.addEventListener("change", (event) => {
@@ -2611,7 +4185,8 @@ function scheduleSavedRosterAutosave(teamId) {
 async function runSavedRosterAutosave(teamId, revision) {
   const current = autosaveStatusFor(teamId);
   if (current.revision !== revision) return;
-  const savedTeam = state.myTeams.items.find((item) => item.id === teamId);
+  const savedTeam = state.myTeams.items.find((item) => item.id === teamId)
+    ?? state.admin.editingTeams?.get(teamId);
   if (!savedTeam) return;
   const draft = normalizeSavedRoster(savedTeam);
   const team = state.data.teams.find((item) => item.slug === draft.teamSlug) ?? state.data.teams[0];
@@ -2630,7 +4205,7 @@ async function saveSavedRoster(savedTeam, team, draft, options = {}) {
     roster: draft,
   };
   try {
-    const result = await apiRequest(`/api/teams/${savedTeam.id}`, {
+    const result = await apiRequest(savedTeam._saveEndpoint || `/api/teams/${savedTeam.id}`, {
       method: "PATCH",
       body: JSON.stringify(request),
     });
@@ -2641,6 +4216,9 @@ async function saveSavedRoster(savedTeam, team, draft, options = {}) {
       Object.assign(savedTeam, result.team);
       if (index >= 0) {
         Object.assign(state.myTeams.items[index], savedTeam);
+      }
+      if (state.admin.editingTeams?.has(savedTeam.id)) {
+        state.admin.editingTeams.set(savedTeam.id, savedTeam);
       }
     }
     if (options.quiet) {
@@ -2690,47 +4268,11 @@ function renderBuilder() {
 
   view.innerHTML = `
     ${renderHeader("Team Builder", "Build a 600k starting roster by clicking available players.")}
+    ${renderBuilderIdentity(team, teams)}
     ${renderBuilderSummary(team, costs, warnings)}
+    ${renderBuilderPurchases(costs)}
     <div class="builder-layout builder-layout-main">
       <section class="builder-panel">
-        <div class="builder-form">
-          <label class="filter-field">
-            <span>Team</span>
-            <select data-builder-team>
-              ${teams.map((item) => renderOption(item.slug, item.title, team.slug)).join("")}
-            </select>
-          </label>
-          <label class="filter-field">
-            <span>Team Name</span>
-            <input type="text" value="${escapeHtml(state.builder.teamName || team.title)}" data-builder-name>
-          </label>
-          <label class="filter-field">
-            <span>Logo, max 2 MB</span>
-            <input type="file" accept="image/*" data-builder-logo>
-          </label>
-          <label class="filter-field">
-            <span>Starting rerolls</span>
-            <div class="inline-stepper-control">
-              <button class="filter-button" type="button" data-builder-reroll="-1" ${state.builder.startingRerolls <= 0 ? "disabled" : ""}>-</button>
-              <strong>${state.builder.startingRerolls}</strong>
-              <button class="filter-button" type="button" data-builder-reroll="1" ${costs.total + builderStaffCosts.startingRerolls > 600 ? "disabled" : ""}>+</button>
-            </div>
-          </label>
-        </div>
-        ${state.builder.logoData ? `
-          <div class="builder-logo-inline">
-            <img class="builder-logo-preview" src="${escapeHtml(state.builder.logoData)}" alt="">
-            <button class="filter-button compact-action" type="button" data-builder-remove-logo>Remove logo</button>
-          </div>
-        ` : ""}
-
-        <div class="builder-addons compact-addons">
-          ${renderBuilderStaffControl("dedicatedFans", "Dedicated Fans", state.builder.dedicatedFans, costs.total + builderStaffCosts.dedicatedFans > 600)}
-          ${renderBuilderStaffControl("assistantCoaches", "Assistant Coaches", state.builder.assistantCoaches, costs.total + builderStaffCosts.assistantCoaches > 600)}
-          ${renderBuilderStaffControl("cheerleaders", "Cheerleaders", state.builder.cheerleaders, costs.total + builderStaffCosts.cheerleaders > 600)}
-        </div>
-        ${renderTeamRuleAccess(team, state.builder, "builder")}
-
         <section class="builder-pool">
           <h2>Available players</h2>
           ${renderAvailablePlayerTable(team, state.builder, true)}
@@ -2744,6 +4286,60 @@ function renderBuilder() {
     </div>
   `;
   wireBuilder(team);
+}
+
+function renderBuilderIdentity(team, teams) {
+  return `
+    <section class="builder-setup-panel roster-identity-panel side-panel">
+      <div class="builder-form builder-identity-form">
+        <label class="filter-field">
+          <span>Team</span>
+          <select data-builder-team>
+            ${teams.map((item) => renderOption(item.slug, item.title, team.slug)).join("")}
+          </select>
+        </label>
+        <label class="filter-field">
+          <span>Team Name</span>
+          <input type="text" value="${escapeHtml(state.builder.teamName || team.title)}" data-builder-name>
+        </label>
+        <label class="filter-field">
+          <span>Logo, max 2 MB</span>
+          <input type="file" accept="image/*" data-builder-logo>
+        </label>
+      </div>
+      ${state.builder.logoData ? `
+        <div class="builder-logo-inline roster-logo-inline">
+          <img class="builder-logo-preview" src="${escapeHtml(state.builder.logoData)}" alt="">
+          <button class="filter-button compact-action" type="button" data-builder-remove-logo>Remove logo</button>
+        </div>
+      ` : ""}
+      ${renderTeamRuleAccess(team, state.builder, "builder")}
+    </section>
+  `;
+}
+
+function renderBuilderPurchases(costs) {
+  return `
+    <section class="roster-controls-panel side-panel">
+      <h2>Purchases</h2>
+      <div class="builder-tracker-list roster-tracker-list" aria-label="Starting roster trackers">
+        <div class="builder-addon compact-staff-control builder-tracker-control">
+          <div>
+            <strong>Starting rerolls</strong>
+            <span>60k each</span>
+          </div>
+          <div class="inline-stepper-control">
+            <button class="filter-button" type="button" data-builder-reroll="-1" ${state.builder.startingRerolls <= 0 ? "disabled" : ""}>-</button>
+            <strong>${state.builder.startingRerolls}</strong>
+            <button class="filter-button" type="button" data-builder-reroll="1" ${costs.total + builderStaffCosts.startingRerolls > 600 ? "disabled" : ""}>+</button>
+          </div>
+        </div>
+        ${renderBuilderStaffControl("dedicatedFans", "Dedicated Fans", state.builder.dedicatedFans, costs.total + builderStaffCosts.dedicatedFans > 600)}
+        ${renderBuilderStaffControl("assistantCoaches", "Assistant Coaches", state.builder.assistantCoaches, costs.total + builderStaffCosts.assistantCoaches > 600)}
+        ${renderBuilderStaffControl("cheerleaders", "Cheerleaders", state.builder.cheerleaders, costs.total + builderStaffCosts.cheerleaders > 600)}
+      </div>
+    </section>
+  `;
 }
 
 function renderBuilderSummary(team, costs, warnings) {
@@ -2774,8 +4370,9 @@ function renderBuilderSummary(team, costs, warnings) {
 
 function renderAvailablePlayerTable(team, draft, enforceBudget = false) {
   const costs = calculateRosterCosts(team, draft, { includeDedicatedFans: enforceBudget });
+  const rows = rowsForTeam(team);
   return `
-    <div class="table-scroll builder-table-scroll">
+    <div class="table-scroll builder-table-scroll builder-available-table-wrap">
       <table class="builder-table compact-roster-table">
         <thead>
           <tr>
@@ -2795,7 +4392,7 @@ function renderAvailablePlayerTable(team, draft, enforceBudget = false) {
           </tr>
         </thead>
         <tbody>
-          ${rowsForTeam(team).map((row, rowIndex) => {
+          ${rows.map((row, rowIndex) => {
     const baseCost = costToNumber(rowCost(row));
     const positionFull = !canAddRowToDraft(row, rowIndex, draft, true);
     const budgetBlocked = enforceBudget && costs.total + baseCost > 600;
@@ -2820,6 +4417,36 @@ function renderAvailablePlayerTable(team, draft, enforceBudget = false) {
         </tbody>
       </table>
     </div>
+    <div class="builder-mobile-card-list available-player-mobile-list">
+      ${rows.map((row, rowIndex) => renderAvailablePlayerCard(row, rowIndex, draft, costs, enforceBudget)).join("")}
+    </div>
+  `;
+}
+
+function renderAvailablePlayerCard(row, rowIndex, draft, costs, enforceBudget = false) {
+  const baseCost = costToNumber(rowCost(row));
+  const positionFull = !canAddRowToDraft(row, rowIndex, draft, true);
+  const budgetBlocked = enforceBudget && costs.total + baseCost > 600;
+  const disabled = positionFull || budgetBlocked;
+  const current = rowCountInPlayers(draft, rowIndex);
+  return `
+    <article class="available-player-card ${disabled ? "disabled" : ""}">
+      <header class="available-player-head">
+        <div>
+          <strong>${escapeHtml(row.position)}</strong>
+          <em>${escapeHtml(row.qty || "-")} · ${escapeHtml(rowCost(row) || "-")}</em>
+        </div>
+        <button class="primary-button add-player-button" type="button" data-add-row="${rowIndex}" ${disabled ? "disabled" : ""}>+</button>
+      </header>
+      ${renderRosterStatGrid(row)}
+      <section class="mobile-player-section">
+        <h3>Skills</h3>
+        <div class="mobile-player-pills">${renderRosterLinks(row.skills)}</div>
+      </section>
+      <footer class="available-player-foot">
+        Primary ${renderAccessCell(row.primary)} · Secondary ${renderAccessCell(row.secondary)} · Selected ${current}/${rosterMax(row.qty)}${budgetBlocked ? ` · over budget` : ""}
+      </footer>
+    </article>
   `;
 }
 
@@ -2827,7 +4454,7 @@ function renderBuilderStaffControl(key, title, value, plusBlocked = false) {
   const max = builderStaffMaximums[key] ?? 6;
   const current = countToNumber(value);
   return `
-    <div class="builder-addon compact-staff-control">
+    <div class="builder-addon compact-staff-control builder-tracker-control">
       <div>
         <strong>${escapeHtml(title)}</strong>
         <span>10k each</span>
@@ -2891,7 +4518,7 @@ function renderBuilderPlayerList(team, draft) {
     return `<div class="builder-empty-roster">Click a player above to add them to the roster.</div>`;
   }
   return `
-    <div class="table-scroll builder-table-scroll">
+    <div class="table-scroll builder-table-scroll builder-selected-table-wrap">
       <table class="builder-selected-table compact-roster-table">
         <thead>
           <tr>
@@ -2913,6 +4540,9 @@ function renderBuilderPlayerList(team, draft) {
         </tbody>
       </table>
     </div>
+    <div class="builder-mobile-card-list builder-selected-mobile-list">
+      ${players.map((player, index) => renderBuilderPlayerCard(player, index)).join("")}
+    </div>
   `;
 }
 
@@ -2929,6 +4559,42 @@ function renderBuilderPlayerRow(player, index) {
       <td>${escapeHtml(rowCost(player.row) || "-")}</td>
       <td><button class="filter-button compact-action" type="button" data-remove-player="${escapeHtml(player.id)}">Remove</button></td>
     </tr>
+  `;
+}
+
+function renderBuilderPlayerStatGrid(player) {
+  const value = (stat) => statValueForDisplayByStat(stat, player.row[stat], player.statMods?.[stat] ?? 0);
+  return `
+    <dl class="team-stat-grid">
+      <div><dt>MA</dt><dd>${escapeHtml(value("ma"))}</dd></div>
+      <div><dt>ST</dt><dd>${escapeHtml(value("st"))}</dd></div>
+      <div><dt>AG</dt><dd>${escapeHtml(value("ag"))}</dd></div>
+      <div><dt>PA</dt><dd>${escapeHtml(value("pa"))}</dd></div>
+      <div><dt>AR</dt><dd>${escapeHtml(value("ar"))}</dd></div>
+    </dl>
+  `;
+}
+
+function renderBuilderPlayerCard(player, index) {
+  return `
+    <article class="saved-roster-player-card mobile-roster-player-card builder-selected-player-card">
+      <header>
+        <div class="mobile-player-title">
+          <span>#${index + 1}</span>
+          <input class="table-input" type="text" value="${escapeHtml(player.name || `${player.row.position} ${index + 1}`)}" data-builder-player-name="${escapeHtml(player.id)}">
+          <small>${escapeHtml(player.row.position)} · ${escapeHtml(rowCost(player.row) || "-")}</small>
+        </div>
+        <button class="filter-button compact-action" type="button" data-remove-player="${escapeHtml(player.id)}">Remove</button>
+      </header>
+      <section class="mobile-player-section">
+        <h3>Stats</h3>
+        ${renderBuilderPlayerStatGrid(player)}
+      </section>
+      <section class="mobile-player-section">
+        <h3>Skills</h3>
+        <div class="mobile-player-pills">${renderRosterLinks(player.row.skills)}</div>
+      </section>
+    </article>
   `;
 }
 
@@ -3776,6 +5442,14 @@ function renderRoute() {
   if (route === "builder") return renderBuilder();
   if (route.startsWith("my-teams/")) return renderSavedRoster(route.replace(/^my-teams\//, ""));
   if (route === "my-teams") return renderMyTeams();
+  if (route === "season") return renderSeason();
+  const adminEditMatch = route.match(/^administration\/users\/([^/]+)\/teams\/([^/]+)\/edit$/);
+  if (adminEditMatch) return renderSavedRoster(adminEditMatch[2], true, { adminOwnerId: adminEditMatch[1] });
+  if (route.startsWith("administration/users/")) return renderAdminUserProfile(route.replace(/^administration\/users\//, ""));
+  if (route === "administration") return renderAdministration();
+  const publicTeamMatch = route.match(/^players\/([^/]+)\/teams\/([^/]+)$/);
+  if (publicTeamMatch) return renderPublicTeamProfile(publicTeamMatch[1], publicTeamMatch[2]);
+  if (route.startsWith("players/")) return renderPlayerProfile(route.replace(/^players\//, ""));
   if (route === "legal") return renderLegal();
   const page = findPageBySlug(route);
   if (page) return renderDetail(page);

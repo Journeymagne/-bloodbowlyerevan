@@ -8,4 +8,4 @@
 **Rerolls:** 60K
 **Apothecary:** Apothecary: Available
 **League:** Tier 2
-**Special Rules:** Chaos Clash, Favored of Tzeentch, Architect of Fate
+**Special Rules:** Chaos Clash, Favoured of Tzeentch, Architect of Fate, Explosive Demise

@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Lustrian Superleague
 ---
-
 
 **Name:** Anqi Panqi
 **Availability:** Lustrian Superleague

@@ -1,8 +1,6 @@
 ---
 tags:
-  - Star Player
 ---
-
 
 **Name:** Elven Kingdom League
 **Availability:** -

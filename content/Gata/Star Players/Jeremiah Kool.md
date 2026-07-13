@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
 ---
-
 
 **Name:** Jeremiah Kool
 **Availability:** Elven Kingdom League

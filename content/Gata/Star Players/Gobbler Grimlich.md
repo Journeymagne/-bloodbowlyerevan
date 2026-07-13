@@ -1,12 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Chaos Clash
-  - Underworld Challenge
-  - Spawn
-  - Special
 ---
-
 
 **Name:** Gobbler Grimlich
 **Availability:** Chaos Clash, Underworld Challenge

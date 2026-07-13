@@ -1,8 +1,6 @@
 ---
 tags:
-  - Star Player
 ---
-
 
 **Name:** World's Edge Superleague
 **Availability:** -

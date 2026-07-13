@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Halfling Thimble Cup
 ---
-
 
 **Name:** Rumbelow Sheepskin
 **Availability:** Halfling Thimble Cup

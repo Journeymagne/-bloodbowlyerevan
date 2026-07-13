@@ -1,8 +1,6 @@
 ---
 tags:
-  - Star Player
 ---
-
 
 **Name:** Halfling Thimble Cup
 **Availability:** -

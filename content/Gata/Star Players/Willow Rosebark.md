@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Woodland League
 ---
-
 
 **Name:** Willow Rosebark
 **Availability:** Woodland League

@@ -1,12 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Underworld Challenge
-  - Goblin
-  - Special
 ---
-
 
 **Name:** Scrappa Sorehead
 **Availability:** Badlands Brawl, Underworld Challenge

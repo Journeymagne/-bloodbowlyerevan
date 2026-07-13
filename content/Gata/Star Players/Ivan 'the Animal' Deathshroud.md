@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Ivan 'the Animal' Deathshroud
 **Availability:** Sylvanian Spotlight

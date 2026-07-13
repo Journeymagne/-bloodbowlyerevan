@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Wilhelm Chaney
 **Availability:** Sylvanian Spotlight

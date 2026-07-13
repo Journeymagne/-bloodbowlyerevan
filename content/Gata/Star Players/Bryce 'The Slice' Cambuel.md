@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Bryce 'The Slice' Cambuel
 **Availability:** Sylvanian Spotlight

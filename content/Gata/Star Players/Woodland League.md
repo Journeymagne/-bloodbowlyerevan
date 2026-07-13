@@ -1,8 +1,6 @@
 ---
 tags:
-  - Star Player
 ---
-
 
 **Name:** Woodland League
 **Availability:** -

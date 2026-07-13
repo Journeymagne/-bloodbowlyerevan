@@ -1,12 +1,7 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Underworld Challenge
-  - Troll
   - Big Guy
 ---
-
 
 **Name:** Ripper Bolgrot
 **Availability:** Badlands Brawl, Underworld Challenge

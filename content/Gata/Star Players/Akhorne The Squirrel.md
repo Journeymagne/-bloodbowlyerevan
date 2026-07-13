@@ -1,11 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Any Team
-  - Squirell
-  - Blitzer
 ---
-
 
 **Name:** Akhorne The Squirrel
 **Availability:** Any Team

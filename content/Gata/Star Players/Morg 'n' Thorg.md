@@ -1,11 +1,7 @@
 ---
 tags:
-  - Star Player
-  - Any Team
-  - Ogre
   - Big Guy
 ---
-
 
 **Name:** Morg 'n' Thorg
 **Availability:** Any Team except Sylvanian Spotlight

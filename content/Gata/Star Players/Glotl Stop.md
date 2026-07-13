@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Lustrian Superleague
 ---
-
 
 **Name:** Glotl Stop
 **Availability:** Lustrian Superleague

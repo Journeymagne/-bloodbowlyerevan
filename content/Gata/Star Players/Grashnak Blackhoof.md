@@ -1,11 +1,7 @@
 ---
 tags:
-  - Star Player
-  - Chaos Clash
-  - Minotaur
   - Big Guy
 ---
-
 
 **Name:** Grashnak Blackhoof
 **Availability:** Chaos Clash

@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Halfling Thimble Cup
-  - Old World Classic
 ---
-
 
 **Name:** Cindy Piewhistle
 **Availability:** Halfling Thimble Cup, Old World Classic

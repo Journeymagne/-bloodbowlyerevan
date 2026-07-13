@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Woodland League
 ---
-
 
 **Name:** Deeproot Strongbranch
 **Availability:** Woodland League
