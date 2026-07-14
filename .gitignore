@@ -5,3 +5,13 @@ server-run*.log
 *.log
 .github-upload/
 _upload_git/
+
+# Per-locale build output regenerates on every `npm run build` and is huge
+# (~20k lines each); public/data.json (the pre-existing single-locale
+# artifact) stays tracked per this repo's existing convention, but tracking
+# these two as well would make every content-translation commit's diff
+# unreviewable.
+public/data.en.json
+public/data.ru.json
+dist/public/data.en.json
+dist/public/data.ru.json
