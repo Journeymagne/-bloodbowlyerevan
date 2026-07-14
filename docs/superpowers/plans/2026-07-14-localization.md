@@ -1169,6 +1169,19 @@ anything else won't be recognized by the parser:
 into structured fields (pure display prose) — translate them freely, e.g.
 `**Имя:**` / `**Персональная способность:**`.
 
+## Inducement names used as UI labels elsewhere
+
+**Ruling from Task 6:** some inducement names double as roster-builder staff
+purchase labels (e.g. "Assistant Coaches" and "Cheerleaders" are both named
+inducements with their own page under `Inducements/`, *and* labels on the
+Team Builder / Saved Roster staff-purchase controls). Wherever a UI label is
+the same string as a named inducement, it stays in English in both locales,
+everywhere it appears — not just on the inducement's own content page. Don't
+translate it as generic UI copy just because it also functions as a button
+label. A UI label that does *not* match a named inducement (e.g. "Dedicated
+Fans," which has no corresponding `Inducements/` page) is ordinary UI copy
+and gets translated normally.
+
 ## Filenames and folder names
 
 `content/Gata-ru/` must mirror `content/Gata/`'s file and folder names
