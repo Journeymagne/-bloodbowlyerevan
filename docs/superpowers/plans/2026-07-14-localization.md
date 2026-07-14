@@ -1057,56 +1057,43 @@ git commit -m "Translate My Teams and saved roster view chrome"
 ### Task 6: Translate Team Builder views
 
 **Files:**
-- Modify: `src/app.js` — functions `renderBuilder` (2674), `renderBuilderSummary` (2749), `renderAvailablePlayerTable` (2775), `renderBuilderStaffControl` (2826), `renderPlainSkillPills` (2844), `renderAccessCell` (2849), `renderRosterStatCells` (2854), `renderPlayerStatCells` (2860), `renderEditablePlayerStatCells` (2869), `renderBuilderPlayerList` (2888), `renderBuilderPlayerRow` (2919), `renderSavedPlayerList` (2935), `renderSavedNewPlayerTable` (2975), `renderSavedPlayerRow` (3021), `renderSavedPlayerCard` (3078), `renderPlayerSppControls` (3150), `renderPlayerLevelCell` (3165), `renderPlayerAdvancementControls` (3177), `renderEditableStatLine` (3211), `renderAddon` (3233), `renderBuilderRow` (3246), `renderBuilderSummaryRoster` (3359), `renderEditableRosterPlayers` (3363), `renderEditablePlayer` (3387), `renderStepper` (3434)
-- Modify: two "Copy Roster"/"Saved" button handlers around `src/app.js:2652-2670` and `3703-3732`
+- Modify: `src/app.js` — functions `renderBuilder` (2674), `renderBuilderSummary` (2749), `renderAvailablePlayerTable` (2775), `renderBuilderStaffControl` (2826), `renderPlainSkillPills` (2844), `renderAccessCell` (2849), `renderRosterStatCells` (2854), `renderPlayerStatCells` (2860), `renderEditablePlayerStatCells` (2869), `renderBuilderPlayerList` (2888), `renderBuilderPlayerRow` (2919), `renderEditableStatLine` (3211), `renderAddon` (3233), `renderBuilderRow` (3246), `renderBuilderSummaryRoster` (3359), `renderEditableRosterPlayers` (3363), `renderEditablePlayer` (3387), `renderStepper` (3434)
+- Modify: the Team Builder's own "Copy Roster"/"Saved" button handler (its `copyRoster`/`saveTeam` wiring — do not touch the Saved Roster page's separate, already-translated `copySavedRoster`/`saveSavedRoster` pair)
 - Modify: `src/i18n/en.json`, `src/i18n/ru.json`
 
 **Interfaces:**
 - Consumes: `t(key)` from Task 2.
-- Produces: nothing new — leaf task. This is the largest sweep (the builder is the most UI-string-dense part of the app), so budget the most review time here.
+- Produces: nothing new — leaf task.
 
-Same ground rule as Tasks 4 and 5. This is the biggest function list in the app — column headers like "Skills" (`src/app.js:2789`, `2906`, `2953`, `2988`, `3101`) are UI table headers, translate them; the actual skill names inside those columns come from content data, don't touch them.
+**Correction (found during Task 5):** this plan originally also listed `renderSavedPlayerList`, `renderSavedNewPlayerTable`, `renderSavedPlayerRow`, `renderSavedPlayerCard`, `renderPlayerSppControls`, `renderPlayerLevelCell`, `renderPlayerAdvancementControls` here. Those functions render the Saved Roster page's player table (not the Team Builder's), so Task 5 already translated them — they've been removed from this task's file list above. Task 6 should **not** re-touch them; reuse their existing keys (`roster.sppEarned`, `roster.sppAvailable`, `roster.next`, `roster.nameHeader`, `roster.positionHeader`, `roster.skillsLabel`, `roster.levelHeader`, `roster.advancementHeader`, etc. — check `src/i18n/en.json` for the full set Task 5 added) wherever the Team Builder's own analogous functions (`renderBuilderPlayerList`/`renderBuilderPlayerRow`/`renderAvailablePlayerTable`/etc.) use the identical literal string. Task 5 also already left the Team Builder's own `copyRoster`/`saveTeam` "Copied"/"Saved" transient-label pair untouched specifically for this task to handle, and recommends reusing `roster.copyRoster`/`roster.copiedStatus`/`roster.savedStatus`/`roster.saveChanges` for it rather than inventing new keys — those keys already exist from Task 5, confirm the literal strings match before reusing.
 
-- [ ] **Step 1: Worked example — convert the transient button-label swap around `src/app.js:2652-2670`**
+Same ground rule as Tasks 4 and 5. Column headers like "Skills" that appear in the Team Builder's own tables are UI labels, translate them (reusing Task 5's `roster.skillsLabel` etc. where the literal matches); the actual skill names inside those columns come from content data, don't touch them.
 
-Find:
+- [ ] **Step 1: Worked example — convert the Team Builder's own transient button-label swap**
+
+**Correction (found during Task 5):** the plan originally pointed this step at `src/app.js:2652-2670`. That location turned out to be the Saved Roster page's own save/copy handlers (`saveSavedRoster`/`copySavedRoster`), which Task 5 already translated using keys `roster.saveChanges`, `roster.savedStatus`, `roster.copyRoster`, `roster.copiedStatus` — do not re-touch that code or re-invent keys for it. This step is about the **Team Builder's own**, separate `copyRoster`/`saveTeam` functions (Task 5's report locates them around `src/app.js:3799-3841`, though the exact line will have shifted further by the time you start — find them by function name, not line number).
+
+Find, in `saveTeam` (or equivalent — search for the literal strings if the function has been renamed):
 ```js
         button.textContent = "Saved";
         setTimeout(() => { button.textContent = "Save Changes"; }, 1200);
 ```
-and, further down:
+and, in `copyRoster`:
 ```js
     button.textContent = "Copied";
     setTimeout(() => { button.textContent = "Copy Roster"; }, 1200);
 ```
-Replace both occurrences (there are two near-identical pairs, at `src/app.js:2652-2653`/`2669-2670` and again at `3703-3704`/`3732`) with:
+Replace with:
 ```js
-        button.textContent = t("builder.saved");
-        setTimeout(() => { button.textContent = t("builder.saveChanges"); }, 1200);
+        button.textContent = t("roster.savedStatus");
+        setTimeout(() => { button.textContent = t("roster.saveChanges"); }, 1200);
 ```
 and:
 ```js
-    button.textContent = t("builder.copied");
-    setTimeout(() => { button.textContent = t("builder.copyRoster"); }, 1200);
+    button.textContent = t("roster.copiedStatus");
+    setTimeout(() => { button.textContent = t("roster.copyRoster"); }, 1200);
 ```
-Add to `src/i18n/en.json`:
-```json
-{
-  "builder.saved": "Saved",
-  "builder.saveChanges": "Save Changes",
-  "builder.copied": "Copied",
-  "builder.copyRoster": "Copy Roster"
-}
-```
-Add to `src/i18n/ru.json`:
-```json
-{
-  "builder.saved": "Сохранено",
-  "builder.saveChanges": "Сохранить изменения",
-  "builder.copied": "Скопировано",
-  "builder.copyRoster": "Скопировать состав"
-}
-```
+**Reuse Task 5's existing keys** (`roster.savedStatus`, `roster.saveChanges`, `roster.copiedStatus`, `roster.copyRoster`) — do not add new `builder.*` keys for this; confirm first that the literal English strings in the Team Builder's version match Task 5's Saved Roster version exactly (both should read "Saved"/"Save Changes"/"Copied"/"Copy Roster") before reusing. If any literal differs even slightly, flag it and ask rather than silently reusing a mismatched key.
 
 - [ ] **Step 2: Apply the same pattern to every function in this task's scope**
 
