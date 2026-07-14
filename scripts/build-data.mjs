@@ -635,12 +635,32 @@ function splitListCell(value) {
     .filter(Boolean);
 }
 
-async function buildLocaleData(sourceDir) {
-  const files = await walk(sourceDir);
+async function pathExists(candidate) {
+  try {
+    await fs.access(candidate);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function resolveLocaleFiles(primaryDir, overrideDir) {
+  const primaryFiles = await walk(primaryDir);
+  const overrideDirExists = await pathExists(overrideDir);
+  const resolved = [];
+  for (const file of primaryFiles) {
+    const relativePath = path.relative(primaryDir, file);
+    const overrideFile = path.join(overrideDir, relativePath);
+    const useOverride = overrideDirExists && await pathExists(overrideFile);
+    resolved.push({ file: useOverride ? overrideFile : file, relativePath });
+  }
+  return resolved;
+}
+
+async function buildLocaleData(resolvedFiles) {
   const rawPages = [];
 
-  for (const file of files) {
-    const relativePath = path.relative(sourceDir, file);
+  for (const { file, relativePath } of resolvedFiles) {
     const title = path.basename(file, ".md");
     const raw = await fs.readFile(file, "utf8");
     const { body, tags } = parseFrontmatter(raw);
@@ -760,21 +780,21 @@ async function buildLocaleData(sourceDir) {
 
 await fs.mkdir(publicDir, { recursive: true });
 
-const enData = await buildLocaleData(vaultDir);
+const enFiles = (await walk(vaultDir)).map((file) => ({ file, relativePath: path.relative(vaultDir, file) }));
+const enData = await buildLocaleData(enFiles);
 await fs.writeFile(path.join(publicDir, "data.en.json"), JSON.stringify(enData, null, 2), "utf8");
 await fs.writeFile(path.join(publicDir, "data.json"), JSON.stringify(enData, null, 2), "utf8");
 console.log(`Built ${enData.counts.pages} pages into public/data.en.json (+ data.json alias)`);
 
-let ruSourceDir = ruVaultDir;
-try {
-  await fs.access(ruVaultDir);
-} catch {
-  console.warn(`content/${primaryContentDir}-ru not found yet; using ${primaryContentDir} content for public/data.ru.json`);
-  ruSourceDir = vaultDir;
+const ruVaultExists = await pathExists(ruVaultDir);
+if (!ruVaultExists) {
+  console.warn(`content/${primaryContentDir}-ru not found yet; every page will fall back to ${primaryContentDir} content for public/data.ru.json`);
 }
-const ruData = await buildLocaleData(ruSourceDir);
+const ruFiles = await resolveLocaleFiles(vaultDir, ruVaultDir);
+const ruData = await buildLocaleData(ruFiles);
 await fs.writeFile(path.join(publicDir, "data.ru.json"), JSON.stringify(ruData, null, 2), "utf8");
-console.log(`Built ${ruData.counts.pages} pages into public/data.ru.json`);
+const ruTranslatedCount = ruFiles.filter(({ file }) => file.startsWith(ruVaultDir + path.sep)).length;
+console.log(`Built ${ruData.counts.pages} pages into public/data.ru.json (${ruTranslatedCount} translated, ${ruData.counts.pages - ruTranslatedCount} falling back to ${primaryContentDir})`);
 if (enData.unresolvedLinks.length) {
   console.log(`Unresolved links: ${enData.unresolvedLinks.join(", ")}`);
 }
