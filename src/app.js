@@ -202,13 +202,26 @@ function applyLocaleChrome() {
 
 async function switchLocale(nextLocale) {
   if (!supportedLocales.has(nextLocale) || nextLocale === state.locale) return;
+  const previousLocale = state.locale;
   state.locale = nextLocale;
   try {
     localStorage.setItem(localeStorageKey, nextLocale);
   } catch (_error) {
     // Locale persistence is optional; the switch still works for this session.
   }
-  state.data = await loadLocaleData(nextLocale);
+  try {
+    state.data = await loadLocaleData(nextLocale);
+  } catch (error) {
+    console.error(error);
+    state.locale = previousLocale;
+    try {
+      localStorage.setItem(localeStorageKey, previousLocale);
+    } catch (_error) {
+      // Locale persistence is optional; the switch still works for this session.
+    }
+    applyLocaleChrome();
+    return;
+  }
   applyLocaleChrome();
   renderRoute();
 }
