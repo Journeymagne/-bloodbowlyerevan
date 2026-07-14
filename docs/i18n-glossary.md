@@ -119,6 +119,15 @@ content task:
   "Inducements," which stays English, because the structural-label table
   above already establishes Russian as the intended rendering for this
   category (`**Special Rules:**` → `**Специальные правила:**`).
+- **"Coach's Safe"** (a named house rule quoted verbatim across multiple
+  files — `Rules/3. Team Management.md`, `Rules/5. Patch Notes.md`, and
+  `General Information/All Gata Changes.md`) stays in English as a heading,
+  the same treatment as a named special rule, even though it isn't one of
+  the 8 rules catalogued in `Special Rules.md`. Its descriptive bullet
+  labels underneath are ordinary prose and are translated: `Deposits` →
+  «Взносы:», `Restrictions` → «Ограничения:», `Usage` → «Использование:» —
+  use these exact three renderings everywhere this section recurs, for
+  consistency across files.
 
 If `content/Gata`'s English source itself contains unrecoverable corruption
 (e.g. a block of text with characters destroyed at the byte level, not just
