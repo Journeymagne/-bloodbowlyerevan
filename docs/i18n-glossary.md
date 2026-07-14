@@ -64,3 +64,36 @@ change" prose, star player special-ability descriptions, and any other
 narrative text. Markdown table structure, `[[wiki-links]]` targets, and
 frontmatter `tags:` values are never translated (tags are filter/category
 keywords, e.g. `Agility`, `Trait`, `Inducement`).
+
+## Judgment calls established during content translation (Task 8+)
+
+The categories above don't cover every recurring term. These calls were made
+during Rules translation and should be applied consistently in every later
+content task:
+
+- **Reroll(s) / Apothecary, used generically in prose** (not as a bold
+  structural label, not as part of a named inducement) → "переброс(ы)" /
+  "апотекарий", consistent with the structural-label translations above.
+  Named inducements built on these words (`Wandering Apothecary`, `Mortuary
+  Assistant`, `Plague Doctor`) stay fully English as inducement names.
+- **"Inducements"** (the generic category noun, not one specific inducement's
+  name) — kept in English throughout, treated as an adopted term rather than
+  translated inconsistently case-by-case.
+- **Drive / Turnover / Touchdown** (generic rules vocabulary, not proper
+  nouns) → transliterated as established RU Blood Bowl fan-community jargon:
+  "дран" / "терновер" / "тачдаун" (lowercase, ordinary Russian nouns).
+  "Tackle Zone" and named actions (Move, Blitz, Pass, Hand-off, Foul, Block)
+  stay in English as capitalized rule-identifiers, same treatment as
+  skill/position names.
+- **"Fan Factor"** stays in English, grouped with the core-stat-shorthand
+  family (TV/SPP/etc.).
+- **Broken export artifacts** (e.g. stray `DOCX`/footnote fragments left over
+  from whatever process originally produced `content/Gata`'s Markdown) are
+  carried forward verbatim, untranslated — they aren't real prose.
+
+If `content/Gata`'s English source itself contains unrecoverable corruption
+(e.g. a block of text with characters destroyed at the byte level, not just
+untranslated), don't fabricate replacement text. Mirror the source's broken
+text byte-for-byte into the RU file and flag it for follow-up outside the
+translation task's scope — that's a pre-existing data-integrity problem, not
+a translation gap.
