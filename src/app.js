@@ -1167,8 +1167,8 @@ function renderHome() {
   view.innerHTML = `
     <section class="league-hero">
       <div class="league-hero-copy">
-        <h1>Gata Blood Bowl League</h1>
-        <p>Teams, star players, skills, traits and league rules in one searchable reference.</p>
+        <h1>${t("home.heroTitle")}</h1>
+        <p>${t("home.heroSubtitle")}</p>
       </div>
       <div class="league-hero-media" aria-hidden="true">
         <img src="assets/brand/gata-league-logo.png" alt="">
@@ -1178,22 +1178,22 @@ function renderHome() {
     <section>
       <div class="page-head">
         <div>
-          <h1>Quick Start</h1>
-          <p>Jump into the most useful league pages, or use search for teams, rules, skills and star players.</p>
+          <h1>${t("home.quickStartTitle")}</h1>
+          <p>${t("home.quickStartSubtitle")}</p>
         </div>
       </div>
       <div class="card-grid quick-grid">
         <a class="card compact" href="#/teams">
-          <h3>Teams</h3>
-          <p>${state.data.counts.teams} rosters with team-building data.</p>
+          <h3>${t("common.teams")}</h3>
+          <p>${state.data.counts.teams} ${t("home.cardTeamsDescription")}</p>
         </a>
         <a class="card compact" href="#/builder">
-          <h3>Team Builder</h3>
-          <p>Build a 600k starting roster by adding individual players.</p>
+          <h3>${t("nav.builder")}</h3>
+          <p>${t("home.cardBuilderDescription")}</p>
         </a>
         <a class="card compact" href="#/star-players">
-          <h3>Star Players</h3>
-          <p>${state.data.counts.starPlayers} stars with costs and availability.</p>
+          <h3>${t("nav.starPlayers")}</h3>
+          <p>${state.data.counts.starPlayers} ${t("home.cardStarPlayersDescription")}</p>
         </a>
         ${quickPages.map(renderSimpleCard).join("")}
       </div>
@@ -1243,14 +1243,33 @@ function renderSection(route) {
   normalizeSkillFilters(route);
   const items = visibleCollection(route);
   const allItems = collectionForRoute(route);
-  const actions = route === "teams" ? `<a class="primary-button" href="#/builder">Create Team</a>` : "";
-  const description = route === "pages" ? "" : `${items.length} of ${allItems.length}. ${sectionDescriptions[route]}`;
+  const sectionTitleKeys = {
+    teams: "nav.teamsRules",
+    skills: "nav.skills",
+    traits: "nav.traits",
+    rules: "section.rulesTitle",
+    cheatsheets: "section.cheatsheetsTitle",
+    inducements: "nav.inducements",
+    "star-players": "nav.starPlayers",
+    pages: "nav.references",
+  };
+  const sectionDescriptionKeys = {
+    teams: "section.teamsDescription",
+    skills: "section.skillsDescription",
+    traits: "section.traitsDescription",
+    rules: "section.rulesDescription",
+    cheatsheets: "section.cheatsheetsDescription",
+    inducements: "section.inducementsDescription",
+    "star-players": "section.starPlayersDescription",
+  };
+  const actions = route === "teams" ? `<a class="primary-button" href="#/builder">${t("section.createTeamButton")}</a>` : "";
+  const description = route === "pages" ? "" : `${items.length} ${t("section.countOf")} ${allItems.length}. ${t(sectionDescriptionKeys[route])}`;
 
   view.innerHTML = `
-    ${renderHeader(sectionTitles[route], description, actions)}
+    ${renderHeader(t(sectionTitleKeys[route]), description, actions)}
     ${renderFilters(route)}
     <div class="card-grid">
-      ${items.length ? items.map((page) => renderListCard(page, route)).join("") : `<div class="empty-state">Nothing found. Try changing the search or filters.</div>`}
+      ${items.length ? items.map((page) => renderListCard(page, route)).join("") : `<div class="empty-state">${t("section.emptyState")}</div>`}
     </div>
   `;
   wireFilters(route);
@@ -1276,28 +1295,28 @@ function renderTeamFilters() {
   const f = state.teamFilters;
   return `
     <div class="filter-panel" data-filter-panel="teams">
-      <label class="filter-field"><span>Type</span><select data-filter="type">
-        ${renderOption("all", "All teams", f.type)}
-        ${renderOption("core", "Core", f.type)}
-        ${renderOption("experimental", "Experimental", f.type)}
+      <label class="filter-field"><span>${t("filters.type")}</span><select data-filter="type">
+        ${renderOption("all", t("filters.allTeams"), f.type)}
+        ${renderOption("core", t("filters.core"), f.type)}
+        ${renderOption("experimental", t("filters.experimental"), f.type)}
       </select></label>
-      <label class="filter-field"><span>League</span><select data-filter="league">
-        ${renderOption("all", "Any league", f.league)}
+      <label class="filter-field"><span>${t("filters.league")}</span><select data-filter="league">
+        ${renderOption("all", t("filters.anyLeague"), f.league)}
         ${leagues.map((league) => renderOption(league, league, f.league)).join("")}
       </select></label>
-      <label class="filter-field"><span>Skill or trait</span><select data-filter="skill">
-        ${renderOption("all", "Any skill", f.skill)}
+      <label class="filter-field"><span>${t("filters.skillOrTrait")}</span><select data-filter="skill">
+        ${renderOption("all", t("filters.anySkill"), f.skill)}
         ${skills.map((skill) => renderOption(skill, skill, f.skill)).join("")}
       </select></label>
-      <label class="filter-field"><span>Player tag</span><select data-filter="tag">
-        ${renderOption("all", "Any tag", f.tag)}
+      <label class="filter-field"><span>${t("filters.playerTag")}</span><select data-filter="tag">
+        ${renderOption("all", t("filters.anyTag"), f.tag)}
         ${tags.map((tag) => renderOption(tag, tag, f.tag)).join("")}
       </select></label>
-      <label class="filter-field"><span>Player cost</span><select data-filter="price">
-        ${renderOption("all", "Any cost", f.price)}
+      <label class="filter-field"><span>${t("filters.playerCost")}</span><select data-filter="price">
+        ${renderOption("all", t("filters.anyCost"), f.price)}
         ${prices.map((price) => renderOption(price, price, f.price)).join("")}
       </select></label>
-      <button class="filter-button" type="button" data-reset-filters>Reset</button>
+      <button class="filter-button" type="button" data-reset-filters>${t("filters.reset")}</button>
     </div>
   `;
 }
@@ -1325,11 +1344,11 @@ function renderSkillFilters(route) {
   const f = state.skillFilters;
   return `
     <div class="filter-panel compact-panel" data-filter-panel="skills">
-      <label class="filter-field"><span>Group</span><select data-filter="category">
-        ${renderOption("all", "Any group", f.category)}
+      <label class="filter-field"><span>${t("filters.group")}</span><select data-filter="category">
+        ${renderOption("all", t("filters.anyGroup"), f.category)}
         ${categories.map((tag) => renderOption(tag, tag, f.category)).join("")}
       </select></label>
-      <button class="filter-button" type="button" data-reset-filters>Reset</button>
+      <button class="filter-button" type="button" data-reset-filters>${t("filters.reset")}</button>
     </div>
   `;
 }
@@ -1339,11 +1358,11 @@ function renderStarFilters() {
   const f = state.starFilters;
   return `
     <div class="filter-panel compact-panel" data-filter-panel="star-players">
-      <label class="filter-field"><span>Player tag</span><select data-filter="tag">
-        ${renderOption("all", "Any tag", f.tag)}
+      <label class="filter-field"><span>${t("filters.playerTag")}</span><select data-filter="tag">
+        ${renderOption("all", t("filters.anyTag"), f.tag)}
         ${tags.map((tag) => renderOption(tag, tag, f.tag)).join("")}
       </select></label>
-      <button class="filter-button" type="button" data-reset-filters>Reset</button>
+      <button class="filter-button" type="button" data-reset-filters>${t("filters.reset")}</button>
     </div>
   `;
 }
@@ -1353,11 +1372,11 @@ function renderInducementFilters() {
   const f = state.inducementFilters;
   return `
     <div class="filter-panel compact-panel" data-filter-panel="inducements">
-      <label class="filter-field"><span>Inducement tag</span><select data-filter="tag">
-        ${renderOption("all", "Any tag", f.tag)}
+      <label class="filter-field"><span>${t("filters.inducementTag")}</span><select data-filter="tag">
+        ${renderOption("all", t("filters.anyTag"), f.tag)}
         ${tags.map((tag) => renderOption(tag, tag, f.tag)).join("")}
       </select></label>
-      <button class="filter-button" type="button" data-reset-filters>Reset</button>
+      <button class="filter-button" type="button" data-reset-filters>${t("filters.reset")}</button>
     </div>
   `;
 }
@@ -1392,7 +1411,7 @@ function renderListCard(page, route) {
     return `
       <a class="card compact" href="${pageUrl(page)}">
         <h3>${escapeHtml(page.title)}</h3>
-        <p>${escapeHtml(page.team?.meta?.league ?? "League roster")}</p>
+        <p>${escapeHtml(page.team?.meta?.league ?? t("listCard.leagueRosterFallback"))}</p>
       </a>
     `;
   }
@@ -1428,7 +1447,7 @@ function renderDetail(page) {
   setActiveNav(route);
   setViewSection(route);
   const sidebar = renderSidebar(page);
-  const actions = `<a class="primary-button" href="${listUrlForRoute(route)}">Back</a>`;
+  const actions = `<a class="primary-button" href="${listUrlForRoute(route)}">${t("common.back")}</a>`;
   let content = page.html || `<p>${escapeHtml(page.text)}</p>`;
   if (isLeaguesPage(page)) {
     content = renderLeaguesReferencePage();
@@ -1664,11 +1683,11 @@ function renderTeamRuleAccess(team, draft, controlName = "") {
   return `
     <section class="team-rules-panel">
       <div class="team-rules-row">
-        <span>Tier</span>
+        <span>${t("roster.tier")}</span>
         <strong>${escapeHtml(team.team?.meta?.league ?? "-")}</strong>
       </div>
       <div class="team-rules-row">
-        <span>League access</span>
+        <span>${t("roster.leagueAccess")}</span>
         ${leagueOptions.length > 1 ? `
           <select ${controlName ? `data-${controlName}-league` : ""}>
             ${leagueOptions.map((option) => renderOption(option, option, selectedLeague)).join("")}
@@ -1676,7 +1695,7 @@ function renderTeamRuleAccess(team, draft, controlName = "") {
         ` : `<div class="rule-link-list">${renderRuleLinks(leagueOptions)}</div>`}
       </div>
       <div class="team-rules-row team-rules-row-wide">
-        <span>Special rules</span>
+        <span>${t("roster.specialRules")}</span>
         <div class="rule-link-list">${renderRuleLinks(specialRules)}</div>
       </div>
     </section>
@@ -1729,18 +1748,18 @@ function renderLeaguesReferencePage() {
           <article class="league-reference-card">
             <header>
               <h2>${escapeHtml(league)}</h2>
-              <span>${teams.length} teams · ${starPlayers.length} star players</span>
+              <span>${teams.length} ${t("leagueRef.teamsSuffix")} · ${starPlayers.length} ${t("leagueRef.starPlayersSuffix")}</span>
             </header>
             <section class="league-reference-section">
-              <h3>Teams</h3>
+              <h3>${t("common.teams")}</h3>
               <div class="rule-link-list league-link-list">
-                ${renderPagePills(teams, "No teams")}
+                ${renderPagePills(teams, t("leagueRef.noTeams"))}
               </div>
             </section>
             <section class="league-reference-section">
-              <h3>Star Players</h3>
+              <h3>${t("nav.starPlayers")}</h3>
               <div class="rule-link-list league-link-list league-star-list">
-                ${renderPagePills(starPlayers, "No star players")}
+                ${renderPagePills(starPlayers, t("leagueRef.noStarPlayers"))}
               </div>
             </section>
           </article>
@@ -1753,11 +1772,11 @@ function renderLeaguesReferencePage() {
 function renderRosterStatGrid(row) {
   return `
     <dl class="team-stat-grid">
-      <div><dt>MA</dt><dd>${escapeHtml(row.ma || "-")}</dd></div>
-      <div><dt>ST</dt><dd>${escapeHtml(row.st || "-")}</dd></div>
-      <div><dt>AG</dt><dd>${escapeHtml(row.ag || "-")}</dd></div>
-      <div><dt>PA</dt><dd>${escapeHtml(row.pa || "-")}</dd></div>
-      <div><dt>AR</dt><dd>${escapeHtml(row.ar || "-")}</dd></div>
+      <div><dt>${t("stats.ma")}</dt><dd>${escapeHtml(row.ma || "-")}</dd></div>
+      <div><dt>${t("stats.st")}</dt><dd>${escapeHtml(row.st || "-")}</dd></div>
+      <div><dt>${t("stats.ag")}</dt><dd>${escapeHtml(row.ag || "-")}</dd></div>
+      <div><dt>${t("stats.pa")}</dt><dd>${escapeHtml(row.pa || "-")}</dd></div>
+      <div><dt>${t("stats.ar")}</dt><dd>${escapeHtml(row.ar || "-")}</dd></div>
     </dl>
   `;
 }
@@ -1779,21 +1798,21 @@ function renderTeamRosterMobile(team) {
           </header>
           ${renderRosterStatGrid(row)}
           <div class="team-roster-field">
-            <span>Skills</span>
+            <span>${t("roster.skillsLabel")}</span>
             <div>${renderRosterLinks(row.skills)}</div>
           </div>
           <div class="team-roster-columns">
             <div class="team-roster-field">
-              <span>Primary</span>
+              <span>${t("roster.primary")}</span>
               <div>${renderRosterValues(row.primary)}</div>
             </div>
             <div class="team-roster-field">
-              <span>Secondary</span>
+              <span>${t("roster.secondary")}</span>
               <div>${renderRosterValues(row.secondary)}</div>
             </div>
           </div>
           <div class="team-roster-field">
-            <span>Tags</span>
+            <span>${t("roster.tags")}</span>
             <div>${renderRosterValues(row.tags)}</div>
           </div>
         </article>
@@ -1812,18 +1831,18 @@ function renderSkillTableRoller() {
   const resultPage = result ? pageForSkillTableEntry(result) : null;
   const resultMarkup = result
     ? `<a class="skill-roll-result-link" href="${resultPage ? pageUrl(resultPage) : "#/skill-table"}">${escapeHtml(result)}</a>`
-    : `<span class="skill-roll-placeholder">Ready to roll 1d${skills.length}.</span>`;
+    : `<span class="skill-roll-placeholder">${t("skillRoll.readyPrefix")}${skills.length}.</span>`;
 
   return `
     <section class="skill-roll-panel" aria-label="Skill randomizer">
       <div class="skill-roll-controls">
         <label class="filter-field">
-          <span>Skill group</span>
+          <span>${t("skillRoll.groupLabel")}</span>
           <select data-skill-roll-group>
             ${groups.map((group) => renderOption(group.category, group.category, selectedGroup.category)).join("")}
           </select>
         </label>
-        <button class="primary-button" type="button" data-skill-roll>Roll</button>
+        <button class="primary-button" type="button" data-skill-roll>${t("skillRoll.rollButton")}</button>
       </div>
       <div class="skill-roll-result">
         <span class="skill-roll-die">1d${skills.length}${state.skillTableRoller.roll ? `: ${state.skillTableRoller.roll}` : ""}</span>
@@ -1950,15 +1969,15 @@ function renderSidebar(page) {
     const costs = uniqueSorted(roster.map(rowCost).filter(Boolean));
     return `
       <aside class="side-panel">
-        <h3>Team</h3>
+        <h3>${t("sidebar.teamHeading")}</h3>
         <dl class="stat-list">
-          <dt>Positions</dt><dd>${roster.length}</dd>
-          <dt>Player cost</dt><dd>${escapeHtml(costs.join(" - ") || "-")}</dd>
-          <dt>Rerolls</dt><dd>${escapeHtml(page.team?.meta?.rerolls ?? "-")}</dd>
-          <dt>Apothecary</dt><dd>${escapeHtml(cleanApothecary(page.team?.meta?.apothecary))}</dd>
-          <dt>Tier</dt><dd>${escapeHtml(page.team?.meta?.league ?? "-")}</dd>
-          <dt>League access</dt><dd>${renderRuleLinks(teamLeagueOptions(page))}</dd>
-          <dt>Special rules</dt><dd>${renderRuleLinks(teamSpecialRuleTokens(page))}</dd>
+          <dt>${t("sidebar.positions")}</dt><dd>${roster.length}</dd>
+          <dt>${t("filters.playerCost")}</dt><dd>${escapeHtml(costs.join(" - ") || "-")}</dd>
+          <dt>${t("sidebar.rerolls")}</dt><dd>${escapeHtml(page.team?.meta?.rerolls ?? "-")}</dd>
+          <dt>${t("sidebar.apothecary")}</dt><dd>${escapeHtml(cleanApothecary(page.team?.meta?.apothecary))}</dd>
+          <dt>${t("roster.tier")}</dt><dd>${escapeHtml(page.team?.meta?.league ?? "-")}</dd>
+          <dt>${t("roster.leagueAccess")}</dt><dd>${renderRuleLinks(teamLeagueOptions(page))}</dd>
+          <dt>${t("roster.specialRules")}</dt><dd>${renderRuleLinks(teamSpecialRuleTokens(page))}</dd>
         </dl>
       </aside>
     `;
@@ -1966,21 +1985,21 @@ function renderSidebar(page) {
   if (page.kind === "starPlayer") {
     return `
       <aside class="side-panel">
-        <h3>Star Player</h3>
+        <h3>${t("sidebar.starPlayerHeading")}</h3>
         <dl class="stat-list">
-          <dt>Cost</dt><dd>${escapeHtml(page.starPlayer?.cost ?? "-")}</dd>
-          <dt>Availability</dt><dd>${escapeHtml(page.starPlayer?.availability ?? "-")}</dd>
-          <dt>Tags</dt><dd>${badgeList(page.tags, 8)}</dd>
+          <dt>${t("sidebar.cost")}</dt><dd>${escapeHtml(page.starPlayer?.cost ?? "-")}</dd>
+          <dt>${t("sidebar.availability")}</dt><dd>${escapeHtml(page.starPlayer?.availability ?? "-")}</dd>
+          <dt>${t("roster.tags")}</dt><dd>${badgeList(page.tags, 8)}</dd>
         </dl>
       </aside>
     `;
   }
   return `
     <aside class="side-panel">
-      <h3>Page</h3>
+      <h3>${t("sidebar.pageHeading")}</h3>
       <dl class="stat-list">
-        <dt>Category</dt><dd>${escapeHtml(page.sectionLabel)}</dd>
-        ${page.tags?.length ? `<dt>Tags</dt><dd>${badgeList(page.tags, 8)}</dd>` : ""}
+        <dt>${t("sidebar.category")}</dt><dd>${escapeHtml(page.sectionLabel)}</dd>
+        ${page.tags?.length ? `<dt>${t("roster.tags")}</dt><dd>${badgeList(page.tags, 8)}</dd>` : ""}
       </dl>
     </aside>
   `;
@@ -1994,11 +2013,11 @@ function renderLegal() {
   setActiveNav("legal");
   setViewSection("pages");
   view.innerHTML = `
-    ${renderHeader("Legal Information", "Unofficial fan-made reference for a private Blood Bowl league.")}
+    ${renderHeader(t("legal.title"), t("legal.subtitle"))}
     <article class="content-panel content-body">
-      <p>Gata Blood Bowl League is an unofficial fan reference. It is not affiliated with, endorsed by, or sponsored by Games Workshop.</p>
-      <p>Blood Bowl and related names belong to their respective owners. This site is intended to document league-specific house rules and help players navigate their local league.</p>
-      <p>Base game wording is referenced through Blood Bowl Base where appropriate instead of being reproduced here in full.</p>
+      <p>${t("legal.paragraph1")}</p>
+      <p>${t("legal.paragraph2")}</p>
+      <p>${t("legal.paragraph3")}</p>
     </article>
   `;
 }
