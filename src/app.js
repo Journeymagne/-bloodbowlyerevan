@@ -278,28 +278,6 @@ const eliteSkillCombos = [
   ["Wrestle", "Evasive"],
 ];
 
-const sectionTitles = {
-  teams: "Team's Rules",
-  skills: "Skills",
-  traits: "Traits",
-  rules: "League Rules",
-  cheatsheets: "Cheatsheets",
-  inducements: "Inducements",
-  "star-players": "Star Players",
-  pages: "References",
-};
-
-const sectionDescriptions = {
-  teams: "Browse team roster rules, tiers, special rules and team-building data.",
-  skills: "Skill reference with category and active/passive filters.",
-  traits: "Trait reference for players, star players and special rules.",
-  rules: "Gata league format, roster creation, season flow and league-specific rulings.",
-  cheatsheets: "Compact tables and match aids used during play.",
-  inducements: "Inducements and match extras available in the league.",
-  "star-players": "Star player costs, availability groups, keywords and abilities.",
-  pages: "Skill, kick-off, player advancement, special rules and match reference tables.",
-};
-
 const quickPreviews = new Map([
   ["1. League Basics", "League format, event tone, dice/model expectations and core conduct for Gata league games."],
   ["2. Team Creation", "Starting roster rules, team budget, model requirements and how new teams enter the league."],
