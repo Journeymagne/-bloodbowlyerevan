@@ -326,3 +326,37 @@ happened almost immediately: a separate branch merged in with 226 changed EN fil
    new code for hardcoded string literals in template strings before considering the merge done —
    `npm run i18n:check` only validates *content* parity, it has no way to catch a hardcoded English
    string sitting in `src/app.js`.
+7. **Content embedded directly in JS, not the Markdown vault** (e.g. `overviewCards` in
+   `src/app.js`, a ~380-line array of Code of Conduct / season-structure rules prose backing the
+   `/overview/*` routes): this doesn't get picked up by the `content/Gata` ⇄ `content/Gata-ru` diff
+   in step 1 at all, since it never touches `content/`. Grep `src/app.js` itself for large data
+   arrays of English prose when auditing a merge for translation gaps. The established pattern
+   (see `overviewCardsRu` next to `overviewCards`) is a parallel same-shape array selected by
+   `state.locale` via a small `activeXxx()` helper, not a rearchitecture into the Markdown vault —
+   keep new instances of this pattern consistent with it unless there's a reason to migrate the
+   whole thing into `content/Gata` properly.
+
+## New-UI translation sweep, 2026-07-15 (origin/main merge)
+
+The `origin/main` merge folded in a large, independently-developed feature set (Season,
+Administration, team/star-player catalog cards, favoured-skills editor, public player/team
+profiles — roughly 90 new functions, ~2000 lines) that had zero i18n. All of it was swept and
+wrapped in `t()`/`data-i18n` in the same pass as the merge (129 new keys added to
+`src/i18n/en.json`/`ru.json`), plus a parallel `overviewCardsRu` array for the new Overview
+content pages. Established conventions from this sweep, for consistency if this area is extended
+further:
+
+- **"Coach"** (a site user who manages a team, distinct from in-fiction "coach" flavor text) →
+  «тренер».
+- **"BYE"** (a tournament pairing with no opponent) stays English/all-caps as a status word, same
+  treatment as other short match-result indicators; the table column *counting* byes ("Byes")
+  translates as «Баи» (transliterated tournament jargon, not a literal translation).
+- **"TD"** (touchdown abbreviation in season/fixture tables) stays English, joining the
+  MA/ST/AG/PA/AR/SPP/TV/GP/CAS core-stat-shorthand family — the spelled-out word "Touchdowns"
+  still transliterates to «тачдауны» per the existing Drive/Turnover/Touchdown convention.
+- **"Tier"** (the catalog card's stat label for a team's league value) → «Лига», matching the
+  established `**League:**` → `**Лига:**` structural-label convention elsewhere, even though this
+  particular UI label's underlying data field is named `.league` and it says "Tier" in the source.
+- **Round/Table/Home/Away/Opponent** (Swiss-pairing season vocabulary) are ordinary translated UI
+  words («раунд», «стол», «хозяева», «гости», «соперник») — not treated as kept-English rule
+  identifiers, since they're season-administration bookkeeping terms, not Blood Bowl rules text.

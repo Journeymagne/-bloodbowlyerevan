@@ -473,6 +473,153 @@ const overviewCards = [
   },
 ];
 
+const overviewCardsRu = [
+  {
+    slug: "code-of-conduct",
+    title: "Кодекс поведения",
+    summary: "Честная игра, откаты ходов, контроль тильта, отчётность и как сохранять приятную атмосферу матча.",
+    sections: [
+      {
+        title: "Как быть отличным игроком",
+        items: [
+          "Играйте честно и с уважением к сопернику.",
+          "Откат хода (rollback) разрешён для любых действий, но только до броска костей.",
+          "Контролируйте своё раздражение (тильт) из-за результатов бросков.",
+          "Вовремя сообщайте организатору результаты матчей.",
+          "Сразу спрашивайте организатора, если у вас есть вопросы по правилам, на которые вы не можете найти ответ.",
+          "Заранее предупреждайте, если не можете сыграть матч в срок.",
+          "Получайте удовольствие от футбола!",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "general-rules",
+    title: "Общие правила",
+    summary: "Форматы лиги, процедуры матчей, стандарты моделей и базовые правила регистрации.",
+    sections: [
+      {
+        title: "Форматы лиги",
+        items: [
+          "Сезон (Season): крупное событие продолжительностью около 3-4 месяцев с чётко определённым началом, концом и фиксированным составом участников. Расписание и время матчей строго назначены.",
+          "Турниры (Tournaments): события продолжительностью 1-2 дня, обычно проводятся как финал сезона или отдельные развлекательные кубки.",
+          "Межсезонье (Off-season): товарищеские матчи, которые можно играть в любое время, если команда не участвует в данный момент в другом событии. Это отличный способ развить команду перед сезоном. В этом формате можно зарегистрировать до 6 игр в месяц.",
+          "Результаты матча должны быть переданы в течение 1-3 дней после его завершения. Несоблюдение этого срока может повлечь штрафы, вплоть до аннулирования результата матча.",
+          "Один тренер может зарегистрировать в лиге до 4 команд.",
+          "По желанию любого из игроков матч может проводиться с таймером. Стандартный формат — 45 минут на человека. Таймер останавливается для обоих игроков во время предматчевой подготовки, кик-оффов и подобных пауз.",
+        ],
+      },
+      {
+        title: "Процедуры матчей",
+        items: [
+          "Планирование: для матчей в назначенные игровые дни тренеры самостоятельно согласовывают детали с соперником любым удобным способом.",
+          "Отчётность: результаты матча следует сообщать комиссару любым удобным способом.",
+          "Фото: будет ещё лучше, если вы сделаете несколько фотографий.",
+        ],
+      },
+      {
+        title: "Требования к моделям",
+        items: [
+          "Бесплатный стартовый состав: в качестве личного бонуса за участие комиссар бесплатно предоставит вам 9 игроков — достаточно для валидного состава — из любой команды на 3D-печати.",
+          "Стандарты моделей: модель должна чётко представлять игрока команды, иметь подставку и быть подходящего размера.",
+          "Идентификация: номер игрока должен быть чётко указан на модели или подставке и совпадать с номером в составе вашей команды.",
+          "Тематическое соответствие: модели должны изображать игроков Blood Bowl; оружие вроде мечей, обычная броня и т.п. не допускаются.",
+          "Конверсии: конверсии разрешены.",
+          "Уточнение: если вы не уверены, подходит ли ваша модель для игры, обратитесь к комиссару.",
+        ],
+      },
+      {
+        title: "Регистрация",
+        items: [
+          "Как только регистрация открыта, перейдите в раздел «Сезон» и зарегистрируйте валидную команду лиги.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "create-your-team",
+    title: "Создание команды",
+    summary: "Стартовый бюджет, лимиты состава, специалисты, регистрация и требования к моделям.",
+    sections: [
+      {
+        title: "Создание новой команды",
+        items: [
+          "Стартовый бюджет: команды формируются с бюджетом 600 000 золотых по базовым правилам.",
+          "Размер состава: размер команды ограничен 14 игроками.",
+          "Специалисты: в Sevens команда может выставлять на дран не более 4 специалистов, поэтому обязательно приобретите как минимум 3 игроков с тегом Lineman.",
+          "Регистрация: создайте новую команду на этом сайте, затем укажите её название и логотип.",
+        ],
+      },
+      {
+        title: "Требования к моделям",
+        items: [
+          "Стандарты моделей: модель должна чётко представлять игрока команды, иметь подставку и быть подходящего размера.",
+          "Идентификация: номер игрока должен быть чётко указан на модели или подставке и совпадать с номером в составе вашей команды.",
+          "Тематическое соответствие: модели должны изображать игроков Blood Bowl; оружие вроде мечей, обычная броня и т.п. не допускаются.",
+          "Конверсии: конверсии разрешены.",
+          "Уточнение: если вы не уверены, подходит ли ваша модель для игры, обратитесь к комиссару.",
+          "Покраска: настоятельно рекомендуется играть покрашенной командой. Миниатюра считается покрашенной, если проработаны все детали, нанесены тени и света на подставке, а сама подставка завершена.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "season-structure-and-scoring",
+    title: "Структура сезона и очки",
+    summary: "Сроки раундов, очки лиги, защита новичков, призы и структура турнира.",
+    sections: [
+      {
+        title: "Проведение матчей",
+        items: [
+          "Раунды: один раунд длится две недели, начинаясь в понедельник и заканчиваясь в воскресенье.",
+          "Сроки: каждый матч должен быть сыгран в течение своего раунда.",
+          "Места проведения: игры можно проводить в Litch Club, на Painting Evenings у Ded Max, либо у кого-то дома по предварительной договорённости.",
+          "Игра онлайн: если сыграть вживую невозможно, матч можно провести с помощью мода Tabletop Simulator (TTS).",
+          "Согласование времени: предложения по времени матча должны быть поданы до конца пятницы. Если тренер предоставляет варианты времени только на выходных и матч в итоге не сыгран, комиссар примет сторону тренера, предоставившего свою доступность заранее.",
+          "Незавершённые матчи: если матч не сыгран в течение раунда, результат определяет комиссар.",
+          "Начало сезона: в начале сезона у всех игроков снимаются штрафы за пропущенные игры.",
+        ],
+      },
+      {
+        title: "Очки лиги",
+        items: [
+          "3 очка за победу.",
+          "1 очко за ничью.",
+          "2 очка за техническую победу.",
+          "0 очков за поражение.",
+          "+1 очко, если матч завершился с разницей в 3+ тачдауна.",
+          "+1 очко, если вы не пропустили ни одного тачдауна (при этом нужно забить хотя бы один самому).",
+          "+2 очка, если соперник не смог выставить команду на матч (например, из-за большого числа травм).",
+        ],
+      },
+      {
+        title: "Призы по итогам сезона",
+        items: [
+          "По итогам сезона все команды вне топа таблицы получают выплаты.",
+          "10 тыс. за каждый сыгранный матч.",
+          "20 тыс. за каждую победу.",
+          "10 тыс. за каждую ничью.",
+        ],
+      },
+      {
+        title: "Защита новичков",
+        items: [
+          "В первые 3 игры после создания команды все травмы, полученные её игроками, засчитываются как Badly Hurt.",
+        ],
+      },
+      {
+        title: "Техническая победа и структура турнира",
+        items: [
+          "Техническая победа: команде-победителю начисляется 2 броска MVP и (D3+2) * 10 тыс. золотых.",
+          "Турнирная сетка: матчи распределяются по швейцарской системе.",
+          "Тай-брейки: для определения мест при равенстве очков используются коэффициент Бухгольца и результат личной встречи, затем — суммарное число тачдаунов и травм.",
+          "Выход в плей-офф: в зависимости от числа участников, команды в верхней части таблицы получают автоматический проход в сетку победителей плей-офф турнира.",
+        ],
+      },
+    ],
+  },
+];
+
 function escapeHtml(value = "") {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -730,12 +877,12 @@ function adminTeamEditUrl(userOrId, teamOrId) {
 
 function renderPlayerLink(user) {
   if (!user?.id) return `<span class="muted-text">-</span>`;
-  return `<a class="inline-rule-link" href="${playerUrl(user)}">${escapeHtml(user.login || "Player")}</a>`;
+  return `<a class="inline-rule-link" href="${playerUrl(user)}">${escapeHtml(user.login || t("admin.playerHeader"))}</a>`;
 }
 
 function renderPublicTeamLink(user, team) {
   if (!user?.id || !team?.id) return `<span class="muted-text">${escapeHtml(team?.name || "-")}</span>`;
-  return `<a class="inline-rule-link" href="${playerTeamUrl(user, team)}">${escapeHtml(team.name || "Team")}</a>`;
+  return `<a class="inline-rule-link" href="${playerTeamUrl(user, team)}">${escapeHtml(team.name || t("sidebar.teamHeading"))}</a>`;
 }
 
 function isSkillTablePage(page) {
@@ -1453,10 +1600,14 @@ function renderHome() {
         </div>
       </div>
       <div class="card-grid overview-grid">
-        ${overviewCards.map(renderOverviewIndexCard).join("")}
+        ${activeOverviewCards().map(renderOverviewIndexCard).join("")}
       </div>
     </section>
   `;
+}
+
+function activeOverviewCards() {
+  return state.locale === "ru" ? overviewCardsRu : overviewCards;
 }
 
 function overviewCardUrl(card) {
@@ -1464,7 +1615,7 @@ function overviewCardUrl(card) {
 }
 
 function findOverviewCard(slug = "") {
-  return overviewCards.find((card) => card.slug === slug) ?? null;
+  return activeOverviewCards().find((card) => card.slug === slug) ?? null;
 }
 
 function renderOverviewIndexCard(card) {
@@ -1482,13 +1633,13 @@ function renderOverviewDetail(slug) {
   setViewSection("home");
   if (!card) {
     view.innerHTML = `
-      ${renderHeader("Overview", "League overview pages.", `<a class="primary-button" href="#/">Back</a>`)}
-      <div class="empty-state">Overview page not found.</div>
+      ${renderHeader(t("home.overviewTitle"), t("overview.pagesSubtitle"), `<a class="primary-button" href="#/">${t("common.back")}</a>`)}
+      <div class="empty-state">${t("overview.notFound")}</div>
     `;
     return;
   }
   view.innerHTML = `
-    ${renderHeader(card.title, "Overview", `<a class="primary-button" href="#/">Back</a>`)}
+    ${renderHeader(card.title, t("home.overviewTitle"), `<a class="primary-button" href="#/">${t("common.back")}</a>`)}
     <article class="content-panel content-body overview-detail">
       ${renderOverviewContent(card)}
     </article>
@@ -1789,29 +1940,29 @@ function renderTeamCatalogCard(page) {
     <article class="card catalog-card team-catalog-card">
       <header class="catalog-card-head">
         <div>
-          <span class="catalog-kicker">${escapeHtml(page.team?.type ?? page.tags?.[0] ?? "Team")}</span>
+          <span class="catalog-kicker">${escapeHtml(page.team?.type ?? page.tags?.[0] ?? t("sidebar.teamHeading"))}</span>
           <h3><a class="catalog-card-title" href="${pageUrl(page)}">${escapeHtml(page.title)}</a></h3>
         </div>
       </header>
       <dl class="catalog-card-stats">
-        ${renderCatalogField("Tier", escapeHtml(page.team?.meta?.league ?? "-"))}
-        ${renderCatalogField("Positions", escapeHtml(String(rows.length)))}
-        ${renderCatalogField("Rerolls", escapeHtml(page.team?.meta?.rerolls ?? "-"))}
+        ${renderCatalogField(t("catalog.tier"), escapeHtml(page.team?.meta?.league ?? "-"))}
+        ${renderCatalogField(t("catalog.positions"), escapeHtml(String(rows.length)))}
+        ${renderCatalogField(t("catalog.rerolls"), escapeHtml(page.team?.meta?.rerolls ?? "-"))}
       </dl>
       <section class="catalog-card-section">
-        <span>Players</span>
-        <p>${escapeHtml(positionPreview.join(", ") || "No roster rows")}${extraPositions > 0 ? ` +${extraPositions}` : ""}</p>
+        <span>${t("catalog.players")}</span>
+        <p>${escapeHtml(positionPreview.join(", ") || t("catalog.noRosterRows"))}${extraPositions > 0 ? ` +${extraPositions}` : ""}</p>
       </section>
       <section class="catalog-card-section">
-        <span>League access</span>
+        <span>${t("catalog.leagueAccess")}</span>
         <div class="catalog-pill-row">${renderLimitedRuleLinks(leagueOptions, 2)}</div>
       </section>
       <section class="catalog-card-section">
-        <span>Special rules</span>
+        <span>${t("catalog.specialRules")}</span>
         <div class="catalog-pill-row">${renderLimitedRuleLinks(specialRules, 3)}</div>
       </section>
       <footer class="catalog-card-actions">
-        <a class="primary-button compact-action" href="${pageUrl(page)}">Open</a>
+        <a class="primary-button compact-action" href="${pageUrl(page)}">${t("catalog.open")}</a>
       </footer>
     </article>
   `;
@@ -1907,19 +2058,19 @@ function renderStarPlayerCatalogCard(page) {
       </header>
       ${renderStarCatalogStats(star)}
       <section class="catalog-card-section">
-        <span>Availability</span>
+        <span>${t("sidebar.availability")}</span>
         <p>${escapeHtml(availability || "-")}</p>
       </section>
       <section class="catalog-card-section">
-        <span>Skills</span>
+        <span>${t("roster.skillsLabel")}</span>
         <div class="catalog-pill-row">${renderLimitedRosterLinks(star.skills, 5)}</div>
       </section>
       <section class="catalog-card-section">
-        <span>Keywords</span>
+        <span>${t("catalog.keywords")}</span>
         <div class="catalog-pill-row">${badgeList(keywords, 4)}</div>
       </section>
       <footer class="catalog-card-actions">
-        <a class="primary-button compact-action" href="${pageUrl(page)}">Open</a>
+        <a class="primary-button compact-action" href="${pageUrl(page)}">${t("catalog.open")}</a>
       </footer>
     </article>
   `;
@@ -2254,7 +2405,7 @@ function renderTeamRuleAccess(team, draft, controlName = "") {
       </div>
       ${favouredOptions.length ? `
         <div class="team-rules-row">
-          <span>Favoured Of</span>
+          <span>${t("roster.favouredOf")}</span>
           ${favouredOptions.length > 1 ? `
             <select ${controlName ? `data-${controlName}-favoured` : ""}>
               ${favouredOptions.map((option) => renderOption(option, option, selectedFavoured)).join("")}
@@ -2711,13 +2862,13 @@ function renderSavedTeamCard(team) {
         </div>
       </header>
       <dl class="saved-team-card-stats">
-        <div><dt>Players</dt><dd>${costs ? costs.totalPlayersCount : "-"}</dd></div>
-        <div><dt>Total Cost</dt><dd>${costs ? `${costs.total}k` : "-"}</dd></div>
-        <div><dt>Updated</dt><dd>${escapeHtml(updated)}</dd></div>
+        <div><dt>${t("catalog.players")}</dt><dd>${costs ? costs.totalPlayersCount : "-"}</dd></div>
+        <div><dt>${t("roster.totalCost")}</dt><dd>${costs ? `${costs.total}k` : "-"}</dd></div>
+        <div><dt>${t("footer.updated")}</dt><dd>${escapeHtml(updated)}</dd></div>
       </dl>
       <div class="saved-team-actions">
-        <a class="primary-button compact-action" href="#/my-teams/${encodeURIComponent(team.id)}">Edit</a>
-        <button class="filter-button compact-action" type="button" data-delete-team="${escapeHtml(team.id)}">Delete</button>
+        <a class="primary-button compact-action" href="#/my-teams/${encodeURIComponent(team.id)}">${t("common.edit")}</a>
+        <button class="filter-button compact-action" type="button" data-delete-team="${escapeHtml(team.id)}">${t("common.delete")}</button>
       </div>
     </article>
   `;
@@ -2759,22 +2910,22 @@ async function renderAdministration() {
   setActiveNav("administration");
   setViewSection("administration");
   view.innerHTML = `
-    ${renderHeader("Administration", "Players, profiles, and saved teams.", `<button class="primary-button" type="button" data-admin-refresh>Refresh</button>`)}
-    <div class="loading">Loading players...</div>
+    ${renderHeader(t("nav.administration"), t("admin.subtitle"), `<button class="primary-button" type="button" data-admin-refresh>${t("admin.refresh")}</button>`)}
+    <div class="loading">${t("admin.loadingPlayers")}</div>
   `;
 
   if (!state.auth.currentUser) {
     view.innerHTML = `
-      ${renderHeader("Administration", "Players, profiles, and saved teams.")}
-      <div class="empty-state">Log in as an admin to open Administration.</div>
+      ${renderHeader(t("nav.administration"), t("admin.subtitle"))}
+      <div class="empty-state">${t("admin.loginRequired")}</div>
     `;
     return;
   }
 
   if (!state.auth.currentUser.isAdmin) {
     view.innerHTML = `
-      ${renderHeader("Administration", "Players, profiles, and saved teams.")}
-      <div class="empty-state">Admin access required.</div>
+      ${renderHeader(t("nav.administration"), t("admin.subtitle"))}
+      <div class="empty-state">${t("admin.accessRequired")}</div>
     `;
     return;
   }
@@ -2782,7 +2933,7 @@ async function renderAdministration() {
   await loadAdminUsers(true);
   if (state.admin.error) {
     view.innerHTML = `
-      ${renderHeader("Administration", "Players, profiles, and saved teams.", `<button class="primary-button" type="button" data-admin-refresh>Refresh</button>`)}
+      ${renderHeader(t("nav.administration"), t("admin.subtitle"), `<button class="primary-button" type="button" data-admin-refresh>${t("admin.refresh")}</button>`)}
       <div class="empty-state">${escapeHtml(state.admin.error)}</div>
     `;
     wireAdministration();
@@ -2790,26 +2941,26 @@ async function renderAdministration() {
   }
 
   view.innerHTML = `
-    ${renderHeader("Administration", "Players, profiles, and saved teams.", `<button class="primary-button" type="button" data-admin-refresh>Refresh</button>`)}
+    ${renderHeader(t("nav.administration"), t("admin.subtitle"), `<button class="primary-button" type="button" data-admin-refresh>${t("admin.refresh")}</button>`)}
     ${renderAdminUsersTable(state.admin.users)}
   `;
   wireAdministration();
 }
 
 function renderAdminUsersTable(users) {
-  if (!users.length) return `<div class="empty-state">No players found.</div>`;
+  if (!users.length) return `<div class="empty-state">${t("admin.noPlayersFound")}</div>`;
   return `
     <article class="content-panel compact-table-panel">
       <div class="table-scroll builder-table-scroll">
         <table class="admin-users-table compact-roster-table">
           <thead>
             <tr>
-              <th>Player</th>
-              <th>Telegram</th>
-              <th>Role</th>
-              <th>Saved Teams</th>
-              <th>Last Team Update</th>
-              <th>Action</th>
+              <th>${t("admin.playerHeader")}</th>
+              <th>${t("auth.telegramField")}</th>
+              <th>${t("admin.roleHeader")}</th>
+              <th>${t("admin.savedTeamsHeader")}</th>
+              <th>${t("admin.lastTeamUpdateHeader")}</th>
+              <th>${t("roster.actionHeader")}</th>
             </tr>
           </thead>
           <tbody>
@@ -2827,10 +2978,10 @@ function renderAdminUserRow(user) {
     <tr>
       <td><strong>${renderPlayerLink(user)}</strong></td>
       <td>${escapeHtml(user.telegram || "-")}</td>
-      <td>${user.isAdmin ? "Admin" : "Player"}</td>
+      <td>${user.isAdmin ? t("admin.roleAdmin") : t("admin.rolePlayer")}</td>
       <td>${user.savedTeamCount ?? 0}</td>
       <td>${escapeHtml(updated)}</td>
-      <td><a class="primary-button compact-action" href="#/administration/users/${encodeURIComponent(user.id)}">Profile</a></td>
+      <td><a class="primary-button compact-action" href="#/administration/users/${encodeURIComponent(user.id)}">${t("admin.profileLink")}</a></td>
     </tr>
   `;
 }
@@ -2839,14 +2990,14 @@ async function renderAdminUserProfile(userId) {
   setActiveNav("administration");
   setViewSection("administration");
   view.innerHTML = `
-    ${renderHeader("Administration", "Player profile.", `<a class="primary-button" href="#/administration">Back</a>`)}
-    <div class="loading">Loading profile...</div>
+    ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+    <div class="loading">${t("admin.loadingProfile")}</div>
   `;
 
   if (!state.auth.currentUser?.isAdmin) {
     view.innerHTML = `
-      ${renderHeader("Administration", "Player profile.", `<a class="primary-button" href="#/administration">Back</a>`)}
-      <div class="empty-state">Admin access required.</div>
+      ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+      <div class="empty-state">${t("admin.accessRequired")}</div>
     `;
     return;
   }
@@ -2854,14 +3005,14 @@ async function renderAdminUserProfile(userId) {
   try {
     const payload = await apiRequest(`/api/admin/users/${encodeURIComponent(userId)}`);
     view.innerHTML = `
-      ${renderHeader(`Player "${payload.user.login}"`, "Saved teams and profile details.", `<a class="primary-button" href="#/administration">Back</a>`)}
+      ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
       <div class="admin-profile-grid">
         ${renderAdminProfileCard(payload.user)}
         <section class="content-panel season-card">
           ${renderAdminCreateTeamForUserPanel(payload.user)}
         </section>
         <section class="content-panel season-card">
-          <h2>Saved Teams</h2>
+          <h2>${t("admin.savedTeamsHeader")}</h2>
           ${renderAdminSavedTeamsTable(payload.teams ?? [], payload.user)}
         </section>
       </div>
@@ -2869,7 +3020,7 @@ async function renderAdminUserProfile(userId) {
     wireAdminUserProfile(payload.user);
   } catch (error) {
     view.innerHTML = `
-      ${renderHeader("Administration", "Player profile.", `<a class="primary-button" href="#/administration">Back</a>`)}
+      ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
@@ -2880,14 +3031,14 @@ function renderAdminProfileCard(user) {
   const updated = user.lastTeamUpdatedAt ? new Date(user.lastTeamUpdatedAt).toLocaleDateString("en-GB") : "-";
   return `
     <aside class="side-panel admin-profile-card">
-      <h2>Profile</h2>
+      <h2>${t("admin.profileHeading")}</h2>
       <dl class="stat-list">
-        <dt>Login</dt><dd>${renderPlayerLink(user)}</dd>
-        <dt>Telegram</dt><dd>${escapeHtml(user.telegram || "-")}</dd>
-        <dt>Role</dt><dd>${user.isAdmin ? "Admin" : "Player"}</dd>
-        <dt>Saved teams</dt><dd>${user.savedTeamCount ?? 0}</dd>
-        <dt>Created</dt><dd>${escapeHtml(created)}</dd>
-        <dt>Last team update</dt><dd>${escapeHtml(updated)}</dd>
+        <dt>${t("auth.loginField")}</dt><dd>${renderPlayerLink(user)}</dd>
+        <dt>${t("auth.telegramField")}</dt><dd>${escapeHtml(user.telegram || "-")}</dd>
+        <dt>${t("admin.roleHeader")}</dt><dd>${user.isAdmin ? t("admin.roleAdmin") : t("admin.rolePlayer")}</dd>
+        <dt>${t("admin.savedTeamsHeader")}</dt><dd>${user.savedTeamCount ?? 0}</dd>
+        <dt>${t("admin.createdHeader")}</dt><dd>${escapeHtml(created)}</dd>
+        <dt>${t("admin.lastTeamUpdateHeader")}</dt><dd>${escapeHtml(updated)}</dd>
       </dl>
     </aside>
   `;
@@ -2896,20 +3047,20 @@ function renderAdminProfileCard(user) {
 function renderAdminCreateTeamForUserPanel(user) {
   const teams = state.data.teams ?? [];
   return `
-    <h2>Create Team For Player</h2>
-    <p class="muted-text">Create a saved team in ${escapeHtml(user.login)}'s profile. It will not be committed to the season automatically.</p>
+    <h2>${t("admin.createTeamForPlayerHeading")}</h2>
+    <p class="muted-text">${t("admin.createTeamForPlayerNotePrefix")} ${escapeHtml(user.login)}${t("admin.createTeamForPlayerNoteSuffix")}</p>
     <div class="season-action-row admin-create-team-row">
       <label class="filter-field">
-        <span>Rules team</span>
+        <span>${t("admin.rulesTeamField")}</span>
         <select data-admin-create-team-base>
           ${teams.map((team) => renderOption(team.slug, team.title, "")).join("")}
         </select>
       </label>
       <label class="filter-field">
-        <span>Team name</span>
-        <input type="text" data-admin-create-team-name placeholder="New team name">
+        <span>${t("savedRoster.teamName")}</span>
+        <input type="text" data-admin-create-team-name placeholder="${t("admin.newTeamNamePlaceholder")}">
       </label>
-      <button class="primary-button" type="button" data-admin-create-user-team="${escapeHtml(user.id)}">Create Team</button>
+      <button class="primary-button" type="button" data-admin-create-user-team="${escapeHtml(user.id)}">${t("myTeams.createTeam")}</button>
     </div>
   `;
 }
@@ -2938,18 +3089,18 @@ function wireAdminUserProfile(user) {
 }
 
 function renderAdminSavedTeamsTable(teams, owner = null) {
-  if (!teams.length) return `<p>No saved teams yet.</p>`;
+  if (!teams.length) return `<p>${t("myTeams.noSavedTeams")}</p>`;
   return `
     <div class="table-scroll builder-table-scroll">
       <table class="admin-teams-table compact-roster-table">
         <thead>
           <tr>
-            <th>Team</th>
-            <th>Rules</th>
-            <th>Players</th>
-            <th>Total Cost</th>
-            <th>Updated</th>
-            <th>Action</th>
+            <th>${t("sidebar.teamHeading")}</th>
+            <th>${t("myTeams.table.rules")}</th>
+            <th>${t("catalog.players")}</th>
+            <th>${t("roster.totalCost")}</th>
+            <th>${t("footer.updated")}</th>
+            <th>${t("roster.actionHeader")}</th>
           </tr>
         </thead>
         <tbody>
@@ -2982,7 +3133,7 @@ function renderAdminSavedTeamRow(team, owner = null) {
       <td>${costs ? costs.totalPlayersCount : "-"}</td>
       <td>${costs ? `${costs.total}k` : "-"}</td>
       <td>${escapeHtml(updated)}</td>
-      <td>${state.auth.currentUser?.isAdmin && teamOwner ? `<a class="primary-button compact-action" href="${adminTeamEditUrl(teamOwner, team)}">Edit</a>` : `<span class="muted-text">-</span>`}</td>
+      <td>${state.auth.currentUser?.isAdmin && teamOwner ? `<a class="primary-button compact-action" href="${adminTeamEditUrl(teamOwner, team)}">${t("common.edit")}</a>` : `<span class="muted-text">-</span>`}</td>
     </tr>
   `;
 }
@@ -2991,14 +3142,14 @@ async function renderPlayerProfile(userId) {
   setActiveNav("season");
   setViewSection("players");
   view.innerHTML = `
-    ${renderHeader("Player Profile", "Saved teams and coach details.", `<a class="primary-button" href="#/season">Back</a>`)}
-    <div class="loading">Loading player...</div>
+    ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"), `<a class="primary-button" href="#/season">${t("common.back")}</a>`)}
+    <div class="loading">${t("admin.loadingPlayer")}</div>
   `;
 
   if (!state.auth.currentUser) {
     view.innerHTML = `
-      ${renderHeader("Player Profile", "Saved teams and coach details.")}
-      <div class="empty-state">Log in to view player profiles.</div>
+      ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"))}
+      <div class="empty-state">${t("admin.loginToViewProfiles")}</div>
     `;
     return;
   }
@@ -3006,12 +3157,12 @@ async function renderPlayerProfile(userId) {
   try {
     const payload = await apiRequest(`/api/players/${encodeURIComponent(userId)}`);
     view.innerHTML = `
-      ${renderHeader(`Player "${payload.user.login}"`, "Saved teams and coach details.", `<a class="primary-button" href="#/season">Back</a>`)}
+      ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndCoachSubtitle"), `<a class="primary-button" href="#/season">${t("common.back")}</a>`)}
       <div class="admin-profile-grid">
         ${renderAdminProfileCard(payload.user)}
         ${state.auth.currentUser?.isAdmin ? `<section class="content-panel season-card">${renderAdminCreateTeamForUserPanel(payload.user)}</section>` : ""}
         <section class="content-panel season-card">
-          <h2>Saved Teams</h2>
+          <h2>${t("admin.savedTeamsHeader")}</h2>
           ${renderPublicProfileTeamsTable(payload.user, payload.teams ?? [])}
         </section>
       </div>
@@ -3021,25 +3172,25 @@ async function renderPlayerProfile(userId) {
     }
   } catch (error) {
     view.innerHTML = `
-      ${renderHeader("Player Profile", "Saved teams and coach details.", `<a class="primary-button" href="#/season">Back</a>`)}
+      ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"), `<a class="primary-button" href="#/season">${t("common.back")}</a>`)}
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
 }
 
 function renderPublicProfileTeamsTable(user, teams) {
-  if (!teams.length) return `<p>No saved teams yet.</p>`;
+  if (!teams.length) return `<p>${t("myTeams.noSavedTeams")}</p>`;
   return `
     <div class="table-scroll builder-table-scroll">
       <table class="admin-teams-table compact-roster-table">
         <thead>
           <tr>
-            <th>Team</th>
-            <th>Rules</th>
-            <th>Players</th>
-            <th>Total Cost</th>
-            <th>Updated</th>
-            ${state.auth.currentUser?.isAdmin ? "<th>Action</th>" : ""}
+            <th>${t("sidebar.teamHeading")}</th>
+            <th>${t("myTeams.table.rules")}</th>
+            <th>${t("catalog.players")}</th>
+            <th>${t("roster.totalCost")}</th>
+            <th>${t("footer.updated")}</th>
+            ${state.auth.currentUser?.isAdmin ? `<th>${t("roster.actionHeader")}</th>` : ""}
           </tr>
         </thead>
         <tbody>
@@ -3069,7 +3220,7 @@ function renderPublicProfileTeamRow(user, team) {
       <td>${costs ? costs.totalPlayersCount : "-"}</td>
       <td>${costs ? `${costs.total}k` : "-"}</td>
       <td>${escapeHtml(updated)}</td>
-      ${state.auth.currentUser?.isAdmin ? `<td><a class="primary-button compact-action" href="${adminTeamEditUrl(user, team)}">Edit</a></td>` : ""}
+      ${state.auth.currentUser?.isAdmin ? `<td><a class="primary-button compact-action" href="${adminTeamEditUrl(user, team)}">${t("common.edit")}</a></td>` : ""}
     </tr>
   `;
 }
@@ -3078,14 +3229,14 @@ async function renderPublicTeamProfile(userId, teamId) {
   setActiveNav("season");
   setViewSection("players");
   view.innerHTML = `
-    ${renderHeader("Team", "Saved roster.", `<a class="primary-button" href="${playerUrl(userId)}">Back</a>`)}
-    <div class="loading">Loading team...</div>
+    ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"), `<a class="primary-button" href="${playerUrl(userId)}">${t("common.back")}</a>`)}
+    <div class="loading">${t("myTeams.loadingTeam")}</div>
   `;
 
   if (!state.auth.currentUser) {
     view.innerHTML = `
-      ${renderHeader("Team", "Saved roster.")}
-      <div class="empty-state">Log in to view saved teams.</div>
+      ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"))}
+      <div class="empty-state">${t("admin.loginToViewSavedTeams")}</div>
     `;
     return;
   }
@@ -3098,27 +3249,27 @@ async function renderPublicTeamProfile(userId, teamId) {
     ensureDraftPlayers(team, draft);
     const costs = calculateRosterCosts(team, draft);
     const actions = `
-      <a class="primary-button" href="${playerUrl(payload.user)}">Back</a>
-      ${state.auth.currentUser?.isAdmin ? `<a class="primary-button" href="${adminTeamEditUrl(payload.user, payload.team)}">Edit Team</a>` : ""}
+      <a class="primary-button" href="${playerUrl(payload.user)}">${t("common.back")}</a>
+      ${state.auth.currentUser?.isAdmin ? `<a class="primary-button" href="${adminTeamEditUrl(payload.user, payload.team)}">${t("admin.editTeamAction")}</a>` : ""}
     `;
     view.innerHTML = `
-      ${renderHeader(`Team "${payload.team.name}"`, `Coach: ${payload.user.login}`, actions)}
+      ${renderHeader(`${t("sidebar.teamHeading")} "${payload.team.name}"`, `${t("admin.coachHeading")}: ${payload.user.login}`, actions)}
       <div class="saved-roster-top-grid">
         ${renderPublicTeamSummary(payload.user, payload.team, team, draft, costs)}
         <section class="side-panel">
-          <h2>Coach</h2>
+          <h2>${t("admin.coachHeading")}</h2>
           <p>${renderPlayerLink(payload.user)}</p>
           ${renderTeamRuleAccess(team, draft)}
         </section>
       </div>
       <section class="content-panel compact-table-panel">
-        <h2>Roster</h2>
+        <h2>${t("savedRoster.rosterHeading")}</h2>
         ${renderPublicTeamRosterTable(team, draft)}
       </section>
     `;
   } catch (error) {
     view.innerHTML = `
-      ${renderHeader("Team", "Saved roster.", `<a class="primary-button" href="${playerUrl(userId)}">Back</a>`)}
+      ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"), `<a class="primary-button" href="${playerUrl(userId)}">${t("common.back")}</a>`)}
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
@@ -3129,18 +3280,18 @@ function renderPublicTeamSummary(user, savedTeam, team, draft, costs) {
     <aside class="builder-summary saved-roster-summary-panel side-panel">
       ${draft.logoData ? `<div class="summary-logo-block"><img src="${escapeHtml(draft.logoData)}" alt=""></div>` : ""}
       <div class="summary-title-block">
-        <h3>Roster Summary</h3>
+        <h3>${t("savedRoster.summaryTitle")}</h3>
         <a class="builder-team-link" href="${playerTeamUrl(user, savedTeam)}">${escapeHtml(savedTeam.name)}</a>
       </div>
       <dl class="stat-list summary-stat-grid">
-        <dt>Coach</dt><dd>${renderPlayerLink(user)}</dd>
-        <dt>Rules</dt><dd><a class="inline-rule-link" href="${pageUrl(team)}">${escapeHtml(team.title)}</a></dd>
-        <dt>Active players</dt><dd>${costs.playersCount}</dd>
-        <dt>Total players</dt><dd>${costs.totalPlayersCount}</dd>
-        <dt>Team Rerolls</dt><dd>${draft.teamRerolls ?? 0}</dd>
-        <dt>Dedicated Fans</dt><dd>${countToNumber(draft.dedicatedFans)}</dd>
-        <dt>Treasury</dt><dd>${countToNumber(draft.treasury)}k</dd>
-        <dt>Total Cost</dt><dd>${costs.total}k</dd>
+        <dt>${t("admin.coachHeading")}</dt><dd>${renderPlayerLink(user)}</dd>
+        <dt>${t("myTeams.table.rules")}</dt><dd><a class="inline-rule-link" href="${pageUrl(team)}">${escapeHtml(team.title)}</a></dd>
+        <dt>${t("savedRoster.activePlayers")}</dt><dd>${costs.playersCount}</dd>
+        <dt>${t("savedRoster.totalPlayers")}</dt><dd>${costs.totalPlayersCount}</dd>
+        <dt>${t("savedRoster.teamRerolls")}</dt><dd>${draft.teamRerolls ?? 0}</dd>
+        <dt>${t("savedRoster.dedicatedFans")}</dt><dd>${countToNumber(draft.dedicatedFans)}</dd>
+        <dt>${t("savedRoster.treasury")}</dt><dd>${countToNumber(draft.treasury)}k</dd>
+        <dt>${t("roster.totalCost")}</dt><dd>${costs.total}k</dd>
       </dl>
     </aside>
   `;
@@ -3148,23 +3299,23 @@ function renderPublicTeamSummary(user, savedTeam, team, draft, costs) {
 
 function renderPublicTeamRosterTable(team, draft) {
   const players = selectedRosterPlayers(team, draft);
-  if (!players.length) return `<p>No players in this team yet.</p>`;
+  if (!players.length) return `<p>${t("savedRoster.noPlayersYet")}</p>`;
   return `
     <div class="table-scroll builder-table-scroll">
       <table class="compact-roster-table public-roster-table">
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Position</th>
-            <th>MA</th>
-            <th>ST</th>
-            <th>AG</th>
-            <th>PA</th>
-            <th>AR</th>
-            <th>Skills</th>
-            <th>Cost</th>
-            <th>Status</th>
+            <th>${t("roster.nameHeader")}</th>
+            <th>${t("roster.positionHeader")}</th>
+            <th>${t("stats.ma")}</th>
+            <th>${t("stats.st")}</th>
+            <th>${t("stats.ag")}</th>
+            <th>${t("stats.pa")}</th>
+            <th>${t("stats.ar")}</th>
+            <th>${t("roster.skillsLabel")}</th>
+            <th>${t("sidebar.cost")}</th>
+            <th>${t("admin.statusHeader")}</th>
           </tr>
         </thead>
         <tbody>
@@ -3180,7 +3331,7 @@ function renderPublicTeamRosterTable(team, draft) {
               <td>${escapeHtml(statValueForDisplayByStat("ar", player.row.ar, player.statMods.ar ?? 0))}</td>
               <td class="skills-cell">${renderRosterLinks(skillNamesForPlayer(player.row, player))}</td>
               <td>${playerCurrentCost(player.row, player, true)}k</td>
-              <td>${player.skipNextGame ? "Skip next game" : player.niglingInjury ? "Nigling injury" : "-"}</td>
+              <td>${player.skipNextGame ? t("admin.skipNextGameStatus") : player.niglingInjury ? t("roster.niglingInjury") : "-"}</td>
             </tr>
           `).join("")}
         </tbody>
@@ -3242,11 +3393,11 @@ function makeSeasonStarterRoster(team, name) {
 }
 
 const seasonTabDefinitions = [
-  { id: "registration", label: "Registration" },
-  { id: "fixture", label: "League Fixture" },
-  { id: "standings", label: "Standings" },
-  { id: "schedule", label: "Schedule" },
-  { id: "administration", label: "Administration", adminOnly: true },
+  { id: "registration", labelKey: "season.tab.registration" },
+  { id: "fixture", labelKey: "season.tab.fixture" },
+  { id: "standings", labelKey: "season.tab.standings" },
+  { id: "schedule", labelKey: "season.tab.schedule" },
+  { id: "administration", labelKey: "nav.administration", adminOnly: true },
 ];
 
 function availableSeasonTabs() {
@@ -3260,7 +3411,7 @@ function normalizeSeasonTab(tabId = "") {
 
 function renderSeasonTabs(activeTab) {
   return `
-    <div class="season-tabs" role="tablist" aria-label="Season sections">
+    <div class="season-tabs" role="tablist" aria-label="${t("season.sectionsAriaLabel")}">
       ${availableSeasonTabs().map((tab) => `
         <button
           class="season-tab ${tab.id === activeTab ? "active" : ""}"
@@ -3268,7 +3419,7 @@ function renderSeasonTabs(activeTab) {
           role="tab"
           aria-selected="${tab.id === activeTab ? "true" : "false"}"
           data-season-tab="${escapeHtml(tab.id)}"
-        >${escapeHtml(tab.label)}</button>
+        >${t(tab.labelKey)}</button>
       `).join("")}
     </div>
   `;
@@ -3286,23 +3437,23 @@ async function renderSeason(refresh = true) {
   setActiveNav("season");
   setViewSection("season");
   view.innerHTML = `
-    ${renderHeader("Season", "Commit a team, manage Swiss pairings, and track league points.", `<button class="primary-button" type="button" data-season-refresh>Refresh</button>`)}
-    <div class="loading">Loading season...</div>
+    ${renderHeader(t("nav.season"), t("season.subtitle"), `<button class="primary-button" type="button" data-season-refresh>${t("admin.refresh")}</button>`)}
+    <div class="loading">${t("season.loading")}</div>
   `;
 
   await loadSeason(refresh);
 
   if (!state.auth.currentUser) {
     view.innerHTML = `
-      ${renderHeader("Season", "Commit a team, manage Swiss pairings, and track league points.")}
-      <div class="empty-state">Log in to commit your team to the season.</div>
+      ${renderHeader(t("nav.season"), t("season.subtitle"))}
+      <div class="empty-state">${t("season.loginToCommit")}</div>
     `;
     return;
   }
 
   if (state.season.error) {
     view.innerHTML = `
-      ${renderHeader("Season", "Commit a team, manage Swiss pairings, and track league points.", `<button class="primary-button" type="button" data-season-refresh>Refresh</button>`)}
+      ${renderHeader(t("nav.season"), t("season.subtitle"), `<button class="primary-button" type="button" data-season-refresh>${t("admin.refresh")}</button>`)}
       <div class="empty-state">${escapeHtml(state.season.error)}</div>
     `;
     wireSeason();
@@ -3313,7 +3464,7 @@ async function renderSeason(refresh = true) {
   const activeTab = normalizeSeasonTab(state.season.activeTab);
   state.season.activeTab = activeTab;
   view.innerHTML = `
-    ${renderHeader("Season", `${data.season?.name ?? "Season 1"} · Swiss pairing control`, `<button class="primary-button" type="button" data-season-refresh>Refresh</button>`)}
+    ${renderHeader(t("nav.season"), `${data.season?.name ?? t("season.defaultName")} · ${t("season.swissPairingControl")}`, `<button class="primary-button" type="button" data-season-refresh>${t("admin.refresh")}</button>`)}
     ${renderSeasonTabs(activeTab)}
     ${renderSeasonTabContent(data, activeTab)}
   `;
@@ -3326,7 +3477,7 @@ function renderSeasonRegistration(data) {
       ${renderSeasonCommitPanel(data)}
       ${state.auth.currentUser?.isAdmin ? renderSeasonRegistrationAdminPanel(data) : ""}
       <section class="content-panel season-card">
-        <h2>Registered Teams</h2>
+        <h2>${t("season.registeredTeamsHeading")}</h2>
         ${renderSeasonEntriesTable(data, Boolean(state.auth.currentUser?.isAdmin))}
       </section>
     </div>
@@ -3344,19 +3495,19 @@ function renderSeasonRegistrationAdminPanel(data) {
   const availableSavedTeams = availableSeasonSavedTeams(data);
   return `
     <section class="content-panel season-card">
-      <h2>Admin Registration</h2>
+      <h2>${t("season.adminRegistrationHeading")}</h2>
       ${availableSavedTeams.length ? `
-        <p>Add any saved team to the active season.</p>
+        <p>${t("season.addSavedTeamNote")}</p>
         <div class="season-action-row">
           <label class="filter-field">
-            <span>Saved team</span>
+            <span>${t("season.savedTeamField")}</span>
             <select data-season-admin-team>
               ${availableSavedTeams.map((team) => renderOption(team.id, `${team.owner.login} · ${team.name}`, "")).join("")}
             </select>
           </label>
-          <button class="primary-button" type="button" data-season-admin-add-team>Add Team</button>
+          <button class="primary-button" type="button" data-season-admin-add-team>${t("season.addTeamAction")}</button>
         </div>
-      ` : `<p>No eligible saved teams outside the season.</p>`}
+      ` : `<p>${t("season.noEligibleSavedTeams")}</p>`}
     </section>
   `;
 }
@@ -3367,13 +3518,13 @@ function renderSeasonCommitPanel(data) {
   if (myEntry) {
     return `
       <section class="content-panel season-card">
-        <h2>Your Season Team</h2>
+        <h2>${t("season.yourTeamHeading")}</h2>
         <div class="season-committed-team">
           ${myEntry.team.logoData ? `<img src="${escapeHtml(myEntry.team.logoData)}" alt="">` : ""}
           <div>
             <strong>${escapeHtml(myEntry.team.name)}</strong>
             <p>${seasonTeamRulesLink(myEntry)}</p>
-            <p class="muted-text">Committed as ${escapeHtml(myEntry.user.login)}.</p>
+            <p class="muted-text">${t("season.committedAs")} ${escapeHtml(myEntry.user.login)}.</p>
           </div>
         </div>
       </section>
@@ -3382,21 +3533,21 @@ function renderSeasonCommitPanel(data) {
 
   return `
     <section class="content-panel season-card">
-      <h2>Commit Team</h2>
+      <h2>${t("season.commitTeamHeading")}</h2>
       ${teams.length ? `
-        <p>Select one saved team to confirm its participation in the active season.</p>
+        <p>${t("season.selectSavedTeamNote")}</p>
         <div class="season-action-row">
           <label class="filter-field">
-            <span>Saved team</span>
+            <span>${t("season.savedTeamField")}</span>
             <select data-season-commit-team>
               ${teams.map((team) => renderOption(team.id, team.name, "")).join("")}
             </select>
           </label>
-          <button class="primary-button" type="button" data-season-commit>Commit</button>
+          <button class="primary-button" type="button" data-season-commit>${t("season.commitAction")}</button>
         </div>
       ` : `
-        <p>No saved teams yet.</p>
-        <a class="primary-button" href="#/builder">Create Team</a>
+        <p>${t("myTeams.noSavedTeams")}</p>
+        <a class="primary-button" href="#/builder">${t("myTeams.createTeam")}</a>
       `}
     </section>
   `;
@@ -3408,7 +3559,7 @@ function pairingEntry(data, entryId) {
 
 function pairingTeamCell(data, entryId) {
   const entry = pairingEntry(data, entryId);
-  if (!entry) return `<span class="muted-text">Empty</span>`;
+  if (!entry) return `<span class="muted-text">${t("season.emptySlotLabel")}</span>`;
   return `
     <span class="season-pairing-team">
       <strong>${seasonTeamProfileLink(entry)}</strong>
@@ -3444,8 +3595,8 @@ function renderLeagueFixture(data) {
   if (!myEntry) {
     return `
       <section class="content-panel season-card">
-        <h2>League Fixture</h2>
-        <p>Commit a team first to receive your active pairing.</p>
+        <h2>${t("season.leagueFixtureHeading")}</h2>
+        <p>${t("season.commitFirstNote")}</p>
       </section>
     `;
   }
@@ -3454,8 +3605,8 @@ function renderLeagueFixture(data) {
   if (!fixture) {
     return `
       <section class="content-panel season-card">
-        <h2>League Fixture</h2>
-        <p>No active pairing yet. An admin needs to start a round first.</p>
+        <h2>${t("season.leagueFixtureHeading")}</h2>
+        <p>${t("season.noActivePairingNote")}</p>
       </section>
     `;
   }
@@ -3466,27 +3617,27 @@ function renderLeagueFixture(data) {
   const opponent = isHome ? away : home;
   return `
     <section class="content-panel season-card">
-      <h2>League Fixture</h2>
+      <h2>${t("season.leagueFixtureHeading")}</h2>
       <div class="fixture-headline">
         <div>
-          <span class="muted-text">Round ${fixture.roundNumber} · Table ${fixture.tableNumber}</span>
+          <span class="muted-text">${t("season.roundLabel")} ${fixture.roundNumber} · ${t("season.tableLabel")} ${fixture.tableNumber}</span>
           <strong>${seasonTeamProfileLink(myEntry)}</strong>
         </div>
         <div>
-          <span class="muted-text">Opponent</span>
+          <span class="muted-text">${t("season.opponentLabel")}</span>
           ${opponent ? `
             <strong>${seasonTeamProfileLink(opponent)}</strong>
             <p>${renderPlayerLink(opponent.user)} · ${seasonTeamRulesLink(opponent)}</p>
-          ` : `<strong>BYE</strong>`}
+          ` : `<strong>${t("season.byeLabel")}</strong>`}
         </div>
       </div>
 
       <div class="season-score-summary">
-        <span>Touchdowns: <strong>${escapeHtml(pairingTouchdowns(fixture))}</strong></span>
-        <span>League points: <strong>${escapeHtml(pairingLeaguePoints(fixture))}</strong></span>
+        <span>${t("season.touchdownsLabel")}: <strong>${escapeHtml(pairingTouchdowns(fixture))}</strong></span>
+        <span>${t("season.leaguePointsLabel")}: <strong>${escapeHtml(pairingLeaguePoints(fixture))}</strong></span>
       </div>
 
-      ${opponent ? renderFixtureResultForm(fixture) : `<p>This is a one-team fixture. Admin-started one-team pairings are scored as a technical win.</p>`}
+      ${opponent ? renderFixtureResultForm(fixture) : `<p>${t("season.oneTeamFixtureNote")}</p>`}
     </section>
   `;
 }
@@ -3495,38 +3646,38 @@ function renderFixtureResultForm(pairing) {
   return `
     <div class="fixture-result-form" data-fixture-row="${escapeHtml(pairing.id)}">
       <label class="filter-field">
-        <span>Home touchdowns</span>
+        <span>${t("season.homeTouchdownsField")}</span>
         <input type="number" min="0" step="1" value="${escapeHtml(pairing.homeTouchdowns ?? "")}" data-fixture-home-td>
       </label>
       <label class="filter-field">
-        <span>Away touchdowns</span>
+        <span>${t("season.awayTouchdownsField")}</span>
         <input type="number" min="0" step="1" value="${escapeHtml(pairing.awayTouchdowns ?? "")}" data-fixture-away-td>
       </label>
       <label class="table-checkbox fixture-checkbox">
         <input type="checkbox" data-fixture-home-unable ${pairing.homeOpponentUnable ? "checked" : ""}>
-        <span>Award +2 to Home: Away could not field</span>
+        <span>${t("season.awardHomeUnableNote")}</span>
       </label>
       <label class="table-checkbox fixture-checkbox">
         <input type="checkbox" data-fixture-away-unable ${pairing.awayOpponentUnable ? "checked" : ""}>
-        <span>Award +2 to Away: Home could not field</span>
+        <span>${t("season.awardAwayUnableNote")}</span>
       </label>
-      <button class="primary-button" type="button" data-save-fixture="${escapeHtml(pairing.id)}">Submit Result</button>
+      <button class="primary-button" type="button" data-save-fixture="${escapeHtml(pairing.id)}">${t("season.submitResultAction")}</button>
     </div>
   `;
 }
 
 function renderSeasonEntriesTable(data, adminActions = false) {
   const entries = data.entries ?? [];
-  if (!entries.length) return `<p>No teams committed yet.</p>`;
+  if (!entries.length) return `<p>${t("season.noTeamsCommittedYet")}</p>`;
   return `
     <div class="table-scroll">
       <table class="compact-roster-table season-table">
         <thead>
           <tr>
-            <th>Coach</th>
-            <th>Team</th>
-            <th>Rules</th>
-            ${adminActions ? "<th>Action</th>" : ""}
+            <th>${t("admin.coachHeading")}</th>
+            <th>${t("sidebar.teamHeading")}</th>
+            <th>${t("myTeams.table.rules")}</th>
+            ${adminActions ? `<th>${t("roster.actionHeader")}</th>` : ""}
           </tr>
         </thead>
         <tbody>
@@ -3535,7 +3686,7 @@ function renderSeasonEntriesTable(data, adminActions = false) {
               <td>${renderPlayerLink(entry.user)}</td>
               <td><strong>${seasonTeamProfileLink(entry)}</strong></td>
               <td>${seasonTeamRulesLink(entry)}</td>
-              ${adminActions ? `<td><button class="filter-button compact-action" type="button" data-season-remove-entry="${escapeHtml(entry.id)}">Remove</button></td>` : ""}
+              ${adminActions ? `<td><button class="filter-button compact-action" type="button" data-season-remove-entry="${escapeHtml(entry.id)}">${t("common.remove")}</button></td>` : ""}
             </tr>
           `).join("")}
         </tbody>
@@ -3548,19 +3699,19 @@ function renderSeasonStandings(data) {
   const standings = data.standings ?? [];
   return `
     <section class="content-panel season-card">
-      <h2>Standings</h2>
-      <p class="muted-text">Scoring: win 3, draw 1, technical win 2, loss 0, +1 for a 3+ TD gap, +1 for a shutout with at least one TD scored, +2 if the opponent could not field a team.</p>
+      <h2>${t("season.tab.standings")}</h2>
+      <p class="muted-text">${t("season.scoringNote")}</p>
       ${standings.length ? `
         <div class="table-scroll">
           <table class="compact-roster-table season-table">
             <thead>
               <tr>
                 <th>#</th>
-                <th>Coach</th>
-                <th>Team</th>
-                <th>Games</th>
-                <th>League Points</th>
-                <th>Byes</th>
+                <th>${t("admin.coachHeading")}</th>
+                <th>${t("sidebar.teamHeading")}</th>
+                <th>${t("season.gamesHeader")}</th>
+                <th>${t("season.leaguePointsLabel")}</th>
+                <th>${t("season.byesHeader")}</th>
               </tr>
             </thead>
             <tbody>
@@ -3577,7 +3728,7 @@ function renderSeasonStandings(data) {
             </tbody>
           </table>
         </div>
-      ` : `<p>No committed teams yet.</p>`}
+      ` : `<p>${t("season.noTeamsCommittedYet")}</p>`}
     </section>
   `;
 }
@@ -3587,8 +3738,8 @@ function renderSeasonRounds(data, adminMode = false) {
   if (!rounds.length) {
     return `
       <section class="content-panel season-card">
-        <h2>${adminMode ? "Pairing Controls" : "Schedule"}</h2>
-        <p>No rounds generated yet. An admin can generate Round 1 after teams are committed.</p>
+        <h2>${adminMode ? t("season.pairingControlsHeading") : t("season.tab.schedule")}</h2>
+        <p>${t("season.noRoundsGeneratedNote")}</p>
       </section>
     `;
   }
@@ -3599,7 +3750,7 @@ function renderSeasonRounds(data, adminMode = false) {
         <article class="content-panel season-card">
           <header class="season-round-header">
             <div>
-              <h2>Round ${round.roundNumber}</h2>
+              <h2>${t("season.roundLabel")} ${round.roundNumber}</h2>
               <span class="season-status-pill" data-status="${escapeHtml(round.status)}">${escapeHtml(round.status)}</span>
             </div>
             ${adminMode ? renderSeasonRoundActions(round) : ""}
@@ -3609,22 +3760,22 @@ function renderSeasonRounds(data, adminMode = false) {
               <thead>
                 ${adminMode ? `
                   <tr>
-                    <th>Table</th>
-                    <th>Home</th>
-                    <th>Away</th>
-                    <th>Result</th>
-                    <th>TD</th>
-                    <th>Bonuses</th>
-                    <th>League Points</th>
-                    <th>Action</th>
+                    <th>${t("season.tableLabel")}</th>
+                    <th>${t("season.homeLabel")}</th>
+                    <th>${t("season.awayLabel")}</th>
+                    <th>${t("season.resultHeader")}</th>
+                    <th>${t("season.tdHeader")}</th>
+                    <th>${t("season.bonusesHeader")}</th>
+                    <th>${t("season.leaguePointsLabel")}</th>
+                    <th>${t("roster.actionHeader")}</th>
                   </tr>
                 ` : `
                   <tr>
-                    <th>Table</th>
-                    <th>Home</th>
-                    <th>TD</th>
-                    <th>League Points</th>
-                    <th>Away</th>
+                    <th>${t("season.tableLabel")}</th>
+                    <th>${t("season.homeLabel")}</th>
+                    <th>${t("season.tdHeader")}</th>
+                    <th>${t("season.leaguePointsLabel")}</th>
+                    <th>${t("season.awayLabel")}</th>
                   </tr>
                 `}
               </thead>
@@ -3643,10 +3794,10 @@ function renderSeasonRoundActions(round) {
   return `
     <div class="season-round-actions">
       ${round.status === "draft" ? `
-        <button class="primary-button compact-action" type="button" data-season-start-round="${escapeHtml(round.id)}">Start Round</button>
-        <button class="filter-button compact-action" type="button" data-season-add-pairing="${escapeHtml(round.id)}">Add Empty Pairing</button>
+        <button class="primary-button compact-action" type="button" data-season-start-round="${escapeHtml(round.id)}">${t("season.startRoundAction")}</button>
+        <button class="filter-button compact-action" type="button" data-season-add-pairing="${escapeHtml(round.id)}">${t("season.addEmptyPairingAction")}</button>
       ` : ""}
-      <button class="filter-button compact-action" type="button" data-season-delete-round="${escapeHtml(round.id)}">Delete Round</button>
+      <button class="filter-button compact-action" type="button" data-season-delete-round="${escapeHtml(round.id)}">${t("season.deleteRoundAction")}</button>
     </div>
   `;
 }
@@ -3664,7 +3815,7 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
         <td>${pairingTeamCell(data, pairing.homeEntryId)}</td>
         <td>${escapeHtml(pairingTouchdowns(pairing))}</td>
         <td>${escapeHtml(pairingLeaguePoints(pairing))}</td>
-        <td>${isBye ? "<strong>BYE</strong>" : pairingTeamCell(data, pairing.awayEntryId)}</td>
+        <td>${isBye ? `<strong>${t("season.byeLabel")}</strong>` : pairingTeamCell(data, pairing.awayEntryId)}</td>
       </tr>
     `;
   }
@@ -3678,9 +3829,9 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
       <td>${renderSeasonEntrySelect(data, "away-entry", pairing.awayEntryId, locked)}</td>
       <td>
         <select class="table-select" data-result-type ${resultLocked ? "disabled" : ""}>
-          ${renderOption("played", "Played", pairing.resultType)}
-          ${renderOption("technical_home", "Technical Home 1-0", pairing.resultType)}
-          ${renderOption("technical_away", "Technical Away 0-1", pairing.resultType)}
+          ${renderOption("played", t("season.resultPlayed"), pairing.resultType)}
+          ${renderOption("technical_home", t("season.resultTechnicalHome"), pairing.resultType)}
+          ${renderOption("technical_away", t("season.resultTechnicalAway"), pairing.resultType)}
         </select>
       </td>
       <td>
@@ -3691,15 +3842,15 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
       </td>
       <td>
         <div class="season-bonus-checks">
-          <label class="table-checkbox"><input type="checkbox" data-home-unable ${pairing.homeOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>+2 Home</span></label>
-          <label class="table-checkbox"><input type="checkbox" data-away-unable ${pairing.awayOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>+2 Away</span></label>
+          <label class="table-checkbox"><input type="checkbox" data-home-unable ${pairing.homeOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>${t("season.plusTwoHome")}</span></label>
+          <label class="table-checkbox"><input type="checkbox" data-away-unable ${pairing.awayOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>${t("season.plusTwoAway")}</span></label>
         </div>
       </td>
       <td>${escapeHtml(pairingLeaguePoints(pairing))}</td>
       <td>
         <div class="table-actions">
-          <button class="filter-button compact-action" type="button" data-save-season-pairing="${escapeHtml(pairing.id)}">Save</button>
-          <button class="filter-button compact-action" type="button" data-delete-season-pairing="${escapeHtml(pairing.id)}">Delete</button>
+          <button class="filter-button compact-action" type="button" data-save-season-pairing="${escapeHtml(pairing.id)}">${t("season.saveAction")}</button>
+          <button class="filter-button compact-action" type="button" data-delete-season-pairing="${escapeHtml(pairing.id)}">${t("common.delete")}</button>
         </div>
       </td>
     </tr>
@@ -3709,7 +3860,7 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
 function renderSeasonEntrySelect(data, name, selected, disabled = false) {
   return `
     <select class="table-select" data-${name} ${disabled ? "disabled" : ""}>
-      ${renderOption("", "Empty slot", selected ?? "")}
+      ${renderOption("", t("season.emptySlotLabel"), selected ?? "")}
       ${(data.entries ?? []).map((entry) => renderOption(entry.id, seasonEntryLabel(entry), selected ?? "")).join("")}
     </select>
   `;
@@ -3724,49 +3875,49 @@ function renderSeasonAdmin(data) {
   return `
     <div class="season-admin-stack">
       <section class="content-panel season-card season-admin-panel">
-        <h2>Admin Controls</h2>
+        <h2>${t("season.adminControlsHeading")}</h2>
         <div class="season-admin-grid">
           <div class="season-admin-block">
-            <h3>Rounds</h3>
-            <p>Create pairings as drafts. Start Round locks the pairings and publishes League Fixtures.</p>
-            <button class="primary-button" type="button" data-season-generate-round>Generate Next Round</button>
-            <button class="filter-button" type="button" data-season-create-round>Create Empty Round</button>
+            <h3>${t("season.tab.schedule")}</h3>
+            <p>${t("season.roundsAdminNote")}</p>
+            <button class="primary-button" type="button" data-season-generate-round>${t("season.generateNextRoundAction")}</button>
+            <button class="filter-button" type="button" data-season-create-round>${t("season.createEmptyRoundAction")}</button>
           </div>
 
           <div class="season-admin-block">
-            <h3>Add Saved Team</h3>
+            <h3>${t("season.addSavedTeamHeading")}</h3>
             ${availableSavedTeams.length ? `
               <label class="filter-field">
-                <span>Saved team</span>
+                <span>${t("season.savedTeamField")}</span>
                 <select data-season-admin-team>
                   ${availableSavedTeams.map((team) => renderOption(team.id, `${team.owner.login} · ${team.name}`, "")).join("")}
                 </select>
               </label>
-              <button class="primary-button" type="button" data-season-admin-add-team>Add Team</button>
-            ` : `<p>No eligible saved teams outside the season.</p>`}
+              <button class="primary-button" type="button" data-season-admin-add-team>${t("season.addTeamAction")}</button>
+            ` : `<p>${t("season.noEligibleSavedTeams")}</p>`}
           </div>
 
           <div class="season-admin-block">
-            <h3>Create Team For Coach</h3>
+            <h3>${t("season.createTeamForCoachHeading")}</h3>
             ${availableUsers.length ? `
               <label class="filter-field">
-                <span>Coach</span>
+                <span>${t("admin.coachHeading")}</span>
                 <select data-season-admin-user>
                   ${availableUsers.map((user) => renderOption(user.id, user.login, "")).join("")}
                 </select>
               </label>
               <label class="filter-field">
-                <span>Rules team</span>
+                <span>${t("admin.rulesTeamField")}</span>
                 <select data-season-admin-base-team>
                   ${teams.map((team) => renderOption(team.slug, team.title, "")).join("")}
                 </select>
               </label>
               <label class="filter-field">
-                <span>Team name</span>
-                <input type="text" data-season-admin-team-name placeholder="New roster name">
+                <span>${t("savedRoster.teamName")}</span>
+                <input type="text" data-season-admin-team-name placeholder="${t("season.newRosterNamePlaceholder")}">
               </label>
-              <button class="primary-button" type="button" data-season-admin-create-team>Create And Commit</button>
-            ` : `<p>Every coach already has one committed team.</p>`}
+              <button class="primary-button" type="button" data-season-admin-create-team>${t("season.createAndCommitAction")}</button>
+            ` : `<p>${t("season.everyCoachCommittedNote")}</p>`}
           </div>
         </div>
       </section>
@@ -3774,7 +3925,7 @@ function renderSeasonAdmin(data) {
       ${renderSeasonRounds(data, true)}
 
       <section class="content-panel season-card">
-        <h2>Committed Teams</h2>
+        <h2>${t("season.committedTeamsHeading")}</h2>
         ${renderSeasonAdminEntries(data)}
       </section>
     </div>
@@ -3894,7 +4045,7 @@ function wireSeason() {
 
   view.querySelectorAll("[data-season-delete-round]").forEach((button) => {
     button.addEventListener("click", async () => {
-      if (!confirm("Delete this round and all its pairings?")) return;
+      if (!confirm(t("season.confirmDeleteRound"))) return;
       try {
         replaceSeasonData(await apiRequest(`/api/season/admin/rounds/${button.dataset.seasonDeleteRound}`, {
           method: "DELETE",
@@ -3926,7 +4077,7 @@ function wireSeason() {
       const homeTouchdowns = row?.querySelector("[data-fixture-home-td]")?.value ?? "";
       const awayTouchdowns = row?.querySelector("[data-fixture-away-td]")?.value ?? "";
       if (homeTouchdowns === "" || awayTouchdowns === "") {
-        alert("Enter both touchdown values.");
+        alert(t("season.enterBothTouchdownsAlert"));
         return;
       }
       try {
@@ -3974,7 +4125,7 @@ function wireSeason() {
 
   view.querySelectorAll("[data-delete-season-pairing]").forEach((button) => {
     button.addEventListener("click", async () => {
-      if (!confirm("Delete this pairing?")) return;
+      if (!confirm(t("season.confirmDeletePairing"))) return;
       try {
         replaceSeasonData(await apiRequest(`/api/season/admin/pairings/${button.dataset.deleteSeasonPairing}`, {
           method: "DELETE",
@@ -3988,7 +4139,7 @@ function wireSeason() {
 
   view.querySelectorAll("[data-season-remove-entry]").forEach((button) => {
     button.addEventListener("click", async () => {
-      if (!confirm("Remove this team from the season?")) return;
+      if (!confirm(t("season.confirmRemoveTeam"))) return;
       try {
         replaceSeasonData(await apiRequest(`/api/season/admin/entries/${button.dataset.seasonRemoveEntry}`, {
           method: "DELETE",
@@ -4154,7 +4305,7 @@ function renderSavedRosterIdentity(team, draft, teams) {
       ${draft.logoData ? `
         <div class="builder-logo-inline roster-logo-inline">
           <img class="builder-logo-preview" src="${escapeHtml(draft.logoData)}" alt="">
-          <button class="filter-button compact-action" type="button" data-roster-remove-logo>Remove logo</button>
+          <button class="filter-button compact-action" type="button" data-roster-remove-logo>${t("savedRoster.removeLogo")}</button>
         </div>
       ` : ""}
       ${renderTeamRuleAccess(team, draft, "roster")}
@@ -4166,32 +4317,32 @@ function renderSavedRosterPurchases(team, draft) {
   return `
     <div class="roster-purchases-layout">
       <section class="roster-controls-panel roster-resources-panel side-panel">
-        <h2>Team Resources</h2>
-        <div class="builder-tracker-list roster-resource-list" aria-label="Team resource trackers">
-          ${renderRosterStaffControl("dedicatedFans", "Dedicated Fans", draft.dedicatedFans)}
-          ${renderRosterMoneyControl("Treasury", "Spendable team balance", draft.treasury, "data-roster-treasury")}
-          ${renderRosterMoneyControl("Coach's Safe", "Locked reserve", draft.coachesSafe, "data-roster-coaches-safe")}
+        <h2>${t("roster.teamResourcesHeading")}</h2>
+        <div class="builder-tracker-list roster-resource-list" aria-label="${t("roster.teamResourceTrackersAriaLabel")}">
+          ${renderRosterStaffControl("dedicatedFans", t("savedRoster.dedicatedFans"), draft.dedicatedFans)}
+          ${renderRosterMoneyControl(t("roster.treasuryTitle"), t("roster.treasuryDescription"), draft.treasury, "data-roster-treasury")}
+          ${renderRosterMoneyControl("Coach's Safe", t("roster.coachesSafeDescription"), draft.coachesSafe, "data-roster-coaches-safe")}
         </div>
       </section>
       <section class="roster-controls-panel roster-purchases-panel side-panel">
-        <h2>Purchases</h2>
-        <div class="builder-tracker-list roster-tracker-list roster-purchase-grid" aria-label="Roster purchase trackers">
+        <h2>${t("roster.purchasesHeading")}</h2>
+        <div class="builder-tracker-list roster-tracker-list roster-purchase-grid" aria-label="${t("roster.purchaseTrackersAriaLabel")}">
         ${renderRosterCounterControl(
-          "Starting rerolls",
-          "60k each",
+          t("savedRoster.startingRerolls"),
+          `60k ${t("roster.each")}`,
           countToNumber(draft.startingRerolls),
           `<button class="filter-button" type="button" data-roster-reroll="-1" ${countToNumber(draft.startingRerolls) <= 0 ? "disabled" : ""}>-</button>`,
           `<button class="filter-button" type="button" data-roster-reroll="1">+</button>`,
         )}
         ${renderRosterCounterControl(
-          "Team Rerolls",
-          "120k each",
+          t("savedRoster.teamRerolls"),
+          `120k ${t("roster.each")}`,
           countToNumber(draft.teamRerolls),
           `<button class="filter-button" type="button" data-roster-team-reroll="-1" ${countToNumber(draft.teamRerolls) <= 0 ? "disabled" : ""}>-</button>`,
           `<button class="filter-button" type="button" data-roster-team-reroll="1" ${countToNumber(draft.teamRerolls) >= builderStaffMaximums.teamRerolls ? "disabled" : ""}>+</button>`,
         )}
-        ${renderRosterStaffControl("assistantCoaches", "Assistant Coaches", draft.assistantCoaches)}
-        ${renderRosterStaffControl("cheerleaders", "Cheerleaders", draft.cheerleaders)}
+        ${renderRosterStaffControl("assistantCoaches", t("savedRoster.assistantCoaches"), draft.assistantCoaches)}
+        ${renderRosterStaffControl("cheerleaders", t("savedRoster.cheerleaders"), draft.cheerleaders)}
         ${availableMedicalStaffDefinitions(team).map((staff) => renderRosterStaffControl(staff.key, staff.title, draft[staff.key])).join("")}
         </div>
       </section>
@@ -4889,24 +5040,24 @@ function renderBuilderIdentity(team, teams) {
     <section class="builder-setup-panel roster-identity-panel side-panel">
       <div class="builder-form builder-identity-form">
         <label class="filter-field">
-          <span>Team</span>
+          <span>${t("sidebar.teamHeading")}</span>
           <select data-builder-team>
             ${teams.map((item) => renderOption(item.slug, item.title, team.slug)).join("")}
           </select>
         </label>
         <label class="filter-field">
-          <span>Team Name</span>
+          <span>${t("savedRoster.teamName")}</span>
           <input type="text" value="${escapeHtml(state.builder.teamName || team.title)}" data-builder-name>
         </label>
         <label class="filter-field">
-          <span>Logo, max 2 MB</span>
+          <span>${t("savedRoster.logoField")}</span>
           <input type="file" accept="image/*" data-builder-logo>
         </label>
       </div>
       ${state.builder.logoData ? `
         <div class="builder-logo-inline roster-logo-inline">
           <img class="builder-logo-preview" src="${escapeHtml(state.builder.logoData)}" alt="">
-          <button class="filter-button compact-action" type="button" data-builder-remove-logo>Remove logo</button>
+          <button class="filter-button compact-action" type="button" data-builder-remove-logo>${t("savedRoster.removeLogo")}</button>
         </div>
       ` : ""}
       ${renderTeamRuleAccess(team, state.builder, "builder")}
@@ -4917,12 +5068,12 @@ function renderBuilderIdentity(team, teams) {
 function renderBuilderPurchases(team, costs) {
   return `
     <section class="roster-controls-panel side-panel">
-      <h2>Purchases</h2>
-      <div class="builder-tracker-list roster-tracker-list" aria-label="Starting roster trackers">
+      <h2>${t("roster.purchasesHeading")}</h2>
+      <div class="builder-tracker-list roster-tracker-list" aria-label="${t("roster.startingRosterTrackersAriaLabel")}">
         <div class="builder-addon compact-staff-control builder-tracker-control">
           <div>
-            <strong>Starting rerolls</strong>
-            <span>60k each</span>
+            <strong>${t("savedRoster.startingRerolls")}</strong>
+            <span>60k ${t("roster.each")}</span>
           </div>
           <div class="inline-stepper-control">
             <button class="filter-button" type="button" data-builder-reroll="-1" ${state.builder.startingRerolls <= 0 ? "disabled" : ""}>-</button>
@@ -4930,9 +5081,9 @@ function renderBuilderPurchases(team, costs) {
             <button class="filter-button" type="button" data-builder-reroll="1" ${costs.total + builderStaffCosts.startingRerolls > 600 ? "disabled" : ""}>+</button>
           </div>
         </div>
-        ${renderBuilderStaffControl("dedicatedFans", "Dedicated Fans", state.builder.dedicatedFans, costs.total + builderStaffCosts.dedicatedFans > 600)}
-        ${renderBuilderStaffControl("assistantCoaches", "Assistant Coaches", state.builder.assistantCoaches, costs.total + builderStaffCosts.assistantCoaches > 600)}
-        ${renderBuilderStaffControl("cheerleaders", "Cheerleaders", state.builder.cheerleaders, costs.total + builderStaffCosts.cheerleaders > 600)}
+        ${renderBuilderStaffControl("dedicatedFans", t("savedRoster.dedicatedFans"), state.builder.dedicatedFans, costs.total + builderStaffCosts.dedicatedFans > 600)}
+        ${renderBuilderStaffControl("assistantCoaches", t("savedRoster.assistantCoaches"), state.builder.assistantCoaches, costs.total + builderStaffCosts.assistantCoaches > 600)}
+        ${renderBuilderStaffControl("cheerleaders", t("savedRoster.cheerleaders"), state.builder.cheerleaders, costs.total + builderStaffCosts.cheerleaders > 600)}
         ${availableMedicalStaffDefinitions(team).map((staff) => {
           const blocked = costs.total + (builderStaffCosts[staff.key] ?? 0) > 600;
           return renderBuilderStaffControl(staff.key, staff.title, state.builder[staff.key], blocked);
@@ -5040,11 +5191,11 @@ function renderAvailablePlayerCard(row, rowIndex, draft, costs, enforceBudget = 
       </header>
       ${renderRosterStatGrid(row)}
       <section class="mobile-player-section">
-        <h3>Skills</h3>
+        <h3>${t("roster.skillsLabel")}</h3>
         <div class="mobile-player-pills">${renderRosterLinks(row.skills)}</div>
       </section>
       <footer class="available-player-foot">
-        Primary ${renderAccessCell(row.primary)} · Secondary ${renderAccessCell(row.secondary)} · Selected ${current}/${rosterMax(row.qty)}${budgetBlocked ? ` · over budget` : ""}
+        ${t("roster.primary")} ${renderAccessCell(row.primary)} · ${t("roster.secondary")} ${renderAccessCell(row.secondary)} · ${t("roster.selectedLabel")} ${current}/${rosterMax(row.qty)}${budgetBlocked ? ` · ${t("roster.overBudgetLabel")}` : ""}
       </footer>
     </article>
   `;
@@ -5185,14 +5336,14 @@ function renderBuilderPlayerCard(player, index) {
           <input class="table-input" type="text" value="${escapeHtml(player.name || `${player.row.position} ${index + 1}`)}" data-builder-player-name="${escapeHtml(player.id)}">
           <small>${escapeHtml(player.row.position)} · ${escapeHtml(rowCost(player.row) || "-")}</small>
         </div>
-        <button class="filter-button compact-action" type="button" data-remove-player="${escapeHtml(player.id)}">Remove</button>
+        <button class="filter-button compact-action" type="button" data-remove-player="${escapeHtml(player.id)}">${t("common.remove")}</button>
       </header>
       <section class="mobile-player-section">
-        <h3>Stats</h3>
+        <h3>${t("roster.statsLabel")}</h3>
         ${renderBuilderPlayerStatGrid(player)}
       </section>
       <section class="mobile-player-section">
-        <h3>Skills</h3>
+        <h3>${t("roster.skillsLabel")}</h3>
         <div class="mobile-player-pills">${renderRosterLinks(player.row.skills)}</div>
       </section>
     </article>
@@ -5295,11 +5446,11 @@ function renderSavedPlayerFavouredEditor(team, draft, player, inputId) {
     <div class="favoured-skill-editor">
       <small>${escapeHtml(choice)}</small>
       <div class="table-skill-editor">
-        <input class="table-input" type="text" list="${escapeHtml(inputId)}" placeholder="Favoured skill..." data-saved-player-favoured-skill ${!options.length ? "disabled" : ""}>
+        <input class="table-input" type="text" list="${escapeHtml(inputId)}" placeholder="${t("roster.favouredSkillPlaceholder")}" data-saved-player-favoured-skill ${!options.length ? "disabled" : ""}>
         <datalist id="${escapeHtml(inputId)}">
           ${options.map((option) => `<option value="${escapeHtml(option.name)}" label="${escapeHtml(option.alignment)}"></option>`).join("")}
         </datalist>
-        <button class="filter-button compact-action" type="button" data-saved-player-add-favoured ${!options.length ? "disabled" : ""}>Add</button>
+        <button class="filter-button compact-action" type="button" data-saved-player-add-favoured ${!options.length ? "disabled" : ""}>${t("common.add")}</button>
       </div>
     </div>
   `;
@@ -5328,7 +5479,7 @@ function renderSavedPlayerRow(team, draft, player, index, hasFavouredAccess = fa
     <tr data-roster-player="${escapeHtml(player.id)}" draggable="true">
       <td class="saved-number-cell">
         <div class="saved-number-control">
-          <button class="filter-button compact-action drag-handle table-drag-handle" type="button" draggable="true" data-player-drag-handle title="Drag to reorder" aria-label="Drag to reorder">↕</button>
+          <button class="filter-button compact-action drag-handle table-drag-handle" type="button" draggable="true" data-player-drag-handle title="${t("roster.dragToReorder")}" aria-label="${t("roster.dragToReorder")}">↕</button>
           <input class="table-input table-number-input" type="text" value="${escapeHtml(player.number ?? index + 1)}" data-saved-player-number>
         </div>
       </td>
@@ -5394,7 +5545,7 @@ function renderSavedPlayerCard(team, draft, player, index, hasFavouredAccess = f
       <header>
         <div class="mobile-player-title">
           <label class="mobile-player-number">
-            <span>No.</span>
+            <span>${t("roster.numberAbbr")}</span>
             <input class="table-input table-number-input" type="text" value="${escapeHtml(player.number ?? index + 1)}" data-saved-player-number>
           </label>
           <input class="table-input" type="text" value="${escapeHtml(player.name || `${player.row.position} ${index + 1}`)}" data-saved-player-name>
@@ -5909,7 +6060,7 @@ function wireBuilder(team) {
     const file = event.currentTarget.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      alert("Logo must be 2 MB or smaller.");
+      alert(t("savedRoster.logoTooLarge"));
       event.currentTarget.value = "";
       return;
     }
@@ -6146,7 +6297,7 @@ function renderRoute() {
   if (page) return renderDetail(page);
   setActiveNav("home");
   setViewSection("home");
-  view.innerHTML = `<div class="empty-state">Page not found.</div>`;
+  view.innerHTML = `<div class="empty-state">${t("app.pageNotFound")}</div>`;
 }
 
 async function init() {
