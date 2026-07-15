@@ -3287,14 +3287,7 @@ async function renderPublicTeamProfile(userId, teamId) {
     `;
     view.innerHTML = `
       ${renderHeader(`${t("sidebar.teamHeading")} "${payload.team.name}"`, `${t("admin.coachHeading")}: ${payload.user.login}`, actions)}
-      <div class="saved-roster-top-grid">
-        ${renderPublicTeamSummary(payload.user, payload.team, team, draft, costs)}
-        <section class="side-panel">
-          <h2>${t("admin.coachHeading")}</h2>
-          <p>${renderPlayerLink(payload.user)}</p>
-          ${renderTeamRuleAccess(team, draft)}
-        </section>
-      </div>
+      ${renderPublicTeamOverview(payload.user, payload.team, team, draft, costs)}
       <section class="content-panel compact-table-panel">
         <h2>${t("savedRoster.rosterHeading")}</h2>
         ${renderPublicTeamRosterTable(team, draft)}
@@ -3306,6 +3299,36 @@ async function renderPublicTeamProfile(userId, teamId) {
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
+}
+
+function renderPublicTeamOverview(user, savedTeam, team, draft, costs) {
+  return `
+    <section class="public-team-overview side-panel">
+      ${draft.logoData ? `<div class="summary-logo-block public-team-logo-block"><img src="${escapeHtml(draft.logoData)}" alt=""></div>` : ""}
+      <div class="public-team-overview-grid">
+        <div class="public-team-summary-block">
+          <div class="summary-title-block">
+            <h3>${t("savedRoster.summaryTitle")}</h3>
+            <a class="builder-team-link" href="${playerTeamUrl(user, savedTeam)}">${escapeHtml(savedTeam.name)}</a>
+          </div>
+          <dl class="stat-list summary-stat-grid">
+            <dt>${t("savedRoster.activePlayers")}</dt><dd>${costs.playersCount}</dd>
+            <dt>${t("savedRoster.totalPlayers")}</dt><dd>${costs.totalPlayersCount}</dd>
+            <dt>${t("savedRoster.teamRerolls")}</dt><dd>${draft.teamRerolls ?? 0}</dd>
+            ${hasBribery(team) ? `<dt>${t("savedRoster.bribes")}</dt><dd>${countToNumber(draft.bribes)}</dd>` : ""}
+            <dt>${t("savedRoster.dedicatedFans")}</dt><dd>${countToNumber(draft.dedicatedFans)}</dd>
+            <dt>${t("savedRoster.treasury")}</dt><dd>${countToNumber(draft.treasury)}k</dd>
+            <dt>${t("roster.totalCost")}</dt><dd>${costs.total}k</dd>
+          </dl>
+        </div>
+        <div class="public-team-coach-block">
+          <h2>${t("admin.coachHeading")}</h2>
+          <p>${renderPlayerLink(user)}</p>
+          ${renderTeamRuleAccess(team, draft)}
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function renderPublicTeamSummary(user, savedTeam, team, draft, costs) {
@@ -5057,9 +5080,7 @@ function renderBuilder() {
 
   view.innerHTML = `
     ${renderHeader(t("nav.builder"), t("builder.subtitle"))}
-    ${renderBuilderIdentity(team, teams)}
-    ${renderBuilderSummary(team, costs, warnings)}
-    ${renderBuilderPurchases(team, costs)}
+    ${renderBuilderInfoPanel(team, teams, costs, warnings)}
     <div class="builder-layout builder-layout-main">
       <section class="builder-panel">
         <section class="builder-pool">
@@ -5075,6 +5096,86 @@ function renderBuilder() {
     </div>
   `;
   wireBuilder(team);
+}
+
+function renderBuilderInfoPanel(team, teams, costs, warnings) {
+  return `
+    <section class="builder-info-panel side-panel">
+      <div class="builder-info-section builder-info-identity">
+        <div class="builder-form builder-identity-form">
+          <label class="filter-field">
+            <span>${t("sidebar.teamHeading")}</span>
+            <select data-builder-team>
+              ${teams.map((item) => renderOption(item.slug, item.title, team.slug)).join("")}
+            </select>
+          </label>
+          <label class="filter-field">
+            <span>${t("savedRoster.teamName")}</span>
+            <input type="text" value="${escapeHtml(state.builder.teamName || team.title)}" data-builder-name>
+          </label>
+          <label class="filter-field">
+            <span>${t("savedRoster.logoField")}</span>
+            <input type="file" accept="image/*" data-builder-logo>
+          </label>
+        </div>
+        ${state.builder.logoData ? `
+          <div class="builder-logo-inline roster-logo-inline">
+            <img class="builder-logo-preview" src="${escapeHtml(state.builder.logoData)}" alt="">
+            <button class="filter-button compact-action" type="button" data-builder-remove-logo>${t("savedRoster.removeLogo")}</button>
+          </div>
+        ` : ""}
+        ${renderTeamRuleAccess(team, state.builder, "builder")}
+      </div>
+      <div class="builder-info-grid">
+        <div class="builder-info-section builder-info-summary">
+          <div class="summary-title-block">
+            <h3>${t("savedRoster.summaryTitle")}</h3>
+            <a class="builder-team-link" href="${pageUrl(team)}">${escapeHtml(team.title)}</a>
+          </div>
+          <dl class="stat-list summary-stat-grid">
+            <dt>${t("myTeams.table.players")}</dt><dd>${costs.totalPlayersCount}</dd>
+            <dt>${t("savedRoster.dedicatedFans")}</dt><dd>${countToNumber(state.builder.dedicatedFans)}</dd>
+            ${hasBribery(team) ? `<dt>${t("savedRoster.bribes")}</dt><dd>${countToNumber(state.builder.bribes)}</dd>` : ""}
+            <dt>${t("savedRoster.playersCost")}</dt><dd>${costs.playersCost}k</dd>
+            <dt>${t("savedRoster.staffCost")}</dt><dd>${costs.staffCost}k</dd>
+            <dt>${t("roster.totalCost")}</dt><dd>${costs.total}k</dd>
+            <dt>${t("builder.remaining")}</dt><dd class="${costs.remaining < 0 ? "danger-text" : ""}">${costs.remaining}k</dd>
+          </dl>
+          <div class="summary-state-block">
+            ${warnings.length ? `<div class="builder-warnings">${warnings.map((warning) => `<p>${escapeHtml(warning)}</p>`).join("")}</div>` : `<div class="builder-ok">${t("savedRoster.withinLimits")}</div>`}
+            <div class="summary-actions">
+              <button class="primary-button" type="button" data-save-team ${costs.total > 600 || !state.builder.players.length ? "disabled" : ""}>${t("builder.saveTeam")}</button>
+              <button class="primary-button" type="button" data-copy-roster>${t("roster.copyRoster")}</button>
+            </div>
+          </div>
+        </div>
+        <div class="builder-info-section builder-info-purchases">
+          <h2>${t("roster.purchasesHeading")}</h2>
+          <div class="builder-tracker-list roster-tracker-list" aria-label="${t("roster.startingRosterTrackersAriaLabel")}">
+            <div class="builder-addon compact-staff-control builder-tracker-control">
+              <div>
+                <strong>${t("savedRoster.startingRerolls")}</strong>
+                <span>60k ${t("roster.each")}</span>
+              </div>
+              <div class="inline-stepper-control">
+                <button class="filter-button" type="button" data-builder-reroll="-1" ${state.builder.startingRerolls <= 0 ? "disabled" : ""}>-</button>
+                <strong>${state.builder.startingRerolls}</strong>
+                <button class="filter-button" type="button" data-builder-reroll="1" ${costs.total + builderStaffCosts.startingRerolls > 600 ? "disabled" : ""}>+</button>
+              </div>
+            </div>
+            ${renderBuilderStaffControl("dedicatedFans", t("savedRoster.dedicatedFans"), state.builder.dedicatedFans, costs.total + builderStaffCosts.dedicatedFans > 600)}
+            ${hasBribery(team) ? renderBuilderStaffControl("bribes", t("savedRoster.bribes"), state.builder.bribes, costs.total + builderStaffCosts.bribes > 600) : ""}
+            ${renderBuilderStaffControl("assistantCoaches", t("savedRoster.assistantCoaches"), state.builder.assistantCoaches, costs.total + builderStaffCosts.assistantCoaches > 600)}
+            ${renderBuilderStaffControl("cheerleaders", t("savedRoster.cheerleaders"), state.builder.cheerleaders, costs.total + builderStaffCosts.cheerleaders > 600)}
+            ${availableMedicalStaffDefinitions(team).map((staff) => {
+              const blocked = costs.total + (builderStaffCosts[staff.key] ?? 0) > 600;
+              return renderBuilderStaffControl(staff.key, staff.title, state.builder[staff.key], blocked);
+            }).join("")}
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function renderBuilderIdentity(team, teams) {

@@ -1622,6 +1622,49 @@ body.auth-open {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.builder-info-panel {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.builder-info-section {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  align-content: start;
+}
+
+.builder-info-section h2 {
+  margin: 0;
+}
+
+.builder-info-identity .builder-form {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.builder-info-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.7fr) minmax(360px, 1.3fr);
+  gap: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.builder-info-panel .team-rules-panel,
+.public-team-overview .team-rules-panel {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.builder-info-purchases .builder-tracker-list {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .roster-purchase-card {
   min-height: 86px;
 }
@@ -2993,6 +3036,47 @@ body.auth-open {
   grid-template-columns: 1fr;
 }
 
+.public-team-overview {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.public-team-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.48fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.public-team-summary-block,
+.public-team-coach-block {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  align-content: start;
+}
+
+.public-team-coach-block {
+  padding-left: 18px;
+  border-left: 1px solid var(--line);
+}
+
+.public-team-coach-block h2,
+.public-team-coach-block p {
+  margin: 0;
+}
+
+.public-team-logo-block {
+  min-height: 190px;
+  margin: 0;
+}
+
+.public-team-logo-block img {
+  width: min(100%, 220px);
+  max-height: 220px;
+}
+
 .summary-title-block {
   display: grid;
   gap: 6px;
@@ -3558,6 +3642,8 @@ td {
   .builder-layout,
   .saved-roster-top-grid,
   .roster-purchases-layout,
+  .builder-info-grid,
+  .public-team-overview-grid,
   .builder-addons,
   .builder-setup-panel,
   .team-rules-panel,
@@ -3573,8 +3659,16 @@ td {
   }
 
   .builder-setup-panel .builder-form,
+  .builder-info-identity .builder-form,
   .builder-tracker-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .public-team-coach-block {
+    padding-top: 16px;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
   .season-round-header {
@@ -3707,6 +3801,7 @@ td {
   }
 
   .builder-setup-panel .builder-form,
+  .builder-info-identity .builder-form,
   .builder-tracker-list {
     grid-template-columns: 1fr;
   }
