@@ -1,12 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Underworld Challenge
-  - Goblin
-  - Special
 ---
-
 
 **Name:** Bomber Dribblesnot
 **Availability:** Badlands Brawl, Underworld Challenge

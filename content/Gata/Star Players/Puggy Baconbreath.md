@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Halfling Thimble Cup
-  - Old World Classic
 ---
-
 
 **Name:** Puggy Baconbreath
 **Availability:** Halfling Thimble Cup, Old World Classic

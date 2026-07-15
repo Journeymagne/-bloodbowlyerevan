@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Count Luthor von Drakenborg
 **Availability:** Sylvanian Spotlight

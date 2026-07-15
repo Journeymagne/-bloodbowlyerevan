@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
 ---
-
 
 **Name:** Jordell Freshbreeze
 **Availability:** Elven Kingdom League

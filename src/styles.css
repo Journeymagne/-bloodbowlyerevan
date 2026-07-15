@@ -1174,6 +1174,12 @@ body.auth-open {
   gap: 14px;
 }
 
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+
 .card {
   position: relative;
   display: block;
@@ -1222,6 +1228,172 @@ body.auth-open {
   color: var(--muted);
   line-height: 1.45;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.78);
+}
+
+.overview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  align-items: start;
+}
+
+.overview-card {
+  display: grid;
+  gap: 16px;
+  min-height: 0;
+}
+
+.overview-index-card {
+  display: grid;
+  gap: 10px;
+  min-height: 156px;
+}
+
+.overview-index-card .meta-line {
+  align-self: end;
+}
+
+.overview-card h2 {
+  color: var(--text);
+}
+
+.overview-card-section {
+  display: grid;
+  gap: 8px;
+}
+
+.overview-card-section h3 {
+  color: var(--soft);
+  font-size: 16px;
+}
+
+.overview-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.overview-list strong {
+  color: var(--text);
+}
+
+.catalog-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-height: 0;
+}
+
+.catalog-card-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.catalog-card-head > div {
+  min-width: 0;
+}
+
+.catalog-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.catalog-card-title {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.catalog-card-title:hover {
+  color: var(--focus);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.catalog-price {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid rgba(240, 200, 74, 0.34);
+  border-radius: 999px;
+  background: rgba(91, 71, 38, 0.42);
+  color: var(--soft);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.catalog-card-stats,
+.catalog-stat-strip {
+  display: grid;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(85, 69, 51, 0.62);
+  border-radius: var(--radius);
+}
+
+.catalog-card-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.catalog-stat-strip {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.catalog-card-stats div,
+.catalog-stat-strip div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 7px;
+  border-left: 1px solid rgba(85, 69, 51, 0.5);
+  text-align: center;
+}
+
+.catalog-card-stats div:first-child,
+.catalog-stat-strip div:first-child {
+  border-left: 0;
+}
+
+.catalog-card-stats dt,
+.catalog-stat-strip dt,
+.catalog-card-section > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.catalog-card-stats dd,
+.catalog-stat-strip dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--text);
+  font-weight: 900;
+}
+
+.catalog-card-section {
+  display: grid;
+  gap: 7px;
+}
+
+.catalog-card-section p {
+  margin: 0;
+}
+
+.catalog-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.catalog-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
 }
 
 .meta-line {
@@ -1322,10 +1494,16 @@ body.auth-open {
 
 .saved-roster-top-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.8fr);
+  grid-template-columns: minmax(360px, 1fr) minmax(280px, 360px);
   gap: 18px;
   align-items: start;
   margin-bottom: 18px;
+}
+
+.saved-roster-top-grid .roster-identity-panel,
+.saved-roster-top-grid .saved-roster-summary-panel {
+  height: 100%;
+  margin-bottom: 0;
 }
 
 .builder-panel {
@@ -1349,6 +1527,120 @@ body.auth-open {
   border-radius: var(--radius);
   background: var(--panel-glass);
   backdrop-filter: blur(5px);
+}
+
+.builder-setup-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-glass);
+  backdrop-filter: blur(5px);
+}
+
+.builder-setup-panel .builder-form {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.builder-setup-panel.roster-identity-panel .saved-roster-form {
+  grid-template-columns: 1fr;
+}
+
+.roster-identity-panel,
+.roster-controls-panel {
+  margin-bottom: 18px;
+}
+
+.roster-identity-panel {
+  gap: 14px;
+}
+
+.roster-identity-panel .team-rules-panel {
+  grid-template-columns: 1fr;
+}
+
+.roster-logo-inline {
+  max-width: 100%;
+}
+
+.roster-controls-panel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.roster-controls-panel h2 {
+  margin: 0;
+}
+
+.roster-purchases-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.roster-purchases-layout .roster-controls-panel {
+  margin-bottom: 0;
+}
+
+.roster-resources-panel,
+.roster-purchases-panel {
+  min-width: 0;
+}
+
+.roster-resource-list {
+  grid-template-columns: 1fr;
+}
+
+.roster-money-form {
+  grid-template-columns: repeat(2, minmax(160px, 1fr));
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.roster-tracker-list {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.builder-tracker-list {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.roster-purchase-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.roster-purchase-card {
+  min-height: 86px;
+}
+
+.roster-money-card {
+  grid-template-columns: 1fr;
+  align-content: start;
+}
+
+.roster-purchase-card .inline-stepper-control,
+.roster-purchase-input {
+  justify-self: end;
+  width: min(150px, 100%);
+}
+
+.roster-purchase-input {
+  justify-self: stretch;
+  width: 100%;
+  min-height: 38px;
 }
 
 .roster-settings-panel {
@@ -1482,6 +1774,52 @@ body.auth-open {
   margin-top: 5px;
   color: var(--muted);
   line-height: 1.45;
+}
+
+.builder-addon.roster-money-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
+}
+
+.builder-addon.roster-money-card span {
+  margin-top: 3px;
+  max-width: none;
+}
+
+.builder-addon.roster-money-card .roster-purchase-input {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.builder-tracker-control {
+  grid-template-columns: minmax(0, 1fr) minmax(106px, auto);
+  gap: 10px;
+  padding: 9px 10px;
+}
+
+.builder-tracker-control strong {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.builder-tracker-control span {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.builder-tracker-control .inline-stepper-control {
+  min-height: 32px;
+  grid-template-columns: 32px 40px 32px;
+}
+
+.builder-tracker-control .inline-stepper-control .filter-button {
+  min-height: 32px;
+  padding: 0;
 }
 
 .builder-row {
@@ -1686,10 +2024,65 @@ body.auth-open {
 }
 
 .saved-roster-table {
-  min-width: 1780px;
+  min-width: 2040px;
+}
+
+.saved-roster-table tbody tr[draggable="true"] {
+  transition: background 0.14s ease, opacity 0.14s ease;
+}
+
+.saved-roster-table tbody tr.is-dragging {
+  opacity: 0.5;
+}
+
+.saved-roster-table tbody tr.drop-before {
+  box-shadow: inset 0 3px 0 var(--focus);
+}
+
+.saved-roster-table tbody tr.drop-after {
+  box-shadow: inset 0 -3px 0 var(--focus);
+}
+
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.saved-number-cell {
+  min-width: 100px;
+}
+
+.saved-number-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-drag-handle {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.table-number-input {
+  width: 58px;
+  min-width: 58px;
+  text-align: center;
 }
 
 .saved-roster-mobile-list {
+  display: none;
+  gap: 12px;
+}
+
+.builder-mobile-card-list,
+.my-teams-card-list {
   display: none;
   gap: 12px;
 }
@@ -1698,11 +2091,23 @@ body.auth-open {
   gap: 12px;
 }
 
+.builder-selected-player-card .team-stat-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .mobile-player-title {
   display: grid;
   flex: 1 1 auto;
   gap: 5px;
   min-width: 0;
+}
+
+.mobile-player-number {
+  display: grid;
+  grid-template-columns: auto minmax(58px, 86px);
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
 }
 
 .mobile-player-title > span,
@@ -1845,6 +2250,64 @@ body.auth-open {
   min-width: 720px;
 }
 
+.saved-team-card {
+  display: grid;
+  gap: 12px;
+}
+
+.saved-team-card-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.saved-team-card-head img {
+  margin-bottom: 0;
+}
+
+.saved-team-card-head h3,
+.saved-team-card-head p {
+  margin: 0;
+}
+
+.saved-team-card-head p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.saved-team-card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.saved-team-card-stats div {
+  padding: 8px;
+  border: 1px solid rgba(85, 69, 51, 0.62);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+
+.saved-team-card-stats dt,
+.saved-team-card-stats dd {
+  margin: 0;
+}
+
+.saved-team-card-stats dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.saved-team-card-stats dd {
+  margin-top: 3px;
+  color: var(--text);
+  font-weight: 900;
+}
+
 .stat-table-cell {
   width: 44px;
   min-width: 44px;
@@ -1877,6 +2340,25 @@ body.auth-open {
 
 .table-skill-editor .table-input {
   min-width: 125px;
+}
+
+.favoured-skill-cell {
+  min-width: 220px;
+}
+
+.favoured-skill-editor {
+  display: grid;
+  gap: 6px;
+}
+
+.favoured-skill-editor small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.favoured-skill-pill {
+  border-color: var(--focus);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--focus) 45%, transparent);
 }
 
 .compact-action {
@@ -2502,7 +2984,9 @@ body.auth-open {
 }
 
 .saved-roster-summary-panel .summary-stat-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;
+  row-gap: 7px;
 }
 
 .saved-roster-summary-panel .summary-actions {
@@ -2646,6 +3130,248 @@ body.auth-open {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: rgba(239, 224, 183, 0.08);
+}
+
+.season-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+}
+
+.season-tab {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--button-border);
+  border-radius: 6px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.season-tab:hover {
+  border-color: var(--line-bright);
+  background: var(--button-bg-hover);
+}
+
+.season-tab.active {
+  border-color: var(--active-button-border);
+  background: var(--active-button-bg);
+  color: var(--active-button-text);
+}
+
+.season-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.18fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.season-rounds {
+  display: grid;
+  gap: 18px;
+}
+
+.season-round-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.season-round-header > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.season-round-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.season-status-pill {
+  display: inline-grid;
+  min-height: 24px;
+  place-items: center;
+  padding: 0 9px;
+  border: 1px solid var(--button-border);
+  border-radius: 999px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.season-status-pill[data-status="started"] {
+  border-color: rgba(138, 160, 75, 0.68);
+  color: #cfe5a4;
+}
+
+.season-admin-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.season-card {
+  display: grid;
+  gap: 14px;
+}
+
+.season-card h2,
+.season-card h3,
+.season-card p {
+  margin: 0;
+}
+
+.season-committed-team {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.season-committed-team img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin: 0;
+}
+
+.season-action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.season-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.season-admin-block {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-glass);
+}
+
+.season-table {
+  min-width: 760px;
+}
+
+.season-score-input {
+  width: 76px;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  font-weight: 800;
+  text-align: center;
+}
+
+.season-pairing-team {
+  display: grid;
+  gap: 3px;
+  min-width: 180px;
+}
+
+.season-pairing-team span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.season-td-pair,
+.season-bonus-checks {
+  display: grid;
+  gap: 6px;
+}
+
+.fixture-headline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.fixture-headline > div,
+.season-score-summary {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-glass);
+}
+
+.fixture-headline strong {
+  display: block;
+  color: var(--soft);
+  font-size: 18px;
+}
+
+.fixture-headline p {
+  margin: 4px 0 0;
+}
+
+.season-score-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.fixture-result-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.fixture-checkbox {
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-glass);
+}
+
+.admin-profile-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.34fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.admin-profile-card .stat-list {
+  margin: 0;
+}
+
+.admin-users-table {
+  min-width: 820px;
+}
+
+.admin-teams-table {
+  min-width: 760px;
+}
+
+.public-roster-table {
+  min-width: 980px;
 }
 
 .legal-panel {
@@ -2831,13 +3557,33 @@ td {
 
   .builder-layout,
   .saved-roster-top-grid,
-  .builder-form,
+  .roster-purchases-layout,
   .builder-addons,
+  .builder-setup-panel,
   .team-rules-panel,
   .builder-player-pool,
   .roster-slots,
-  .skill-roll-panel {
+  .skill-roll-panel,
+  .season-overview-grid,
+  .season-admin-grid,
+  .admin-profile-grid,
+  .fixture-headline,
+  .fixture-result-form {
     grid-template-columns: 1fr;
+  }
+
+  .builder-setup-panel .builder-form,
+  .builder-tracker-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .season-round-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .season-round-actions {
+    justify-content: stretch;
   }
 
   .builder-summary {
@@ -2955,8 +3701,22 @@ td {
   .mobile-player-checks,
   .mobile-advancement-section,
   .mobile-skill-editor,
-  .advancement-add-row {
+  .advancement-add-row,
+  .season-action-row {
     grid-template-columns: 1fr;
+  }
+
+  .builder-setup-panel .builder-form,
+  .builder-tracker-list {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-tracker-control {
+    grid-template-columns: minmax(0, 1fr) minmax(104px, auto);
+  }
+
+  .builder-tracker-control .inline-stepper-control {
+    justify-self: end;
   }
 
   .mobile-roster-player-card header {
@@ -2982,6 +3742,7 @@ td {
   }
 
   .grid,
+  .card-grid,
   .filter-panel {
     grid-template-columns: 1fr;
   }
@@ -3003,6 +3764,10 @@ td {
     padding: 14px;
   }
 
+  .season-tab {
+    flex: 1 1 140px;
+  }
+
   .team-roster-desktop {
     display: none;
   }
@@ -3010,6 +3775,21 @@ td {
   .team-roster-mobile {
     display: grid;
     gap: 12px;
+  }
+
+  .builder-available-table-wrap,
+  .builder-selected-table-wrap,
+  .my-teams-table-panel {
+    display: none;
+  }
+
+  .builder-mobile-card-list,
+  .my-teams-card-list {
+    display: grid;
+  }
+
+  .saved-team-card-stats {
+    grid-template-columns: 1fr;
   }
 
   .skill-table-desktop {
@@ -3065,10 +3845,14 @@ td {
   }
 
   .table-scroll .saved-roster-table {
-    min-width: 1780px;
+    min-width: 2040px;
   }
 
   .table-scroll .my-teams-table {
     min-width: 720px;
+  }
+
+  .table-scroll .season-table {
+    min-width: 760px;
   }
 }

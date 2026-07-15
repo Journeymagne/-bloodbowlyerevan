@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
 ---
-
 
 **Name:** Roxanna Darknail
 **Availability:** Elven Kingdom League

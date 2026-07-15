@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
-  - World's Edge Superleague
 ---
-
 
 **Name:** Skrull Halfheight
 **Availability:** Sylvanian Spotlight, World's Edge Superleague

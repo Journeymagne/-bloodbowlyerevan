@@ -1,11 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Halfling Thimble Cup
-  - Old World Classic
-  - World's Edge Superleague
 ---
-
 
 **Name:** Grombrindal, The White Dwarf
 **Availability:** Halfling Thimble Cup, Old World Classic, World's Edge Superleague

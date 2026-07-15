@@ -1,11 +1,9 @@
 ---
 tags:
-  - Star Player
 ---
 
-
 **Name:** Tolly Clockringer
-**Availability:** -
+**Availability:** Favoured of Nurgle
 **Cost:** 110k
 
 | MA | ST | AG | PA | AR | Cost | Skills | Keywords |

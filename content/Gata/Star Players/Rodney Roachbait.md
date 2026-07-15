@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Woodland League
 ---
-
 
 **Name:** Rodney Roachbait
 **Availability:** Woodland League

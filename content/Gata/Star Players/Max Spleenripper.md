@@ -1,11 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Favoured of Khorne
-  - Human
-  - Special
 ---
-
 
 **Name:** Max Spleenripper
 **Availability:** Favoured of Khorne

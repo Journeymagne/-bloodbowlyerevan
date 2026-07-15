@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Woodland League
 ---
-
 
 **Name:** Swiftvine Glimmershard
 **Availability:** Woodland League

@@ -1,12 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Badlands Brawl
-  - Favoured of Hashut
-  - Dwarf
-  - Blitzer
 ---
-
 
 **Name:** H'thark the Unstoppable
 **Availability:** Badlands Brawl, Favoured of Hashut

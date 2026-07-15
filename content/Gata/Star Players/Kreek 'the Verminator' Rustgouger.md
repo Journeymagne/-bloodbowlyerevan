@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Underworld Challenge
 ---
-
 
 **Name:** Kreek 'the Verminator' Rustgouger
 **Availability:** Underworld Challenge

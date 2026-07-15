@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
 ---
-
 
 **Name:** Valen Swift
 **Availability:** Elven Kingdom League

@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Lustrian Superleague
 ---
-
 
 **Name:** Boa Kon'ssstriktr
 **Availability:** Lustrian Superleague

@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Captain' Karina Von Riesz
 **Availability:** Sylvanian Spotlight

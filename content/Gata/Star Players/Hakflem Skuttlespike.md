@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Underworld Challenge
 ---
-
 
 **Name:** Hakflem Skuttlespike
 **Availability:** Underworld Challenge

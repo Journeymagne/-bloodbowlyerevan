@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Old World Classic
 ---
-
 
 **Name:** Ivar Eriksson
 **Availability:** Old World Classic

@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Lustrian Superleague
-  - Old World Classic
 ---
-
 
 **Name:** Karla Von Kill
 **Availability:** Lustrian Superleague, Old World Classic

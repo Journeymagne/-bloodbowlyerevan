@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Underworld Challenge
 ---
-
 
 **Name:** Glart Smashrip
 **Availability:** Underworld Challenge

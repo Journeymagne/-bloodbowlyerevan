@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Favoured of Nurgle
 ---
-
 
 **Name:** Bilerot Vomitflesh
 **Availability:** Favoured of Nurgle

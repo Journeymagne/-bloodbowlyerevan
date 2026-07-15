@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
-  - Lustrian Superleague
 ---
-
 
 **Name:** Zolcath the Zoat
 **Availability:** Elven Kingdom League, Lustrian Superleague

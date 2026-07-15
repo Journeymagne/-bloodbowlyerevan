@@ -1,11 +1,7 @@
 ---
 tags:
-  - Star Player
-  - Favoured of Khorne
-  - Spawn
   - Big Guy
 ---
-
 
 **Name:** Scyla Anfingrimm
 **Availability:** Favoured of Khorne

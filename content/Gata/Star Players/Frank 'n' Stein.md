@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Sylvanian Spotlight
 ---
-
 
 **Name:** Frank 'n' Stein
 **Availability:** Sylvanian Spotlight

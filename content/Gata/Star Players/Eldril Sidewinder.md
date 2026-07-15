@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Elven Kingdom League
 ---
-
 
 **Name:** Eldril Sidewinder
 **Availability:** Elven Kingdom League

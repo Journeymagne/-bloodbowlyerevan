@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Favoured of Nurgle
 ---
-
 
 **Name:** Withergrasp Doubledrool
 **Availability:** Favoured of Nurgle

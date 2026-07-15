@@ -1,9 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Underworld Challenge
 ---
-
 
 **Name:** Skitter Stab-Stab
 **Availability:** Underworld Challenge

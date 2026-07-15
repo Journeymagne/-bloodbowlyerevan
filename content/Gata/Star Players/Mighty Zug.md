@@ -1,10 +1,6 @@
 ---
 tags:
-  - Star Player
-  - Lustrian Superleague
-  - Old World Classic
 ---
-
 
 **Name:** Mighty Zug
 **Availability:** Lustrian Superleague, Old World Classic

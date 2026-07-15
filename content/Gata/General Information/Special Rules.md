@@ -17,9 +17,9 @@ Teams with this rule have improved access to referee-related inducements:
 
 ## Favoured of...
 
-If a team has a choice for Favoured of..., choose one alignment during team registration. The choice cannot be changed later.
+If a team has a choice for Favoured of..., choose one alignment for the team.
 
-Every time a player on the team receives an advancement, roll a D8. If the result matches the team's alignment, the player may gain one matching skill in addition to their normal advancement. This extra skill increases the player's value, but does not increase their rank.
+Every time a player on the team receives an advancement, roll a D8. If the result matches the team's alignment, the player may gain one matching skill in addition to their normal advancement. This extra skill does not increase the player's value and does not increase their rank.
 
 If the player has Mutation access only as a secondary access, or has no Mutation access at all, choose the bonus skill randomly from the matching list.
 
@@ -31,6 +31,18 @@ If the player has Mutation access only as a secondary access, or has no Mutation
 | Nurgle | 7 | Tentacles, Monstrous Mouth, Bone Hook |
 | Khorne | 8 | Horns, Iron Hard Skin, Prehensile Tail |
 | Tzeentch | 9 (6 in current notes) | Two Heads, Extra Arms, Very Long Legs |
+
+## Architect of Fate
+
+Players on this team are sold for their full value. Each injury on a player adds +10k to that player's sale value.
+
+When the team gains a Whining Point, roll a D6. On a 1, the team loses that Whining Point. On a 6, the team gains one additional Whining Point. This can trigger only once per sequence.
+
+Whining Points are not used in the current season.
+
+## Explosive Demise
+
+Treat any roll on the Casualty table for a player with this rule as Dead. When that player dies, resolve a bomb explosion in that player's square, then place two Brimstone Horrors in the nearest available squares.
 
 ## Low Cost Linemen
 
