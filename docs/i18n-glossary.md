@@ -128,6 +128,45 @@ content task:
   «Взносы:», `Restrictions` → «Ограничения:», `Usage` → «Использование:» —
   use these exact three renderings everywhere this section recurs, for
   consistency across files.
+- **"Tier 1" / "Tier 2" / "Tier 3" / "Premier League" league-tier labels**
+  (Task 14, Teams): kept in English, untranslated, on the `**League:**` /
+  `**Лига:**` line of every team page. This deviates from the tier-label
+  translation ("Tier 1" → "Дивизион 1") that Task 14's own instructions
+  proposed as an example — that example assumed `General Information/
+  Leagues.md` already established a Russian rendering for tier labels, but
+  it doesn't (it's a one-line description with no tier table). The real
+  precedent, already committed from earlier tasks, is `General Information/
+  All Gata Changes.md`, `Rules/3. Team Management.md`, and `Rules/5. Patch
+  Notes.md`, which consistently leave "Tier 1"/"Tier 2"/"Tier 3"/"Premier
+  League" in English throughout their Russian prose (15+ occurrences). Task
+  14 follows that established precedent instead, for site-wide consistency.
+  `Imperial Nobility.md`'s `**League:**` value is literally the word
+  "League" in the English source (an apparent data-entry omission, not a
+  real tier value) — mirrored byte-for-byte/untranslated rather than
+  guessed at, per the "unrecoverable corruption" guidance below.
+
+- **Cost/gold shorthand** (e.g. `100k`, `85k` on Inducement price tags) →
+  spelled out as "N тыс." (e.g. "100 тыс.", "85 тыс."), matching the
+  established rendering already used for the same figures in
+  `Rules/3. Team Management.md`'s own Inducements section and every other
+  translated page that quotes gold amounts (`General Information/All Gata
+  Changes.md`, `Rules/5. Patch Notes.md`, etc.) — "k" shorthand is not used
+  anywhere else in `content/Gata-ru`, so Inducements pages follow the same
+  convention rather than introducing a one-off format.
+- **"for X" qualifiers on an Inducement's price line** — "for [race/team
+  type]" (e.g. "or 30k for Halfling") → «для» ("или 30 тыс. для Halfling");
+  "for [a specific named inducement/rule]" (e.g. "or 60k for Bribery and
+  Corruption") → «при» ("или 60 тыс. при Bribery and Corruption"). Both
+  renderings were already established in `Rules/3. Team Management.md`'s
+  duplicate of this same Inducements content; kept distinct because «при»
+  reads more naturally for "under/with [rule]" than «для» does.
+- **Assistant Coaches / Cheerleaders inline count** — Inducement blurbs that
+  say "+1 assistant coach"/"+1 cheerleader" (English singular, lowercase) are
+  rendered as "+1 Assistant Coaches"/"+1 Cheerleaders" (English plural,
+  capitalized, matching the UI-label spelling) rather than translated as a
+  generic Russian noun, since these names must stay English absolutely
+  everywhere per the UI-label ruling above. Matches the existing rendering in
+  `Rules/3. Team Management.md`.
 
 If `content/Gata`'s English source itself contains unrecoverable corruption
 (e.g. a block of text with characters destroyed at the byte level, not just
