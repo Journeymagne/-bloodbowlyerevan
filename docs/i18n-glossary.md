@@ -265,3 +265,8 @@ a translation gap.
 - **"Touchback"** (generic rules vocabulary, not previously covered) →
   transliterated the same way as Drive/Turnover/Touchdown/Kick-off: "тачбэк"
   (lowercase, ordinary Russian noun).
+- **Root landing page `content/Gata/Gata Blood Bowl League.md`** (missed by
+  Tasks 8-14's file lists, translated during the Task 15 merge/QA pass):
+  "homebrew" → «доморощенные правила», matching the existing rendering in
+  `Rules/1. League Basics.md`. "Sevens" stays English (established game-format
+  term, used untranslated throughout `content/Gata-ru`).
