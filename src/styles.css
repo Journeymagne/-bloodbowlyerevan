@@ -3474,9 +3474,10 @@ body.auth-open {
 
 .game-team-logo {
   display: block;
-  width: min(180px, 80%);
-  max-height: 180px;
+  width: min(360px, 100%);
+  max-height: 360px;
   margin: 14px auto 0;
+  justify-self: center;
   object-fit: contain;
 }
 
