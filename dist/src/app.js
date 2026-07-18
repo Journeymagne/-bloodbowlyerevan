@@ -396,6 +396,49 @@ const overviewCards = [
     ],
   },
   {
+    slug: "general-rules-changes",
+    title: "General Rules Changes",
+    summary: "League-specific gameplay, SPP, setup, inducement, Team Value, and scoring adjustments.",
+    sections: [
+      {
+        title: "Special Rules and Gameplay Changes",
+        items: [
+          "Prohibited Inducements: Special Hired Wizards, Biased Referees, and Famous Coaching Staff are not used in the league.",
+          "Rules Adjustments: Some rules from the original Sevens and Blood Bowl have been modified for more enjoyable and deliberate gameplay. Most player costs have been recalculated; these changes can be viewed in the team table.",
+        ],
+      },
+      {
+        title: "General Gameplay Rules",
+        items: [
+          "MVP Selection: Choose 3 players and roll a d3 to decide which one receives 5 SPP.",
+          "Kick-off: When the ball scatters on kick-off, roll 1d6 and halve the result (rounding down); the result can be zero.",
+          "Team Rerolls: The cost of Team Rerolls is not doubled during team drafting, but it is doubled if purchased during the season.",
+          "SPP for Knock Outs: A player who knocks out an opponent receives 1 SPP.",
+          "Inducement Tiering: When determining inducement budgets, the team's tier is considered. Tier 2 teams receive 200k when playing against Tier 1; Tier 3 teams receive 300k against Premier League teams or 100k against Tier 2 teams.",
+          "Injury Table: Use the injury table from the \"big format\" (standard) Blood Bowl.",
+          "Setup: The team setup is moved 3 squares forward. Sevens now has a Line of Scrimmage. You must place at least 3 players on the Line of Scrimmage in the central segment. No more than 1 player is allowed in each side segment.",
+          "Touchdown Restrictions: A touchdown cannot be scored on the first turn of any drive. If your player is in the opponent's end zone at the end of your first turn, you do not score, but if they are still there at the start of your second turn, the drive ends immediately and you score a touchdown. Exception: A touchdown can be scored on the first turn of a drive if the player was thrown via Throw Teammate.",
+          "Leaping: Jumping over prone players is prohibited unless the player has the Leap skill.",
+          "Mega-Stars: Star Players with the Mega-Star tag occupy both available Star Player slots.",
+          "Bribes: Bribes trigger automatically.",
+          "Secure the Ball!: The \"no ball pickup\" restriction radius is reduced to 1 square.",
+          "Bribery and Corruption: Allows purchasing up to 3 bribes per team for 50k each, which increase Team Value (TV).",
+          "TV Exceptions: Cheerleaders and assistant coaches do not count toward Team Value.",
+          "Painting Bonus: A fully painted team receives an additional 30k after a match.",
+          "Throw-Ins: Throw-ins are resolved using 1d6.",
+        ],
+      },
+      {
+        title: "Experience (SPP)",
+        items: [
+          "Block-like Actions: Actions similar to Block or their consequences grant SPP according to current rules (1 for KO, 2 for Injury). For example, Stab, Chainsaw, Bombardier, and pushing a player off the pitch can now grant experience.",
+          "Fouls: A Foul action grants experience just like a Block.",
+          "Throw Teammate: A Throw Teammate action grants the thrower experience for inflicting Injuries and KOs, just like a Block.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "create-your-team",
     title: "Create Your Team",
     summary: "Starting budget, roster limits, specialists, registration, and model expectations.",
@@ -582,6 +625,49 @@ const overviewCardsRu = [
         title: "Регистрация",
         items: [
           "Как только регистрация открыта, перейдите в раздел «Сезон» и зарегистрируйте валидную команду лиги.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "general-rules-changes",
+    title: "Изменения общих правил",
+    summary: "Изменения игрового процесса, опыта, расстановки, дополнительных средств, стоимости команды и начисления наград в лиге.",
+    sections: [
+      {
+        title: "Особые правила и изменения игрового процесса",
+        items: [
+          "Запрещённые дополнительные средства: особые наёмные волшебники, подкупленные судьи и знаменитый тренерский штаб не используются в лиге.",
+          "Изменения правил: некоторые правила оригинальных Sevens и Blood Bowl изменены, чтобы сделать игровой процесс более увлекательным и осмысленным. Стоимость большинства игроков пересчитана; изменения можно посмотреть в таблице команд.",
+        ],
+      },
+      {
+        title: "Общие игровые правила",
+        items: [
+          "Выбор MVP: выберите 3 игроков и бросьте d3, чтобы определить, кто из них получит 5 SPP.",
+          "Начальный удар: когда мяч разлетается после начального удара, бросьте 1d6 и разделите результат пополам с округлением вниз; итог может быть равен нулю.",
+          "Командные перебросы: стоимость командных перебросов не удваивается при формировании команды, но удваивается при покупке в течение сезона.",
+          "SPP за нокаут: игрок, отправивший соперника в нокаут, получает 1 SPP.",
+          "Уровень команды и дополнительные средства: при расчёте бюджета дополнительных средств учитывается уровень команды. Команды Tier 2 получают 200k в матче против Tier 1; команды Tier 3 получают 300k против команд Premier League или 100k против Tier 2.",
+          "Таблица травм: используйте таблицу травм из «большого формата» — стандартного Blood Bowl.",
+          "Расстановка: зона расстановки команды сдвинута на 3 клетки вперёд. В Sevens теперь есть линия схватки. В центральном сегменте линии схватки необходимо разместить не менее 3 игроков. В каждом боковом сегменте разрешено не более 1 игрока.",
+          "Ограничения тачдауна: тачдаун нельзя занести на первом ходу любого драйва. Если в конце вашего первого хода игрок находится в зачётной зоне соперника, тачдаун не засчитывается; если в начале второго хода игрок всё ещё там, драйв немедленно завершается и тачдаун засчитывается. Исключение: тачдаун разрешён на первом ходу драйва, если игрок был брошен действием Throw Teammate.",
+          "Прыжки: запрещено перепрыгивать лежащих игроков, если у игрока нет навыка Leap.",
+          "Мегазвёзды: звёздные игроки с тегом Mega-Star занимают оба доступных места звёздных игроков.",
+          "Взятки: взятки срабатывают автоматически.",
+          "Secure the Ball!: радиус ограничения, запрещающего подбирать мяч, уменьшен до 1 клетки.",
+          "Bribery and Corruption: позволяет приобрести до 3 взяток на команду по 50k каждая; эти взятки увеличивают стоимость команды (TV).",
+          "Исключения из TV: чирлидеры и помощники тренера не учитываются в стоимости команды.",
+          "Бонус за покраску: полностью покрашенная команда получает дополнительно 30k после матча.",
+          "Вбрасывания: вбрасывания разрешаются с помощью 1d6.",
+        ],
+      },
+      {
+        title: "Опыт (SPP)",
+        items: [
+          "Действия, подобные Block: действия, похожие на Block, и их последствия приносят SPP по текущим правилам — 1 за KO и 2 за Injury. Например, Stab, Chainsaw, Bombardier и выталкивание игрока за пределы поля теперь могут приносить опыт.",
+          "Фолы: действие Foul приносит опыт так же, как Block.",
+          "Throw Teammate: действие Throw Teammate приносит бросающему игроку опыт за нанесённые травмы и нокауты так же, как Block.",
         ],
       },
     ],
