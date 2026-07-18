@@ -3437,6 +3437,47 @@ body.auth-open {
   margin: 0;
 }
 
+.games-grid {
+  margin-top: 14px;
+}
+
+.game-card {
+  display: grid;
+  gap: 8px;
+}
+
+.game-card h3,
+.game-card p {
+  margin: 0;
+}
+
+.game-versus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.game-versus > div {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-glass);
+}
+
+.game-versus h2,
+.game-versus p {
+  margin: 6px 0 0;
+}
+
+.game-confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .admin-user-management-form {
   display: grid;
   gap: 12px;
@@ -3670,6 +3711,7 @@ td {
   .season-admin-grid,
   .admin-profile-grid,
   .fixture-headline,
+  .game-versus,
   .fixture-result-form {
     grid-template-columns: 1fr;
   }

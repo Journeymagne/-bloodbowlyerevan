@@ -215,6 +215,14 @@ function publicSeasonPairing(row) {
     resultType: row.result_type,
     homePoints: row.home_points,
     awayPoints: row.away_points,
+    resultStatus: row.result_status ?? "pending",
+    proposedByUserId: row.proposed_by_user_id ?? null,
+    proposedHomeTouchdowns: row.proposed_home_touchdowns,
+    proposedAwayTouchdowns: row.proposed_away_touchdowns,
+    proposedHomeCasualties: row.proposed_home_casualties,
+    proposedAwayCasualties: row.proposed_away_casualties,
+    proposedAt: row.proposed_at,
+    confirmedAt: row.confirmed_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -495,6 +503,44 @@ async function loadSeasonPairingRows(seasonId) {
     [seasonId],
   );
   return result.rows;
+}
+
+async function loadUserGameRows(userId, pairingId = null) {
+  const result = await pool.query(
+    `SELECT p.*, r.round_number, r.status AS round_status,
+            s.id AS season_id, s.name AS season_name, s.status AS season_status,
+            he.user_id AS home_user_id, hu.login AS home_user_login,
+            ht.id AS home_team_id, ht.name AS home_team_name, ht.base_team_slug AS home_team_slug,
+            ae.user_id AS away_user_id, au.login AS away_user_login,
+            at.id AS away_team_id, at.name AS away_team_name, at.base_team_slug AS away_team_slug
+     FROM season_pairings p
+     JOIN season_rounds r ON r.id = p.round_id
+     JOIN seasons s ON s.id = r.season_id
+     LEFT JOIN season_entries he ON he.id = p.home_entry_id
+     LEFT JOIN users hu ON hu.id = he.user_id
+     LEFT JOIN saved_teams ht ON ht.id = he.saved_team_id
+     LEFT JOIN season_entries ae ON ae.id = p.away_entry_id
+     LEFT JOIN users au ON au.id = ae.user_id
+     LEFT JOIN saved_teams at ON at.id = ae.saved_team_id
+     WHERE ($2::uuid IS NULL OR p.id = $2)
+       AND ($1 = he.user_id OR $1 = ae.user_id)
+     ORDER BY s.created_at DESC, r.round_number DESC, p.table_number ASC`,
+    [userId, pairingId],
+  );
+  return result.rows;
+}
+
+function publicGame(row, viewerId) {
+  if (!row) return null;
+  const pairing = publicSeasonPairing(row);
+  return {
+    ...pairing,
+    season: { id: row.season_id, name: row.season_name, status: row.season_status },
+    home: row.home_user_id ? { user: { id: row.home_user_id, login: row.home_user_login }, team: { id: row.home_team_id, name: row.home_team_name, baseTeamSlug: row.home_team_slug } } : null,
+    away: row.away_user_id ? { user: { id: row.away_user_id, login: row.away_user_login }, team: { id: row.away_team_id, name: row.away_team_name, baseTeamSlug: row.away_team_slug } } : null,
+    viewerIsHome: row.home_user_id === viewerId,
+    viewerIsProposer: row.proposed_by_user_id === viewerId,
+  };
 }
 
 function nullableInteger(value, fieldName) {
@@ -884,6 +930,49 @@ async function addSeasonPairing(seasonId, roundId, homeEntryId = "", awayEntryId
   return result.rows[0];
 }
 
+async function proposeGameResult(pairingId, userId, body) {
+  const game = (await loadUserGameRows(userId, pairingId))[0];
+  if (!game) throw httpError(404, "Game not found.");
+  if (game.round_status !== "started") throw httpError(409, "This game has not started yet.");
+  if (!game.home_user_id || !game.away_user_id) throw httpError(409, "A BYE game does not require confirmation.");
+  if (game.result_status === "confirmed") throw httpError(409, "This result is already confirmed.");
+  const values = [
+    nullableInteger(body.homeTouchdowns, "Home touchdowns"),
+    nullableInteger(body.awayTouchdowns, "Away touchdowns"),
+    nullableInteger(body.homeCasualties, "Home casualties"),
+    nullableInteger(body.awayCasualties, "Away casualties"),
+  ];
+  if (values.some((value) => value === null || value === undefined)) throw httpError(400, "Enter touchdowns and casualties for both teams.");
+  await pool.query(
+    `UPDATE season_pairings
+     SET result_status = 'awaiting_confirmation', proposed_by_user_id = $2,
+         proposed_home_touchdowns = $3, proposed_away_touchdowns = $4,
+         proposed_home_casualties = $5, proposed_away_casualties = $6,
+         proposed_at = now(), updated_at = now()
+     WHERE id = $1`,
+    [pairingId, userId, ...values],
+  );
+}
+
+async function respondToGameProposal(pairingId, userId, accept) {
+  const game = (await loadUserGameRows(userId, pairingId))[0];
+  if (!game) throw httpError(404, "Game not found.");
+  if (game.result_status !== "awaiting_confirmation") throw httpError(409, "There is no result awaiting confirmation.");
+  if (game.proposed_by_user_id === userId) throw httpError(403, "The proposing player cannot confirm their own result.");
+  if (!accept) {
+    await pool.query(`UPDATE season_pairings SET result_status = 'rejected', updated_at = now() WHERE id = $1`, [pairingId]);
+    return;
+  }
+  await updateSeasonPairing(game.season_id, pairingId, {
+    resultType: "played",
+    homeTouchdowns: game.proposed_home_touchdowns,
+    awayTouchdowns: game.proposed_away_touchdowns,
+    homeCasualties: game.proposed_home_casualties,
+    awayCasualties: game.proposed_away_casualties,
+  }, false, userId);
+  await pool.query(`UPDATE season_pairings SET result_status = 'confirmed', confirmed_at = now(), updated_at = now() WHERE id = $1`, [pairingId]);
+}
+
 async function updateSeasonPairing(seasonId, pairingId, body, isAdmin = false, userId = "") {
   const current = await pool.query(
     `SELECT season_pairings.*, season_rounds.season_id, season_rounds.status AS round_status
@@ -954,6 +1043,8 @@ async function updateSeasonPairing(seasonId, pairingId, body, isAdmin = false, u
          result_type = $8,
          home_points = $9,
          away_points = $10,
+         result_status = 'confirmed',
+         confirmed_at = now(),
          updated_at = now()
      WHERE id = $1
      RETURNING *`,
@@ -1003,6 +1094,8 @@ async function startSeasonRound(seasonId, roundId) {
                away_casualties = 0,
                home_points = 2,
                away_points = 0,
+               result_status = 'confirmed',
+               confirmed_at = now(),
                updated_at = now()
            WHERE id = $1`,
           [pairing.id],
@@ -1017,6 +1110,8 @@ async function startSeasonRound(seasonId, roundId) {
                away_casualties = 0,
                home_points = 0,
                away_points = 2,
+               result_status = 'confirmed',
+               confirmed_at = now(),
                updated_at = now()
            WHERE id = $1`,
           [pairing.id],
@@ -1379,6 +1474,33 @@ async function handleApi(request, response, url) {
       });
     }
 
+    if (url.pathname === "/api/games" && request.method === "GET") {
+      const user = await currentUser(request);
+      if (!user) return sendJson(response, 401, { error: "Not authorized." });
+      const rows = await loadUserGameRows(user.id);
+      return sendJson(response, 200, { games: rows.map((row) => publicGame(row, user.id)) });
+    }
+
+    const gameMatch = url.pathname.match(/^\/api\/games\/([0-9a-f-]+)$/i);
+    if (gameMatch && request.method === "GET") {
+      const user = await currentUser(request);
+      if (!user) return sendJson(response, 401, { error: "Not authorized." });
+      const row = (await loadUserGameRows(user.id, gameMatch[1]))[0];
+      if (!row) return sendJson(response, 404, { error: "Game not found." });
+      return sendJson(response, 200, { game: publicGame(row, user.id) });
+    }
+
+    const gameActionMatch = url.pathname.match(/^\/api\/games\/([0-9a-f-]+)\/(propose|confirm|reject)$/i);
+    if (gameActionMatch && request.method === "POST") {
+      const user = await currentUser(request);
+      if (!user) return sendJson(response, 401, { error: "Not authorized." });
+      if (gameActionMatch[2] === "propose") await proposeGameResult(gameActionMatch[1], user.id, await readJson(request));
+      if (gameActionMatch[2] === "confirm") await respondToGameProposal(gameActionMatch[1], user.id, true);
+      if (gameActionMatch[2] === "reject") await respondToGameProposal(gameActionMatch[1], user.id, false);
+      const row = (await loadUserGameRows(user.id, gameActionMatch[1]))[0];
+      return sendJson(response, 200, { game: publicGame(row, user.id) });
+    }
+
     if (url.pathname === "/api/season" && request.method === "GET") {
       const user = await currentUser(request);
       if (!user) return sendJson(response, 401, { error: "Not authorized." });
@@ -1514,10 +1636,9 @@ async function handleApi(request, response, url) {
     if (fixtureMatch && request.method === "PATCH") {
       const user = await currentUser(request);
       if (!user) return sendJson(response, 401, { error: "Not authorized." });
-      const season = await ensureActiveSeason();
       const body = await readJson(request);
-      await updateSeasonPairing(season.id, fixtureMatch[1], { ...body, resultType: "played" }, false, user.id);
-      return sendJson(response, 200, await loadSeasonBundle(user));
+      await proposeGameResult(fixtureMatch[1], user.id, body);
+      return sendJson(response, 200, { game: publicGame((await loadUserGameRows(user.id, fixtureMatch[1]))[0], user.id) });
     }
 
     const seasonPairingMatch = url.pathname.match(/^\/api\/season\/admin\/pairings\/([0-9a-f-]+)$/i);

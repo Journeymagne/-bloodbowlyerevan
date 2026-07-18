@@ -34,6 +34,7 @@
     loading: false,
     error: "",
   },
+  games: { items: [], loaded: false, loading: false, error: "" },
   admin: {
     users: [],
     loaded: false,
@@ -101,7 +102,7 @@ const supportedLocales = new Set(["en", "ru"]);
 const dataCache = new Map();
 let translations = { en: {}, ru: {} };
 let activeDict = translations.en;
-const assetVersion = "gata-85";
+const assetVersion = "gata-86";
 const logoUploadMaxBytes = 2 * 1024 * 1024;
 const logoOptimizeMaxDimension = 512;
 const logoOptimizeQuality = 0.82;
@@ -128,7 +129,7 @@ const sectionRoutes = new Map([
   ["star-players", "star-players"],
   ["pages", "pages"],
 ]);
-const staticRoutes = new Set(["builder", "legal", "my-teams", "season", "administration"]);
+const staticRoutes = new Set(["builder", "legal", "my-teams", "my-games", "season", "administration"]);
 
 function normalizeTheme(theme) {
   return themeIds.has(theme) ? theme : "dark-gata";
@@ -1181,6 +1182,7 @@ async function logoutAuth() {
   setAuthToken("");
   state.auth.currentUser = null;
   state.myTeams = { items: [], loaded: false, loading: false, error: "" };
+  state.games = { items: [], loaded: false, loading: false, error: "" };
   state.admin = { users: [], loaded: false, loading: false, error: "", editingTeams: new Map() };
   state.season = { data: null, loaded: false, loading: false, error: "", activeTab: "registration" };
   updateAuthButton();
@@ -1273,6 +1275,7 @@ function routeSection(route) {
   if (!route || route === "home") return "home";
   if (route.startsWith("overview/")) return "home";
   if (route.startsWith("administration/")) return "administration";
+  if (route.startsWith("games/")) return "my-games";
   if (route.startsWith("players/")) return "players";
   if (sectionRoutes.has(route)) return route;
   if (staticRoutes.has(route)) return route;
@@ -3791,6 +3794,124 @@ function wireAdministration() {
   });
 }
 
+function gameUrl(gameOrId) {
+  const id = typeof gameOrId === "string" ? gameOrId : gameOrId?.id;
+  return `#/games/${encodeURIComponent(id || "")}`;
+}
+
+function gameStatusLabel(status) {
+  return t(`games.status.${status || "pending"}`);
+}
+
+function gameOpponent(game) {
+  return game.viewerIsHome ? game.away : game.home;
+}
+
+async function loadGames(force = false) {
+  if (!state.auth.currentUser) return;
+  if (state.games.loaded && !force) return;
+  state.games.loading = true;
+  try {
+    const payload = await apiRequest("/api/games");
+    state.games = { items: payload.games ?? [], loaded: true, loading: false, error: "" };
+  } catch (error) {
+    state.games = { items: [], loaded: true, loading: false, error: error.message };
+  }
+}
+
+function renderGameCard(game) {
+  const opponent = gameOpponent(game);
+  return `
+    <a class="card compact game-card" href="${gameUrl(game)}">
+      <span class="season-status-pill" data-status="${escapeHtml(game.resultStatus)}">${escapeHtml(gameStatusLabel(game.resultStatus))}</span>
+      <h3>${escapeHtml(game.season.name)} · ${t("season.roundLabel")} ${game.roundNumber}</h3>
+      <p>${t("games.vsLabel")} <strong>${escapeHtml(opponent?.team?.name || t("season.byeLabel"))}</strong>${opponent ? ` · ${escapeHtml(opponent.user.login)}` : ""}</p>
+      ${game.resultStatus === "confirmed" ? `<p>${t("season.touchdownsLabel")}: ${escapeHtml(pairingTouchdowns(game))} · ${t("season.casualtiesHeader")}: ${escapeHtml(pairingCasualties(game))}</p>` : ""}
+    </a>
+  `;
+}
+
+async function renderMyGames() {
+  setActiveNav("my-games");
+  setViewSection("my-games");
+  if (!state.auth.currentUser) {
+    view.innerHTML = `${renderHeader(t("nav.myGames"), t("games.subtitle"))}<div class="empty-state">${t("games.loginRequired")}</div>`;
+    return;
+  }
+  view.innerHTML = `${renderHeader(t("nav.myGames"), t("games.subtitle"))}<div class="loading">${t("games.loading")}</div>`;
+  await loadGames(true);
+  if (state.games.error) {
+    view.innerHTML = `${renderHeader(t("nav.myGames"), t("games.subtitle"))}<div class="empty-state">${escapeHtml(state.games.error)}</div>`;
+    return;
+  }
+  const nextGames = state.games.items.filter((game) => game.resultStatus !== "confirmed" && game.roundStatus === "started");
+  const history = state.games.items.filter((game) => game.resultStatus === "confirmed");
+  view.innerHTML = `
+    ${renderHeader(t("nav.myGames"), t("games.subtitle"))}
+    <section class="content-panel season-card"><h2>${t("games.nextGameHeading")}</h2>
+      ${nextGames.length ? `<div class="card-grid games-grid">${nextGames.map(renderGameCard).join("")}</div>` : `<p>${t("games.noNextGame")}</p>`}
+    </section>
+    <section class="content-panel season-card"><h2>${t("games.historyHeading")}</h2>
+      ${history.length ? `<div class="card-grid games-grid">${history.map(renderGameCard).join("")}</div>` : `<p>${t("games.noHistory")}</p>`}
+    </section>`;
+}
+
+function renderGameScore(game, proposed = false) {
+  const prefix = proposed ? "proposed" : "";
+  const value = (name) => game[`${prefix}${prefix ? name[0].toUpperCase() + name.slice(1) : name}`];
+  return `${t("season.touchdownsLabel")}: ${value("homeTouchdowns") ?? "-"} / ${value("awayTouchdowns") ?? "-"} · ${t("season.casualtiesHeader")}: ${value("homeCasualties") ?? "-"} / ${value("awayCasualties") ?? "-"}`;
+}
+
+function renderGameProposalForm(game) {
+  return `
+    <form class="game-result-form fixture-result-form" data-game-proposal>
+      <label class="filter-field"><span>${t("season.homeTouchdownsField")}</span><input name="homeTouchdowns" type="number" min="0" step="1" required value="${escapeHtml(game.proposedHomeTouchdowns ?? "")}"></label>
+      <label class="filter-field"><span>${t("season.awayTouchdownsField")}</span><input name="awayTouchdowns" type="number" min="0" step="1" required value="${escapeHtml(game.proposedAwayTouchdowns ?? "")}"></label>
+      <label class="filter-field"><span>${t("season.homeCasualtiesField")}</span><input name="homeCasualties" type="number" min="0" step="1" required value="${escapeHtml(game.proposedHomeCasualties ?? "")}"></label>
+      <label class="filter-field"><span>${t("season.awayCasualtiesField")}</span><input name="awayCasualties" type="number" min="0" step="1" required value="${escapeHtml(game.proposedAwayCasualties ?? "")}"></label>
+      <button class="primary-button" type="submit">${t("games.requestConfirmationAction")}</button>
+    </form>`;
+}
+
+async function renderGamePage(gameId) {
+  setActiveNav("my-games");
+  setViewSection("my-games");
+  if (!state.auth.currentUser) {
+    view.innerHTML = `${renderHeader(t("games.gameHeading"), t("games.subtitle"))}<div class="empty-state">${t("games.loginRequired")}</div>`;
+    return;
+  }
+  try {
+    const { game } = await apiRequest(`/api/games/${encodeURIComponent(gameId)}`);
+    const awaitingOpponent = game.resultStatus === "awaiting_confirmation" && !game.viewerIsProposer;
+    const actions = game.resultStatus === "confirmed"
+      ? `<p class="notice-box">${escapeHtml(renderGameScore(game))}</p>`
+      : awaitingOpponent
+        ? `<div class="notice-box"><strong>${t("games.confirmRequestHeading")}</strong><p>${escapeHtml(renderGameScore(game, true))}</p><div class="game-confirm-actions"><button class="primary-button" data-game-confirm>${t("games.confirmAction")}</button><button class="filter-button danger-action" data-game-reject>${t("games.rejectAction")}</button></div></div>`
+        : game.resultStatus === "awaiting_confirmation"
+          ? `<div class="notice-box"><strong>${t("games.awaitingOpponent")}</strong><p>${escapeHtml(renderGameScore(game, true))}</p></div>`
+          : renderGameProposalForm(game);
+    view.innerHTML = `
+      ${renderHeader(t("games.gameHeading"), `${game.season.name} · ${t("season.roundLabel")} ${game.roundNumber}`, `<a class="primary-button" href="#/my-games">${t("common.back")}</a>`)}
+      <section class="content-panel game-page"><div class="game-versus"><div><span>${t("season.homeLabel")}</span><h2>${escapeHtml(game.home?.team?.name || "-")}</h2><p>${escapeHtml(game.home?.user?.login || "-")}</p></div><strong>VS</strong><div><span>${t("season.awayLabel")}</span><h2>${escapeHtml(game.away?.team?.name || "-")}</h2><p>${escapeHtml(game.away?.user?.login || "-")}</p></div></div>${actions}</section>`;
+    wireGamePage(game);
+  } catch (error) {
+    view.innerHTML = `${renderHeader(t("games.gameHeading"), t("games.subtitle"), `<a class="primary-button" href="#/my-games">${t("common.back")}</a>`)}<div class="empty-state">${escapeHtml(error.message)}</div>`;
+  }
+}
+
+function wireGamePage(game) {
+  view.querySelector("[data-game-proposal]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = Object.fromEntries(new FormData(event.currentTarget));
+    try { await apiRequest(`/api/games/${game.id}/propose`, { method: "POST", body: JSON.stringify(form) }); renderGamePage(game.id); } catch (error) { alert(error.message); }
+  });
+  for (const [selector, action] of [["[data-game-confirm]", "confirm"], ["[data-game-reject]", "reject"]]) {
+    view.querySelector(selector)?.addEventListener("click", async () => {
+      try { await apiRequest(`/api/games/${game.id}/${action}`, { method: "POST", body: "{}" }); state.games.loaded = false; renderGamePage(game.id); } catch (error) { alert(error.message); }
+    });
+  }
+}
+
 async function loadSeason(force = false) {
   if (!state.auth.currentUser) {
     state.season = { ...state.season, data: null, loaded: true, loading: false, error: "" };
@@ -4088,32 +4209,8 @@ function renderLeagueFixture(data) {
         <span>${t("season.leaguePointsLabel")}: <strong>${escapeHtml(pairingLeaguePoints(fixture))}</strong></span>
       </div>
 
-      ${opponent ? renderFixtureResultForm(fixture) : `<p>${t("season.oneTeamFixtureNote")}</p>`}
+      ${opponent ? `<a class="primary-button" href="${gameUrl(fixture)}">${t("games.openGameAction")}</a>` : `<p>${t("season.oneTeamFixtureNote")}</p>`}
     </section>
-  `;
-}
-
-function renderFixtureResultForm(pairing) {
-  return `
-    <div class="fixture-result-form" data-fixture-row="${escapeHtml(pairing.id)}">
-      <label class="filter-field">
-        <span>${t("season.homeTouchdownsField")}</span>
-        <input type="number" min="0" step="1" value="${escapeHtml(pairing.homeTouchdowns ?? "")}" data-fixture-home-td>
-      </label>
-      <label class="filter-field">
-        <span>${t("season.awayTouchdownsField")}</span>
-        <input type="number" min="0" step="1" value="${escapeHtml(pairing.awayTouchdowns ?? "")}" data-fixture-away-td>
-      </label>
-      <label class="filter-field">
-        <span>${t("season.homeCasualtiesField")}</span>
-        <input type="number" min="0" step="1" value="${escapeHtml(pairing.homeCasualties ?? "")}" data-fixture-home-casualties>
-      </label>
-      <label class="filter-field">
-        <span>${t("season.awayCasualtiesField")}</span>
-        <input type="number" min="0" step="1" value="${escapeHtml(pairing.awayCasualties ?? "")}" data-fixture-away-casualties>
-      </label>
-      <button class="primary-button" type="button" data-save-fixture="${escapeHtml(pairing.id)}">${t("season.submitResultAction")}</button>
-    </div>
   `;
 }
 
@@ -4516,34 +4613,6 @@ function wireSeason() {
         replaceSeasonData(await apiRequest(`/api/season/admin/rounds/${button.dataset.seasonAddPairing}/pairings`, {
           method: "POST",
           body: JSON.stringify({ homeEntryId: "", awayEntryId: "" }),
-        }));
-        renderSeason(false);
-      } catch (error) {
-        alert(error.message);
-      }
-    });
-  });
-
-  view.querySelectorAll("[data-save-fixture]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const row = button.closest("[data-fixture-row]");
-      const homeTouchdowns = row?.querySelector("[data-fixture-home-td]")?.value ?? "";
-      const awayTouchdowns = row?.querySelector("[data-fixture-away-td]")?.value ?? "";
-      const homeCasualties = row?.querySelector("[data-fixture-home-casualties]")?.value ?? "";
-      const awayCasualties = row?.querySelector("[data-fixture-away-casualties]")?.value ?? "";
-      if (homeTouchdowns === "" || awayTouchdowns === "" || homeCasualties === "" || awayCasualties === "") {
-        alert(t("season.enterCompleteResultAlert"));
-        return;
-      }
-      try {
-        replaceSeasonData(await apiRequest(`/api/season/fixture/${button.dataset.saveFixture}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            homeTouchdowns,
-            awayTouchdowns,
-            homeCasualties,
-            awayCasualties,
-          }),
         }));
         renderSeason(false);
       } catch (error) {
@@ -6938,6 +7007,8 @@ function renderRoute() {
   if (route === "builder") return renderBuilder();
   if (route.startsWith("my-teams/")) return renderSavedRoster(route.replace(/^my-teams\//, ""));
   if (route === "my-teams") return renderMyTeams();
+  if (route.startsWith("games/")) return renderGamePage(route.replace(/^games\//, ""));
+  if (route === "my-games") return renderMyGames();
   if (route === "season") return renderSeason();
   const adminEditMatch = route.match(/^administration\/users\/([^/]+)\/teams\/([^/]+)\/edit$/);
   if (adminEditMatch) return renderSavedRoster(adminEditMatch[2], true, { adminOwnerId: adminEditMatch[1] });

@@ -89,6 +89,14 @@ CREATE TABLE IF NOT EXISTS season_pairings (
   result_type TEXT NOT NULL DEFAULT 'played',
   home_points INTEGER,
   away_points INTEGER,
+  result_status TEXT NOT NULL DEFAULT 'pending',
+  proposed_by_user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  proposed_home_touchdowns INTEGER,
+  proposed_away_touchdowns INTEGER,
+  proposed_home_casualties INTEGER,
+  proposed_away_casualties INTEGER,
+  proposed_at TIMESTAMPTZ,
+  confirmed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (round_id, table_number)
@@ -100,6 +108,14 @@ ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS away_touchdowns INTEGER;
 ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS home_casualties INTEGER;
 ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS away_casualties INTEGER;
 ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS result_type TEXT NOT NULL DEFAULT 'played';
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS result_status TEXT NOT NULL DEFAULT 'pending';
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS proposed_by_user_id UUID REFERENCES users(id) ON DELETE SET NULL;
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS proposed_home_touchdowns INTEGER;
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS proposed_away_touchdowns INTEGER;
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS proposed_home_casualties INTEGER;
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS proposed_away_casualties INTEGER;
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS proposed_at TIMESTAMPTZ;
+ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS confirmed_at TIMESTAMPTZ;
 DO $$
 BEGIN
   IF EXISTS (
@@ -121,6 +137,10 @@ BEGIN
 END $$;
 ALTER TABLE season_pairings DROP COLUMN IF EXISTS home_opponent_unable;
 ALTER TABLE season_pairings DROP COLUMN IF EXISTS away_opponent_unable;
+
+UPDATE season_pairings
+SET result_status = 'confirmed', confirmed_at = COALESCE(confirmed_at, updated_at)
+WHERE home_points IS NOT NULL OR away_points IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS season_pairings_round_id_idx ON season_pairings(round_id);
 CREATE INDEX IF NOT EXISTS season_pairings_home_entry_id_idx ON season_pairings(home_entry_id);
