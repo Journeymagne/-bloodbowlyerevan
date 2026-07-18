@@ -3385,8 +3385,7 @@ body.auth-open {
   font-size: 12px;
 }
 
-.season-td-pair,
-.season-bonus-checks {
+.season-td-pair {
   display: grid;
   gap: 6px;
 }
@@ -3426,14 +3425,6 @@ body.auth-open {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   align-items: end;
-}
-
-.fixture-checkbox {
-  min-height: 42px;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel-glass);
 }
 
 .admin-profile-grid {

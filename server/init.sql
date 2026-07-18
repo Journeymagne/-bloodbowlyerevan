@@ -85,8 +85,6 @@ CREATE TABLE IF NOT EXISTS season_pairings (
   home_touchdowns INTEGER,
   away_touchdowns INTEGER,
   result_type TEXT NOT NULL DEFAULT 'played',
-  home_opponent_unable BOOLEAN NOT NULL DEFAULT FALSE,
-  away_opponent_unable BOOLEAN NOT NULL DEFAULT FALSE,
   home_points INTEGER,
   away_points INTEGER,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -98,8 +96,27 @@ ALTER TABLE season_pairings ALTER COLUMN home_entry_id DROP NOT NULL;
 ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS home_touchdowns INTEGER;
 ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS away_touchdowns INTEGER;
 ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS result_type TEXT NOT NULL DEFAULT 'played';
-ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS home_opponent_unable BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE season_pairings ADD COLUMN IF NOT EXISTS away_opponent_unable BOOLEAN NOT NULL DEFAULT FALSE;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'season_pairings' AND column_name = 'home_opponent_unable'
+  ) THEN
+    UPDATE season_pairings
+    SET home_points = GREATEST(home_points - 2, 0)
+    WHERE home_opponent_unable = TRUE AND home_points IS NOT NULL;
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'season_pairings' AND column_name = 'away_opponent_unable'
+  ) THEN
+    UPDATE season_pairings
+    SET away_points = GREATEST(away_points - 2, 0)
+    WHERE away_opponent_unable = TRUE AND away_points IS NOT NULL;
+  END IF;
+END $$;
+ALTER TABLE season_pairings DROP COLUMN IF EXISTS home_opponent_unable;
+ALTER TABLE season_pairings DROP COLUMN IF EXISTS away_opponent_unable;
 
 CREATE INDEX IF NOT EXISTS season_pairings_round_id_idx ON season_pairings(round_id);
 CREATE INDEX IF NOT EXISTS season_pairings_home_entry_id_idx ON season_pairings(home_entry_id);

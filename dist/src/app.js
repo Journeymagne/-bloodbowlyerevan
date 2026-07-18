@@ -612,7 +612,6 @@ const overviewCards = [
           "0 points for a loss.",
           "+1 point if the game ends with a margin of 3+ touchdowns.",
           "+1 point if you conceded 0 touchdowns (you must score at least one yourself).",
-          "+2 points if the opponent could not field a team for the match (e.g., due to too many injuries).",
         ],
       },
       {
@@ -923,7 +922,6 @@ const overviewCardsRu = [
           "0 очков за поражение.",
           "+1 очко, если матч завершился с разницей в 3+ тачдауна.",
           "+1 очко, если вы не пропустили ни одного тачдауна (при этом нужно забить хотя бы один самому).",
-          "+2 очка, если соперник не смог выставить команду на матч (например, из-за большого числа травм).",
         ],
       },
       {
@@ -4097,14 +4095,6 @@ function renderFixtureResultForm(pairing) {
         <span>${t("season.awayTouchdownsField")}</span>
         <input type="number" min="0" step="1" value="${escapeHtml(pairing.awayTouchdowns ?? "")}" data-fixture-away-td>
       </label>
-      <label class="table-checkbox fixture-checkbox">
-        <input type="checkbox" data-fixture-home-unable ${pairing.homeOpponentUnable ? "checked" : ""}>
-        <span>${t("season.awardHomeUnableNote")}</span>
-      </label>
-      <label class="table-checkbox fixture-checkbox">
-        <input type="checkbox" data-fixture-away-unable ${pairing.awayOpponentUnable ? "checked" : ""}>
-        <span>${t("season.awardAwayUnableNote")}</span>
-      </label>
       <button class="primary-button" type="button" data-save-fixture="${escapeHtml(pairing.id)}">${t("season.submitResultAction")}</button>
     </div>
   `;
@@ -4209,7 +4199,6 @@ function renderSeasonRounds(data, adminMode = false) {
                     <th>${t("season.awayLabel")}</th>
                     <th>${t("season.resultHeader")}</th>
                     <th>${t("season.tdHeader")}</th>
-                    <th>${t("season.bonusesHeader")}</th>
                     <th>${t("season.leaguePointsLabel")}</th>
                     <th>${t("roster.actionHeader")}</th>
                   </tr>
@@ -4282,12 +4271,6 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
         <div class="season-td-pair">
           <input class="season-score-input" type="number" min="0" step="1" value="${escapeHtml(pairing.homeTouchdowns ?? "")}" data-home-td ${resultLocked ? "disabled" : ""}>
           <input class="season-score-input" type="number" min="0" step="1" value="${escapeHtml(pairing.awayTouchdowns ?? "")}" data-away-td ${resultLocked ? "disabled" : ""}>
-        </div>
-      </td>
-      <td>
-        <div class="season-bonus-checks">
-          <label class="table-checkbox"><input type="checkbox" data-home-unable ${pairing.homeOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>${t("season.plusTwoHome")}</span></label>
-          <label class="table-checkbox"><input type="checkbox" data-away-unable ${pairing.awayOpponentUnable ? "checked" : ""} ${resultLocked ? "disabled" : ""}><span>${t("season.plusTwoAway")}</span></label>
         </div>
       </td>
       <td>${escapeHtml(pairingLeaguePoints(pairing))}</td>
@@ -4530,8 +4513,6 @@ function wireSeason() {
           body: JSON.stringify({
             homeTouchdowns,
             awayTouchdowns,
-            homeOpponentUnable: row?.querySelector("[data-fixture-home-unable]")?.checked ?? false,
-            awayOpponentUnable: row?.querySelector("[data-fixture-away-unable]")?.checked ?? false,
           }),
         }));
         renderSeason(false);
@@ -4550,8 +4531,6 @@ function wireSeason() {
         resultType: row?.querySelector("[data-result-type]")?.value ?? "played",
         homeTouchdowns: row?.querySelector("[data-home-td]")?.value ?? "",
         awayTouchdowns: row?.querySelector("[data-away-td]")?.value ?? "",
-        homeOpponentUnable: row?.querySelector("[data-home-unable]")?.checked ?? false,
-        awayOpponentUnable: row?.querySelector("[data-away-unable]")?.checked ?? false,
       };
       if (homeEntry && !homeEntry.disabled) payload.homeEntryId = homeEntry.value;
       if (awayEntry && !awayEntry.disabled) payload.awayEntryId = awayEntry.value;

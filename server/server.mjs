@@ -211,8 +211,6 @@ function publicSeasonPairing(row) {
     homeTouchdowns: row.home_touchdowns,
     awayTouchdowns: row.away_touchdowns,
     resultType: row.result_type,
-    homeOpponentUnable: row.home_opponent_unable,
-    awayOpponentUnable: row.away_opponent_unable,
     homePoints: row.home_points,
     awayPoints: row.away_points,
     createdAt: row.created_at,
@@ -516,8 +514,6 @@ function scoreLeagueResult({
   homeTouchdowns,
   awayTouchdowns,
   resultType = "played",
-  homeOpponentUnable = false,
-  awayOpponentUnable = false,
   hasHome = true,
   hasAway = true,
 }) {
@@ -548,9 +544,6 @@ function scoreLeagueResult({
 
   if (homeTouchdowns > 0 && awayTouchdowns === 0) homePoints += 1;
   if (awayTouchdowns > 0 && homeTouchdowns === 0) awayPoints += 1;
-  if (homeOpponentUnable) homePoints += 2;
-  if (awayOpponentUnable) awayPoints += 2;
-
   return { homePoints, awayPoints, homeTouchdowns, awayTouchdowns };
 }
 
@@ -930,14 +923,10 @@ async function updateSeasonPairing(seasonId, pairingId, body, isAdmin = false, u
   const awayTouchdowns = nullableInteger(body.awayTouchdowns, "Away touchdowns");
   const nextHomeTouchdowns = homeTouchdowns === undefined ? pairing.home_touchdowns : homeTouchdowns;
   const nextAwayTouchdowns = awayTouchdowns === undefined ? pairing.away_touchdowns : awayTouchdowns;
-  const nextHomeOpponentUnable = Boolean(body.homeOpponentUnable ?? pairing.home_opponent_unable);
-  const nextAwayOpponentUnable = Boolean(body.awayOpponentUnable ?? pairing.away_opponent_unable);
   const score = scoreLeagueResult({
     homeTouchdowns: nextHomeTouchdowns,
     awayTouchdowns: nextAwayTouchdowns,
     resultType,
-    homeOpponentUnable: nextHomeOpponentUnable,
-    awayOpponentUnable: nextAwayOpponentUnable,
     hasHome: Boolean(homeEntryId),
     hasAway: Boolean(awayEntryId),
   });
@@ -949,10 +938,8 @@ async function updateSeasonPairing(seasonId, pairingId, body, isAdmin = false, u
          home_touchdowns = $4,
          away_touchdowns = $5,
          result_type = $6,
-         home_opponent_unable = $7,
-         away_opponent_unable = $8,
-         home_points = $9,
-         away_points = $10,
+         home_points = $7,
+         away_points = $8,
          updated_at = now()
      WHERE id = $1
      RETURNING *`,
@@ -963,8 +950,6 @@ async function updateSeasonPairing(seasonId, pairingId, body, isAdmin = false, u
       score.homeTouchdowns,
       score.awayTouchdowns,
       resultType,
-      nextHomeOpponentUnable,
-      nextAwayOpponentUnable,
       score.homePoints,
       score.awayPoints,
     ],
