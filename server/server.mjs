@@ -527,7 +527,7 @@ async function loadUserGameRows(userId, pairingId = null, includeAll = false) {
      LEFT JOIN saved_teams at ON at.id = ae.saved_team_id
      WHERE ${pairingFilter}
      ORDER BY s.created_at DESC, r.round_number DESC, p.table_number ASC`,
-    pairingId ? [userId, pairingId] : [userId],
+    pairingId ? [userId, pairingId] : includeAll ? [] : [userId],
   );
   return result.rows;
 }
