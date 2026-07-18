@@ -506,7 +506,6 @@ async function loadSeasonPairingRows(seasonId) {
 }
 
 async function loadUserGameRows(userId, pairingId = null) {
-  const logoColumns = pairingId ? ", ht.logo_data AS home_team_logo, at.logo_data AS away_team_logo" : "";
   const result = await pool.query(
     `SELECT p.*, r.round_number, r.status AS round_status,
             s.id AS season_id, s.name AS season_name, s.status AS season_status,
@@ -514,7 +513,6 @@ async function loadUserGameRows(userId, pairingId = null) {
             ht.id AS home_team_id, ht.name AS home_team_name, ht.base_team_slug AS home_team_slug,
             ae.user_id AS away_user_id, au.login AS away_user_login,
             at.id AS away_team_id, at.name AS away_team_name, at.base_team_slug AS away_team_slug
-            ${logoColumns}
      FROM season_pairings p
      JOIN season_rounds r ON r.id = p.round_id
      JOIN seasons s ON s.id = r.season_id
@@ -538,8 +536,8 @@ function publicGame(row, viewerId) {
   return {
     ...pairing,
     season: { id: row.season_id, name: row.season_name, status: row.season_status },
-    home: row.home_user_id ? { user: { id: row.home_user_id, login: row.home_user_login }, team: { id: row.home_team_id, name: row.home_team_name, baseTeamSlug: row.home_team_slug, logoData: row.home_team_logo ?? null } } : null,
-    away: row.away_user_id ? { user: { id: row.away_user_id, login: row.away_user_login }, team: { id: row.away_team_id, name: row.away_team_name, baseTeamSlug: row.away_team_slug, logoData: row.away_team_logo ?? null } } : null,
+    home: row.home_user_id ? { user: { id: row.home_user_id, login: row.home_user_login }, team: { id: row.home_team_id, name: row.home_team_name, baseTeamSlug: row.home_team_slug, logoUrl: row.home_team_id ? `/api/team-logos/${row.home_team_id}` : null } } : null,
+    away: row.away_user_id ? { user: { id: row.away_user_id, login: row.away_user_login }, team: { id: row.away_team_id, name: row.away_team_name, baseTeamSlug: row.away_team_slug, logoUrl: row.away_team_id ? `/api/team-logos/${row.away_team_id}` : null } } : null,
     viewerIsHome: row.home_user_id === viewerId,
     viewerIsProposer: row.proposed_by_user_id === viewerId,
   };
@@ -1481,6 +1479,27 @@ async function handleApi(request, response, url) {
       if (!user) return sendJson(response, 401, { error: "Not authorized." });
       const rows = await loadUserGameRows(user.id);
       return sendJson(response, 200, { games: rows.map((row) => publicGame(row, user.id)) });
+    }
+
+    const teamLogoMatch = url.pathname.match(/^\/api\/team-logos\/([0-9a-f-]+)$/i);
+    if (teamLogoMatch && request.method === "GET") {
+      const result = await pool.query(
+        `SELECT logo_data, updated_at FROM saved_teams WHERE id = $1`,
+        [teamLogoMatch[1]],
+      );
+      const logoData = String(result.rows[0]?.logo_data || "");
+      const match = logoData.match(/^data:(image\/(?:png|jpeg|webp|gif));base64,([a-z0-9+/=]+)$/i);
+      if (!match) return writeResponse(request, response, 404, "", { "Cache-Control": "public, max-age=300" });
+      const body = Buffer.from(match[2], "base64");
+      const etag = `"${crypto.createHash("sha256").update(body).digest("hex")}"`;
+      if (request.headers["if-none-match"] === etag) {
+        return writeResponse(request, response, 304, "", { ETag: etag, "Cache-Control": "public, max-age=86400" });
+      }
+      return writeResponse(request, response, 200, body, {
+        "Content-Type": match[1].toLowerCase(),
+        "Cache-Control": "public, max-age=86400",
+        ETag: etag,
+      });
     }
 
     const gameMatch = url.pathname.match(/^\/api\/games\/([0-9a-f-]+)$/i);
