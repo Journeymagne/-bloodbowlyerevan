@@ -3446,6 +3446,31 @@ body.auth-open {
   margin: 0;
 }
 
+.admin-user-management-form {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-user-management-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.danger-action {
+  border-color: rgba(232, 92, 63, 0.62);
+  color: var(--danger);
+}
+
+.danger-action:hover:not(:disabled) {
+  border-color: var(--danger);
+}
+
+.danger-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
 .admin-users-table {
   min-width: 820px;
 }

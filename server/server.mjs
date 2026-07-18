@@ -1156,6 +1156,59 @@ async function handleApi(request, response, url) {
     }
 
     const adminUserMatch = url.pathname.match(/^\/api\/admin\/users\/([0-9a-f-]+)$/i);
+    if (adminUserMatch && request.method === "PATCH") {
+      const user = await currentUser(request);
+      if (!user) return sendJson(response, 401, { error: "Not authorized." });
+      if (!user.is_admin) return sendJson(response, 403, { error: "Admin access required." });
+
+      const targetResult = await pool.query("SELECT * FROM users WHERE id = $1", [adminUserMatch[1]]);
+      const target = targetResult.rows[0];
+      if (!target) return sendJson(response, 404, { error: "User not found." });
+
+      const body = await readJson(request);
+      const login = String(body.login ?? target.login).trim();
+      const password = String(body.password ?? "");
+      const loginKey = normalizeLogin(login);
+
+      if (login.length < 3) return sendJson(response, 400, { error: "Login must be at least 3 characters." });
+      if (password && password.length < 4) return sendJson(response, 400, { error: "Password must be at least 4 characters." });
+
+      const passwordHash = password ? hashPassword(password) : null;
+      const updated = await pool.query(
+        `UPDATE users
+         SET login = $2,
+             login_key = $3,
+             password_hash = COALESCE($4, password_hash),
+             updated_at = now()
+         WHERE id = $1
+         RETURNING *`,
+        [target.id, login, loginKey, passwordHash],
+      ).catch((error) => {
+        if (error.code === "23505") return null;
+        throw error;
+      });
+      if (!updated) return sendJson(response, 409, { error: "This login is already registered." });
+
+      if (password && target.id !== user.id) {
+        await pool.query("DELETE FROM sessions WHERE user_id = $1", [target.id]);
+      }
+
+      return sendJson(response, 200, { user: publicAdminUser(updated.rows[0]) });
+    }
+
+    if (adminUserMatch && request.method === "DELETE") {
+      const user = await currentUser(request);
+      if (!user) return sendJson(response, 401, { error: "Not authorized." });
+      if (!user.is_admin) return sendJson(response, 403, { error: "Admin access required." });
+      if (adminUserMatch[1] === user.id) {
+        return sendJson(response, 409, { error: "You cannot delete your own admin account." });
+      }
+
+      const deleted = await pool.query("DELETE FROM users WHERE id = $1 RETURNING id", [adminUserMatch[1]]);
+      if (!deleted.rows[0]) return sendJson(response, 404, { error: "User not found." });
+      return sendJson(response, 200, { ok: true });
+    }
+
     if (adminUserMatch && request.method === "GET") {
       const user = await currentUser(request);
       if (!user) return sendJson(response, 401, { error: "Not authorized." });

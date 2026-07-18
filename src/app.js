@@ -3369,6 +3369,7 @@ async function renderAdminUserProfile(userId) {
       ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
       <div class="admin-profile-grid">
         ${renderAdminProfileCard(payload.user)}
+        ${renderAdminUserManagementPanel(payload.user)}
         <section class="content-panel season-card">
           ${renderAdminCreateTeamForUserPanel(payload.user)}
         </section>
@@ -3405,6 +3406,31 @@ function renderAdminProfileCard(user) {
   `;
 }
 
+function renderAdminUserManagementPanel(user) {
+  const isCurrentUser = user.id === state.auth.currentUser?.id;
+  return `
+    <section class="content-panel season-card admin-user-management-panel">
+      <h2>${t("admin.manageUserHeading")}</h2>
+      <p class="muted-text">${t("admin.manageUserNote")}</p>
+      <form class="admin-user-management-form" data-admin-user-management>
+        <label class="filter-field">
+          <span>${t("admin.nicknameField")}</span>
+          <input name="login" type="text" minlength="3" required value="${escapeHtml(user.login || "")}">
+        </label>
+        <label class="filter-field">
+          <span>${t("admin.newPasswordField")}</span>
+          <input name="password" type="password" minlength="4" placeholder="${t("admin.newPasswordPlaceholder")}" autocomplete="new-password">
+        </label>
+        <div class="admin-user-management-actions">
+          <button class="primary-button" type="submit">${t("common.save")}</button>
+          <button class="filter-button danger-action" type="button" data-admin-delete-user ${isCurrentUser ? "disabled" : ""}>${t("admin.deleteUserAction")}</button>
+        </div>
+      </form>
+      ${isCurrentUser ? `<p class="muted-text">${t("admin.cannotDeleteSelfNote")}</p>` : ""}
+    </section>
+  `;
+}
+
 function renderAdminCreateTeamForUserPanel(user) {
   const teams = state.data.teams ?? [];
   return `
@@ -3427,6 +3453,39 @@ function renderAdminCreateTeamForUserPanel(user) {
 }
 
 function wireAdminUserProfile(user) {
+  view.querySelector("[data-admin-user-management]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const login = String(form.get("login") ?? "").trim();
+    const password = String(form.get("password") ?? "");
+    try {
+      const payload = await apiRequest(`/api/admin/users/${encodeURIComponent(user.id)}`, {
+        method: "PATCH",
+        body: JSON.stringify({ login, password }),
+      });
+      if (payload.user?.id === state.auth.currentUser?.id) {
+        state.auth.currentUser = { ...state.auth.currentUser, ...payload.user };
+        updateAuthButton();
+      }
+      state.admin.loaded = false;
+      alert(t("admin.userUpdatedMessage"));
+      renderAdminUserProfile(user.id);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  view.querySelector("[data-admin-delete-user]")?.addEventListener("click", async () => {
+    if (!confirm(`${t("admin.deleteUserConfirm")} ${user.login}? ${t("admin.deleteUserCascadeWarning")}`)) return;
+    try {
+      await apiRequest(`/api/admin/users/${encodeURIComponent(user.id)}`, { method: "DELETE" });
+      state.admin.loaded = false;
+      location.hash = "#/administration";
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
   view.querySelector("[data-admin-create-user-team]")?.addEventListener("click", async () => {
     const baseTeamSlug = view.querySelector("[data-admin-create-team-base]")?.value;
     const baseTeam = state.data.teams.find((team) => team.slug === baseTeamSlug);
