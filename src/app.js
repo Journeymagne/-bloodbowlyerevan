@@ -3309,9 +3309,26 @@ async function renderAdministration() {
 
   view.innerHTML = `
     ${renderHeader(t("nav.administration"), t("admin.subtitle"), `<button class="primary-button" type="button" data-admin-refresh>${t("admin.refresh")}</button>`)}
+    ${renderAdminImportUsersPanel()}
     ${renderAdminUsersTable(state.admin.users)}
   `;
   wireAdministration();
+}
+
+function renderAdminImportUsersPanel() {
+  return `
+    <article class="content-panel season-card admin-import-panel">
+      <h2>${t("admin.importUsersHeading")}</h2>
+      <p class="muted-text">${t("admin.importUsersNote")}</p>
+      <div class="season-action-row admin-import-row">
+        <label class="filter-field">
+          <span>${t("admin.importUsersFileField")}</span>
+          <input type="file" accept="application/json,.json,.team-import.json" data-admin-import-users-file>
+        </label>
+        <button class="primary-button" type="button" data-admin-import-users>${t("admin.importUsersAction")}</button>
+      </div>
+    </article>
+  `;
 }
 
 function renderAdminUsersTable(users) {
@@ -3794,6 +3811,39 @@ function wireAdministration() {
   view.querySelector("[data-admin-refresh]")?.addEventListener("click", () => {
     state.admin.loaded = false;
     renderAdministration();
+  });
+
+  view.querySelector("[data-admin-import-users]")?.addEventListener("click", async (event) => {
+    const button = event.currentTarget;
+    const file = view.querySelector("[data-admin-import-users-file]")?.files?.[0];
+    if (!file) {
+      alert(t("admin.importUsersMissingFile"));
+      return;
+    }
+
+    let payload = null;
+    try {
+      payload = JSON.parse(await file.text());
+    } catch {
+      alert(t("admin.importUsersInvalidFile"));
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = t("common.saving");
+    try {
+      const result = await apiRequest("/api/admin/import-users", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      state.admin.loaded = false;
+      await renderAdministration();
+      alert(t("admin.importUsersSuccess").replace("{count}", String(result.imported?.length ?? 0)));
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = t("admin.importUsersAction");
+      alert(error.message);
+    }
   });
 }
 

@@ -118,6 +118,23 @@ npm.cmd run import:gata
 npm.cmd run build
 ```
 
+## Team XLSX Import
+
+Roster sheets from the league workbook can be converted into a cloud-importable Postgres SQL file and an Administration UI import file:
+
+```powershell
+npm.cmd run team-import:sql -- --xlsx "X:\Downloads\Gata League 2_  Info.xlsx" --sheet "Drunken Rune Guard (Andrei)" --sql-out ".codex_tmp\team-imports\drunken-rune-guard.sql"
+```
+
+The command also writes a `.credentials.json` file with the generated login/password and a `.team-import.json` file next to the SQL. Log in as an admin, open Administration, click Import Users, and upload the `.team-import.json` file to create or update the user and saved team through the site.
+
+To apply that SQL to a remote database, point `DATABASE_URL` at the cloud Postgres instance and run:
+
+```powershell
+$env:DATABASE_URL="postgres://user:password@host:5432/database"
+npm.cmd run team-import:apply -- ".codex_tmp\team-imports\drunken-rune-guard.sql"
+```
+
 ## Deployment
 
 See `DEPLOYMENT.md` for Netlify and handoff instructions.
