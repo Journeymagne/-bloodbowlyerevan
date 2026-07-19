@@ -932,8 +932,8 @@ async function addSeasonPairing(seasonId, roundId, homeEntryId = "", awayEntryId
   return result.rows[0];
 }
 
-async function proposeGameResult(pairingId, userId, body) {
-  const game = (await loadUserGameRows(userId, pairingId))[0];
+async function proposeGameResult(pairingId, userId, body, isAdmin = false) {
+  const game = (await loadUserGameRows(userId, pairingId, isAdmin))[0];
   if (!game) throw httpError(404, "Game not found.");
   if (game.round_status !== "started") throw httpError(409, "This game has not started yet.");
   if (!game.home_user_id || !game.away_user_id) throw httpError(409, "A BYE game does not require confirmation.");
@@ -1534,7 +1534,7 @@ async function handleApi(request, response, url) {
     if (gameActionMatch && request.method === "POST") {
       const user = await currentUser(request);
       if (!user) return sendJson(response, 401, { error: "Not authorized." });
-      if (gameActionMatch[2] === "propose") await proposeGameResult(gameActionMatch[1], user.id, await readJson(request));
+      if (gameActionMatch[2] === "propose") await proposeGameResult(gameActionMatch[1], user.id, await readJson(request), user.is_admin);
       if (gameActionMatch[2] === "confirm") await respondToGameProposal(gameActionMatch[1], user.id, true, user.is_admin);
       if (gameActionMatch[2] === "reject") await respondToGameProposal(gameActionMatch[1], user.id, false, user.is_admin);
       const row = (await loadUserGameRows(user.id, gameActionMatch[1], user.is_admin))[0];
@@ -1677,8 +1677,8 @@ async function handleApi(request, response, url) {
       const user = await currentUser(request);
       if (!user) return sendJson(response, 401, { error: "Not authorized." });
       const body = await readJson(request);
-      await proposeGameResult(fixtureMatch[1], user.id, body);
-      return sendJson(response, 200, { game: publicGame((await loadUserGameRows(user.id, fixtureMatch[1]))[0], user.id) });
+      await proposeGameResult(fixtureMatch[1], user.id, body, user.is_admin);
+      return sendJson(response, 200, { game: publicGame((await loadUserGameRows(user.id, fixtureMatch[1], user.is_admin))[0], user.id) });
     }
 
     const seasonPairingMatch = url.pathname.match(/^\/api\/season\/admin\/pairings\/([0-9a-f-]+)$/i);
