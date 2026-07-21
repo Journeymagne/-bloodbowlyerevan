@@ -1565,6 +1565,18 @@ async function handleApi(request, response, url) {
       return sendJson(response, 200, { team: publicSavedTeam(result.rows[0]) });
     }
 
+    if (adminTeamMatch && request.method === "DELETE") {
+      const user = await currentUser(request);
+      if (!user) return sendJson(response, 401, { error: "Not authorized." });
+      if (!user.is_admin) return sendJson(response, 403, { error: "Admin access required." });
+      const deleted = await pool.query(
+        `DELETE FROM saved_teams WHERE id = $1 RETURNING id, user_id`,
+        [adminTeamMatch[1]],
+      );
+      if (!deleted.rows[0]) return sendJson(response, 404, { error: "Team not found." });
+      return sendJson(response, 200, { ok: true, ownerId: deleted.rows[0].user_id });
+    }
+
     const publicTeamMatch = url.pathname.match(/^\/api\/players\/([0-9a-f-]+)\/teams\/([0-9a-f-]+)$/i);
     if (publicTeamMatch && request.method === "GET") {
       const user = await currentUser(request);

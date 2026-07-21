@@ -338,9 +338,9 @@ def header_index(headers, *needles):
     return -1
 
 
-def build_roster(matrix, data):
-    team_name = str(cell(matrix[0], 0) or "").strip()
-    base_team_name = str(cell(matrix[1], 2) or "").strip()
+def build_roster(matrix, data, base_team_override=None, team_name_override=None):
+    team_name = str(team_name_override or cell(matrix[0], 0) or "").strip()
+    base_team_name = str(base_team_override or cell(matrix[1], 2) or "").strip()
     telegram = str(cell(matrix[2], 2) or "").strip()
     team = find_team(data, base_team_name)
     roster_rows = team["team"]["roster"]
@@ -399,6 +399,7 @@ def build_roster(matrix, data):
             "skipNextGame": to_bool(cell(row, header_index(headers, "skip next"))),
             "niglingInjury": to_bool(cell(row, header_index(headers, "niggling"))),
             "isCaptain": is_captain,
+            "extendedContracts": 0,
             "spp": {
                 "touchdowns": stat_value("touchdown"),
                 "casualties": stat_value("casualties"),
@@ -508,6 +509,8 @@ def main():
     parser.add_argument("--login", help="Site login to create/update. Defaults to the Telegram handle without @.")
     parser.add_argument("--telegram", help="Telegram contact. Defaults to the sheet coach cell.")
     parser.add_argument("--password", help="Temporary password. Defaults to a generated password.")
+    parser.add_argument("--base-team", help="Override the rules team name from the sheet.")
+    parser.add_argument("--team-name", help="Override the saved team name from the sheet.")
     parser.add_argument("--sql-out", required=True, help="Where to write the generated SQL file.")
     parser.add_argument("--credentials-out", help="Where to write login/password JSON. Defaults next to SQL.")
     parser.add_argument("--import-out", help="Where to write the admin UI import JSON. Defaults next to SQL.")
@@ -515,7 +518,7 @@ def main():
 
     data = load_site_data()
     matrix = read_sheet_matrix(args.xlsx, args.sheet)
-    parsed = build_roster(matrix, data)
+    parsed = build_roster(matrix, data, args.base_team, args.team_name)
     telegram = args.telegram or parsed["telegram"] or "@unknown"
     login = args.login or telegram.removeprefix("@") or parsed["teamName"].replace(" ", "-").lower()
     password = args.password or temporary_password()

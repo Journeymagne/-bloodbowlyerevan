@@ -728,10 +728,26 @@ body.auth-open {
   margin-bottom: 22px;
 }
 
+.page-heading-main {
+  min-width: 0;
+}
+
+.page-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
 .page-head h1 {
   margin: 0;
   font-size: clamp(28px, 4vw, 46px);
   line-height: 1.05;
+}
+
+.page-back-button {
+  min-height: 34px;
+  padding: 0 12px;
 }
 
 .page-head p {
@@ -745,6 +761,11 @@ body.auth-open {
   flex-wrap: wrap;
   gap: 10px;
   margin: 0 0 18px;
+}
+
+.page-head > .toolbar {
+  justify-content: flex-end;
+  margin: 0;
 }
 
 .filter-panel {
@@ -2067,7 +2088,23 @@ body.auth-open {
 }
 
 .saved-roster-table {
-  min-width: 2040px;
+  min-width: 2160px;
+}
+
+.player-contract-control {
+  display: grid;
+  gap: 4px;
+  min-width: 116px;
+}
+
+.compact-contract-stepper {
+  grid-template-columns: 32px minmax(38px, auto) 32px;
+  min-height: 32px;
+}
+
+.compact-contract-stepper .filter-button {
+  min-height: 32px;
+  padding: 0;
 }
 
 .saved-roster-table tbody tr[draggable="true"] {
@@ -3843,12 +3880,16 @@ td {
   }
 
   .page-head {
-    display: block;
+    display: grid;
+    gap: 12px;
   }
 
-  .page-head .primary-button {
+  .page-head > .toolbar .primary-button {
     width: 100%;
-    margin-top: 14px;
+  }
+
+  .page-head > .toolbar {
+    justify-content: stretch;
   }
 
   .league-reference-card header {
@@ -4011,7 +4052,7 @@ td {
   }
 
   .table-scroll .saved-roster-table {
-    min-width: 2040px;
+    min-width: 2160px;
   }
 
   .table-scroll .my-teams-table {

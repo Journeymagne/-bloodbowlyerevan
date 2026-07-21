@@ -102,7 +102,7 @@ const supportedLocales = new Set(["en", "ru"]);
 const dataCache = new Map();
 let translations = { en: {}, ru: {} };
 let activeDict = translations.en;
-const assetVersion = "gata-91";
+const assetVersion = "gata-92";
 const logoUploadMaxBytes = 2 * 1024 * 1024;
 const logoOptimizeMaxDimension = 512;
 const logoOptimizeQuality = 0.82;
@@ -1547,6 +1547,7 @@ function makeRosterPlayer(row, rowIndex, copyIndex = 0, options = {}) {
     skipNextGame: false,
     niglingInjury: false,
     isCaptain: false,
+    extendedContracts: 0,
     spp: {},
     advancements: [],
     purchased: Boolean(options.purchased),
@@ -1619,6 +1620,7 @@ function normalizeRosterPlayer(player, rows, fallbackIndex = 0) {
     skipNextGame: Boolean(player.skipNextGame),
     niglingInjury: Boolean(player.niglingInjury),
     isCaptain: Boolean(player.isCaptain ?? player.captain),
+    extendedContracts: countToNumber(player.extendedContracts),
     spp: normalizeSppCounters(player.spp),
     advancements: normalizePlayerAdvancements(player.advancements),
     purchased: Boolean(player.purchased),
@@ -1666,6 +1668,7 @@ function playersFromLegacyRoster(team, draft) {
         skipNextGame: Boolean(edit.skipNextGame),
         niglingInjury: Boolean(edit.niglingInjury),
         isCaptain: Boolean(edit.isCaptain ?? edit.captain),
+        extendedContracts: countToNumber(edit.extendedContracts),
         spp: normalizeSppCounters(edit.spp),
         advancements: normalizePlayerAdvancements(edit.advancements),
       }, rows, copyIndex));
@@ -1716,6 +1719,7 @@ function rosterPlayerView(team, player, index = 0) {
     skipNextGame: Boolean(player.skipNextGame),
     niglingInjury: Boolean(player.niglingInjury),
     isCaptain: Boolean(player.isCaptain ?? player.captain),
+    extendedContracts: countToNumber(player.extendedContracts),
     spp: normalizeSppCounters(player.spp),
     advancements: normalizePlayerAdvancements(player.advancements),
   };
@@ -1801,7 +1805,8 @@ function eliteComboCost(row, player) {
 function playerAdjustmentCost(player) {
   const skillCost = normalizePlayerExtraSkills(player.row, player.extraSkills ?? []).reduce((sum, skill) => sum + skillModCost(skill), 0);
   const statCost = Object.entries(player.statMods ?? {}).reduce((sum, [stat, mod]) => sum + statModCost(stat, Number(mod) || 0), 0);
-  return skillCost + statCost + eliteComboCost(player.row, player);
+  const contractCost = countToNumber(player.extendedContracts) * 20;
+  return skillCost + statCost + contractCost + eliteComboCost(player.row, player);
 }
 
 function playerCurrentCost(row, player, includeAdjustments = true) {
@@ -1932,16 +1937,39 @@ function badgeList(items, limit = 4) {
   ].join("");
 }
 
-function renderHeader(title, description, actions = "") {
+function renderHeader(title, description, actions = "", options = {}) {
+  const backButton = options.back ? `
+    <button
+      class="primary-button page-back-button"
+      type="button"
+      data-history-back
+      data-history-fallback="${escapeHtml(options.backFallback || "#/")}"
+    >${t("common.back")}</button>
+  ` : "";
   return `
     <header class="page-head">
-      <div>
-        <h1>${escapeHtml(title)}</h1>
+      <div class="page-heading-main">
+        <div class="page-title-row">
+          <h1>${escapeHtml(title)}</h1>
+          ${backButton}
+        </div>
         ${description ? `<p>${escapeHtml(description)}</p>` : ""}
       </div>
       ${actions ? `<div class="toolbar">${actions}</div>` : ""}
     </header>
   `;
+}
+
+function handleHistoryBack(event) {
+  const trigger = event.target instanceof Element ? event.target.closest("[data-history-back]") : null;
+  if (!trigger) return;
+  event.preventDefault();
+  const fallback = trigger.dataset.historyFallback || "#/";
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    location.hash = fallback;
+  }
 }
 
 function renderHome() {
@@ -2000,13 +2028,13 @@ function renderOverviewDetail(slug) {
   setViewSection("home");
   if (!card) {
     view.innerHTML = `
-      ${renderHeader(t("home.overviewTitle"), t("overview.pagesSubtitle"), `<a class="primary-button" href="#/">${t("common.back")}</a>`)}
+      ${renderHeader(t("home.overviewTitle"), t("overview.pagesSubtitle"), "", { back: true, backFallback: "#/" })}
       <div class="empty-state">${t("overview.notFound")}</div>
     `;
     return;
   }
   view.innerHTML = `
-    ${renderHeader(card.title, t("home.overviewTitle"), `<a class="primary-button" href="#/">${t("common.back")}</a>`)}
+    ${renderHeader(card.title, t("home.overviewTitle"), "", { back: true, backFallback: "#/" })}
     <article class="content-panel content-body overview-detail">
       ${renderOverviewContent(card)}
     </article>
@@ -2448,7 +2476,6 @@ function renderDetail(page) {
   setActiveNav(route);
   setViewSection(route);
   const sidebar = renderSidebar(page);
-  const actions = `<a class="primary-button" href="${listUrlForRoute(route)}">${t("common.back")}</a>`;
   let content = page.html || `<p>${escapeHtml(page.text)}</p>`;
   if (isLeaguesPage(page)) {
     content = renderLeaguesReferencePage();
@@ -2476,7 +2503,7 @@ function renderDetail(page) {
     `;
   }
   view.innerHTML = `
-    ${renderHeader(page.title, page.sectionLabel, actions)}
+    ${renderHeader(page.title, page.sectionLabel, "", { back: true, backFallback: listUrlForRoute(route) })}
     <div class="detail-layout">
       <article class="content-panel content-body">
         ${content}
@@ -3203,7 +3230,7 @@ function renderSavedTeamRow(team) {
       <td>
         <div class="table-actions">
           <a class="primary-button compact-action" href="#/my-teams/${encodeURIComponent(team.id)}">${t("common.edit")}</a>
-          <button class="filter-button compact-action" type="button" data-delete-team="${escapeHtml(team.id)}">${t("common.delete")}</button>
+          <button class="filter-button compact-action danger-action" type="button" data-delete-team="${escapeHtml(team.id)}" data-delete-team-name="${escapeHtml(team.name || "")}">${t("common.delete")}</button>
         </div>
       </td>
     </tr>
@@ -3235,7 +3262,7 @@ function renderSavedTeamCard(team) {
       </dl>
       <div class="saved-team-actions">
         <a class="primary-button compact-action" href="#/my-teams/${encodeURIComponent(team.id)}">${t("common.edit")}</a>
-        <button class="filter-button compact-action" type="button" data-delete-team="${escapeHtml(team.id)}">${t("common.delete")}</button>
+        <button class="filter-button compact-action danger-action" type="button" data-delete-team="${escapeHtml(team.id)}" data-delete-team-name="${escapeHtml(team.name || "")}">${t("common.delete")}</button>
       </div>
     </article>
   `;
@@ -3246,10 +3273,43 @@ function wireMyTeams() {
     resetBuilderForTeam(state.data.teams[0]);
     location.hash = "#/builder";
   });
+  wireTeamDeleteButtons(() => renderMyTeams());
+}
+
+function deleteTeamEndpoint(teamId, ownerId = "") {
+  const currentUser = state.auth.currentUser;
+  if (currentUser?.isAdmin && ownerId && ownerId !== currentUser.id) {
+    return `/api/admin/teams/${encodeURIComponent(teamId)}`;
+  }
+  return `/api/teams/${encodeURIComponent(teamId)}`;
+}
+
+async function deleteSavedTeam(teamId, options = {}) {
+  if (!teamId) return false;
+  const teamName = options.teamName ? ` "${options.teamName}"` : "";
+  if (!confirm(`${t("savedRoster.deleteTeamConfirm")}${teamName}?`)) return false;
+  await apiRequest(options.endpoint || deleteTeamEndpoint(teamId, options.ownerId), { method: "DELETE" });
+  state.myTeams.loaded = false;
+  state.season.loaded = false;
+  state.games.loaded = false;
+  state.admin.loaded = false;
+  state.admin.editingTeams?.delete(teamId);
+  return true;
+}
+
+function wireTeamDeleteButtons(afterDelete) {
   view.querySelectorAll("[data-delete-team]").forEach((button) => {
     button.addEventListener("click", async () => {
-      await apiRequest(`/api/teams/${button.dataset.deleteTeam}`, { method: "DELETE" });
-      await renderMyTeams();
+      try {
+        const deleted = await deleteSavedTeam(button.dataset.deleteTeam, {
+          ownerId: button.dataset.deleteTeamOwner || "",
+          teamName: button.dataset.deleteTeamName || "",
+          endpoint: button.dataset.deleteTeamEndpoint || "",
+        });
+        if (deleted && afterDelete) await afterDelete(button);
+      } catch (error) {
+        alert(error.message);
+      }
     });
   });
 }
@@ -3374,13 +3434,13 @@ async function renderAdminUserProfile(userId) {
   setActiveNav("administration");
   setViewSection("administration");
   view.innerHTML = `
-    ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+    ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), "", { back: true, backFallback: "#/administration" })}
     <div class="loading">${t("admin.loadingProfile")}</div>
   `;
 
   if (!state.auth.currentUser?.isAdmin) {
     view.innerHTML = `
-      ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+      ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), "", { back: true, backFallback: "#/administration" })}
       <div class="empty-state">${t("admin.accessRequired")}</div>
     `;
     return;
@@ -3389,7 +3449,7 @@ async function renderAdminUserProfile(userId) {
   try {
     const payload = await apiRequest(`/api/admin/users/${encodeURIComponent(userId)}`);
     view.innerHTML = `
-      ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+      ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndProfileSubtitle"), "", { back: true, backFallback: "#/administration" })}
       <div class="admin-profile-grid">
         ${renderAdminProfileCard(payload.user)}
         ${renderAdminUserManagementPanel(payload.user)}
@@ -3403,9 +3463,10 @@ async function renderAdminUserProfile(userId) {
       </div>
     `;
     wireAdminUserProfile(payload.user);
+    wireTeamDeleteButtons(() => renderAdminUserProfile(userId));
   } catch (error) {
     view.innerHTML = `
-      ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+      ${renderHeader(t("nav.administration"), t("admin.playerProfileSubtitle"), "", { back: true, backFallback: "#/administration" })}
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
@@ -3576,7 +3637,14 @@ function renderAdminSavedTeamRow(team, owner = null) {
       <td>${costs ? costs.totalPlayersCount : "-"}</td>
       <td>${costs ? `${costs.total}k` : "-"}</td>
       <td>${escapeHtml(updated)}</td>
-      <td>${state.auth.currentUser?.isAdmin && teamOwner ? `<a class="primary-button compact-action" href="${adminTeamEditUrl(teamOwner, team)}">${t("common.edit")}</a>` : `<span class="muted-text">-</span>`}</td>
+      <td>
+        ${state.auth.currentUser?.isAdmin && teamOwner ? `
+          <div class="table-actions">
+            <a class="primary-button compact-action" href="${adminTeamEditUrl(teamOwner, team)}">${t("common.edit")}</a>
+            <button class="filter-button compact-action danger-action" type="button" data-delete-team="${escapeHtml(team.id)}" data-delete-team-owner="${escapeHtml(teamOwner.id || "")}" data-delete-team-name="${escapeHtml(team.name || "")}">${t("common.delete")}</button>
+          </div>
+        ` : `<span class="muted-text">-</span>`}
+      </td>
     </tr>
   `;
 }
@@ -3585,7 +3653,7 @@ async function renderPlayerProfile(userId) {
   setActiveNav("season");
   setViewSection("players");
   view.innerHTML = `
-    ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"), `<a class="primary-button" href="#/season">${t("common.back")}</a>`)}
+    ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"), "", { back: true, backFallback: "#/season" })}
     <div class="loading">${t("admin.loadingPlayer")}</div>
   `;
 
@@ -3600,7 +3668,7 @@ async function renderPlayerProfile(userId) {
   try {
     const payload = await apiRequest(`/api/players/${encodeURIComponent(userId)}`);
     view.innerHTML = `
-      ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndCoachSubtitle"), `<a class="primary-button" href="#/season">${t("common.back")}</a>`)}
+      ${renderHeader(`${t("admin.playerHeader")} "${payload.user.login}"`, t("admin.savedTeamsAndCoachSubtitle"), "", { back: true, backFallback: "#/season" })}
       <div class="admin-profile-grid">
         ${renderAdminProfileCard(payload.user)}
         ${state.auth.currentUser?.isAdmin ? `<section class="content-panel season-card">${renderAdminCreateTeamForUserPanel(payload.user)}</section>` : ""}
@@ -3613,9 +3681,10 @@ async function renderPlayerProfile(userId) {
     if (state.auth.currentUser?.isAdmin) {
       wireAdminUserProfile(payload.user);
     }
+    wireTeamDeleteButtons(() => renderPlayerProfile(userId));
   } catch (error) {
     view.innerHTML = `
-      ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"), `<a class="primary-button" href="#/season">${t("common.back")}</a>`)}
+      ${renderHeader(t("admin.playerProfileHeading"), t("admin.savedTeamsAndCoachSubtitle"), "", { back: true, backFallback: "#/season" })}
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
@@ -3633,7 +3702,7 @@ function renderPublicProfileTeamsTable(user, teams) {
             <th>${t("catalog.players")}</th>
             <th>${t("roster.totalCost")}</th>
             <th>${t("footer.updated")}</th>
-            ${state.auth.currentUser?.isAdmin ? `<th>${t("roster.actionHeader")}</th>` : ""}
+            ${canManageProfileTeams(user) ? `<th>${t("roster.actionHeader")}</th>` : ""}
           </tr>
         </thead>
         <tbody>
@@ -3663,16 +3732,27 @@ function renderPublicProfileTeamRow(user, team) {
       <td>${costs ? costs.totalPlayersCount : "-"}</td>
       <td>${costs ? `${costs.total}k` : "-"}</td>
       <td>${escapeHtml(updated)}</td>
-      ${state.auth.currentUser?.isAdmin ? `<td><a class="primary-button compact-action" href="${adminTeamEditUrl(user, team)}">${t("common.edit")}</a></td>` : ""}
+      ${canManageProfileTeams(user) ? `
+        <td>
+          <div class="table-actions">
+            ${state.auth.currentUser?.isAdmin ? `<a class="primary-button compact-action" href="${adminTeamEditUrl(user, team)}">${t("common.edit")}</a>` : `<a class="primary-button compact-action" href="#/my-teams/${encodeURIComponent(team.id)}">${t("common.edit")}</a>`}
+            <button class="filter-button compact-action danger-action" type="button" data-delete-team="${escapeHtml(team.id)}" data-delete-team-owner="${escapeHtml(user.id || "")}" data-delete-team-name="${escapeHtml(team.name || "")}">${t("common.delete")}</button>
+          </div>
+        </td>
+      ` : ""}
     </tr>
   `;
+}
+
+function canManageProfileTeams(user) {
+  return Boolean(state.auth.currentUser?.isAdmin || (state.auth.currentUser?.id && state.auth.currentUser.id === user?.id));
 }
 
 async function renderPublicTeamProfile(userId, teamId) {
   setActiveNav("season");
   setViewSection("players");
   view.innerHTML = `
-    ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"), `<a class="primary-button" href="${playerUrl(userId)}">${t("common.back")}</a>`)}
+    ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"), "", { back: true, backFallback: playerUrl(userId) })}
     <div class="loading">${t("myTeams.loadingTeam")}</div>
   `;
 
@@ -3692,11 +3772,10 @@ async function renderPublicTeamProfile(userId, teamId) {
     ensureDraftPlayers(team, draft);
     const costs = calculateRosterCosts(team, draft);
     const actions = `
-      <a class="primary-button" href="${playerUrl(payload.user)}">${t("common.back")}</a>
       ${state.auth.currentUser?.isAdmin ? `<a class="primary-button" href="${adminTeamEditUrl(payload.user, payload.team)}">${t("admin.editTeamAction")}</a>` : ""}
     `;
     view.innerHTML = `
-      ${renderHeader(`${t("sidebar.teamHeading")} "${payload.team.name}"`, `${t("admin.coachHeading")}: ${payload.user.login}`, actions)}
+      ${renderHeader(`${t("sidebar.teamHeading")} "${payload.team.name}"`, `${t("admin.coachHeading")}: ${payload.user.login}`, actions, { back: true, backFallback: playerUrl(payload.user) })}
       ${renderPublicTeamOverview(payload.user, payload.team, team, draft, costs)}
       <section class="content-panel compact-table-panel">
         <h2>${t("savedRoster.rosterHeading")}</h2>
@@ -3705,7 +3784,7 @@ async function renderPublicTeamProfile(userId, teamId) {
     `;
   } catch (error) {
     view.innerHTML = `
-      ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"), `<a class="primary-button" href="${playerUrl(userId)}">${t("common.back")}</a>`)}
+      ${renderHeader(t("sidebar.teamHeading"), t("admin.savedRosterSubtitle"), "", { back: true, backFallback: playerUrl(userId) })}
       <div class="empty-state">${escapeHtml(error.message)}</div>
     `;
   }
@@ -3985,11 +4064,11 @@ async function renderGamePage(gameId) {
           ? `<div class="notice-box"><strong>${t("games.awaitingOpponent")}</strong><p>${escapeHtml(renderGameScore(game, true))}</p></div>`
           : isAdmin ? "" : renderGameProposalForm(game);
     view.innerHTML = `
-      ${renderHeader(t("games.gameHeading"), `${game.season.name} · ${t("season.roundLabel")} ${game.roundNumber}`, `<a class="primary-button" href="#/my-games">${t("common.back")}</a>`)}
+      ${renderHeader(t("games.gameHeading"), `${game.season.name} · ${t("season.roundLabel")} ${game.roundNumber}`, "", { back: true, backFallback: "#/my-games" })}
       <section class="content-panel game-page"><div class="game-versus"><div><span>${t("season.homeLabel")}</span><h2>${escapeHtml(game.home?.user?.login || "-")}</h2><p class="game-team-name">${escapeHtml(game.home?.team?.name || "-")}</p>${game.home?.team?.logoUrl ? `<img class="game-team-logo" src="${escapeHtml(game.home.team.logoUrl)}" alt="" loading="lazy" decoding="async">` : ""}</div><strong>VS</strong><div><span>${t("season.awayLabel")}</span><h2>${escapeHtml(game.away?.user?.login || "-")}</h2><p class="game-team-name">${escapeHtml(game.away?.team?.name || "-")}</p>${game.away?.team?.logoUrl ? `<img class="game-team-logo" src="${escapeHtml(game.away.team.logoUrl)}" alt="" loading="lazy" decoding="async">` : ""}</div></div>${actions}${isAdmin ? renderAdminGameResultForm(game) : ""}</section>`;
     wireGamePage(game);
   } catch (error) {
-    view.innerHTML = `${renderHeader(t("games.gameHeading"), t("games.subtitle"), `<a class="primary-button" href="#/my-games">${t("common.back")}</a>`)}<div class="empty-state">${escapeHtml(error.message)}</div>`;
+    view.innerHTML = `${renderHeader(t("games.gameHeading"), t("games.subtitle"), "", { back: true, backFallback: "#/my-games" })}<div class="empty-state">${escapeHtml(error.message)}</div>`;
   }
 }
 
@@ -4798,7 +4877,7 @@ async function renderSavedRoster(teamId, refresh = true, options = {}) {
   if (isAdminEdit) {
     if (!state.auth.currentUser.isAdmin) {
       view.innerHTML = `
-        ${renderHeader(t("nav.administration"), t("savedRoster.editingTeamSubtitle"), `<a class="primary-button" href="#/administration">${t("common.back")}</a>`)}
+        ${renderHeader(t("nav.administration"), t("savedRoster.editingTeamSubtitle"), "", { back: true, backFallback: "#/administration" })}
         <div class="empty-state">${t("admin.accessRequired")}</div>
       `;
       return;
@@ -4816,7 +4895,7 @@ async function renderSavedRoster(teamId, refresh = true, options = {}) {
         state.admin.editingTeams.set(teamId, savedTeam);
       } catch (error) {
         view.innerHTML = `
-          ${renderHeader(t("nav.administration"), t("savedRoster.editingTeamSubtitle"), `<a class="primary-button" href="#/administration/users/${encodeURIComponent(options.adminOwnerId)}">${t("common.back")}</a>`)}
+          ${renderHeader(t("nav.administration"), t("savedRoster.editingTeamSubtitle"), "", { back: true, backFallback: `#/administration/users/${encodeURIComponent(options.adminOwnerId)}` })}
           <div class="empty-state">${escapeHtml(error.message)}</div>
         `;
         return;
@@ -4849,7 +4928,7 @@ async function renderSavedRoster(teamId, refresh = true, options = {}) {
   const titlePrefix = isAdminEdit ? `${t("common.editing")} "${draft.teamName || savedTeam.name || team.title}"` : `${t("sidebar.teamHeading")} "${draft.teamName || savedTeam.name || team.title}"`;
 
   view.innerHTML = `
-    ${renderHeader(titlePrefix, `${team.title} ${t("savedRoster.rosterSuffix")}${isAdminEdit && owner ? ` · ${owner.login}` : ""}`, `<a class="primary-button" href="${backUrl}">${t("common.back")}</a>`)}
+    ${renderHeader(titlePrefix, `${team.title} ${t("savedRoster.rosterSuffix")}${isAdminEdit && owner ? ` · ${owner.login}` : ""}`, "", { back: true, backFallback: backUrl })}
     <div class="saved-roster-top-grid">
       ${renderSavedRosterIdentity(team, draft, teams)}
       ${renderSavedRosterSummary(savedTeam, team, draft, costs, warnings)}
@@ -4901,6 +4980,7 @@ function renderSavedRosterSummary(savedTeam, team, draft, costs, warnings) {
         <div class="summary-actions">
           <button class="primary-button" type="button" data-save-roster>${t("roster.saveChanges")}</button>
           <button class="primary-button" type="button" data-copy-saved-roster>${t("roster.copyRoster")}</button>
+          <button class="filter-button danger-action" type="button" data-delete-saved-roster>${t("common.delete")}</button>
         </div>
       </div>
     </aside>
@@ -5280,6 +5360,19 @@ function wireSavedRoster(savedTeam, team, draft, options = {}) {
   wireSavedPlayerEditors(team, draft, rerender);
   view.querySelector("[data-save-roster]")?.addEventListener("click", () => saveSavedRoster(savedTeam, team, draft));
   view.querySelector("[data-copy-saved-roster]")?.addEventListener("click", () => copySavedRoster(team, draft));
+  view.querySelector("[data-delete-saved-roster]")?.addEventListener("click", async () => {
+    const ownerId = savedTeam._owner?.id || options.adminOwnerId || state.auth.currentUser?.id || "";
+    try {
+      const deleted = await deleteSavedTeam(savedTeam.id, {
+        ownerId,
+        teamName: draft.teamName || savedTeam.name || team.title,
+      });
+      if (!deleted) return;
+      location.hash = options.adminOwnerId ? `#/administration/users/${encodeURIComponent(ownerId)}` : "#/my-teams";
+    } catch (error) {
+      alert(error.message);
+    }
+  });
 }
 
 function moveRosterPlayer(draft, draggedId, targetId, position = "before") {
@@ -5371,6 +5464,13 @@ function wireSavedPlayerEditors(team, draft, rerender) {
     card.querySelector("[data-saved-player-captain]")?.addEventListener("change", (event) => {
       setRosterCaptain(draft, player.id, event.currentTarget.checked);
       rerender();
+    });
+    card.querySelectorAll("[data-saved-player-contract-delta]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const delta = Number(button.dataset.savedPlayerContractDelta);
+        player.extendedContracts = Math.max(0, countToNumber(player.extendedContracts) + delta);
+        rerender();
+      });
     });
     card.querySelectorAll("[data-saved-player-spp]").forEach((input) => {
       input.addEventListener("input", (event) => {
@@ -6096,6 +6196,7 @@ function renderSavedPlayerList(team, draft) {
             <th>${t("roster.skipHeader")}</th>
             <th>${t("roster.niglingInjury")}</th>
             <th>${t("roster.captain")}</th>
+            <th>${t("roster.extendedContracts")}</th>
             <th>SPP</th>
             <th>${t("roster.levelHeader")}</th>
             <th>${t("roster.advancementHeader")}</th>
@@ -6175,6 +6276,20 @@ function renderSavedPlayerFavouredEditor(team, draft, player, inputId) {
         </datalist>
         <button class="filter-button compact-action" type="button" data-saved-player-add-favoured ${!options.length ? "disabled" : ""}>${t("common.add")}</button>
       </div>
+    </div>
+  `;
+}
+
+function renderPlayerContractControls(player) {
+  const contracts = Math.max(0, countToNumber(player.extendedContracts));
+  return `
+    <div class="player-contract-control">
+      <div class="inline-stepper-control compact-contract-stepper">
+        <button class="filter-button" type="button" data-saved-player-contract-delta="-1" ${contracts <= 0 ? "disabled" : ""}>-</button>
+        <strong>${contracts}</strong>
+        <button class="filter-button" type="button" data-saved-player-contract-delta="1">+</button>
+      </div>
+      ${contracts ? `<small class="cost-note">+${contracts * 20}k</small>` : ""}
     </div>
   `;
 }
@@ -6268,6 +6383,7 @@ function renderSavedPlayerRow(team, draft, player, index, hasFavouredAccess = fa
           <span>${t("roster.captain")}</span>
         </label>
       </td>
+      <td>${renderPlayerContractControls(player)}</td>
       <td class="spp-cell">${renderPlayerSppControls(team, player)}</td>
       <td class="level-cell">${renderPlayerLevelCell(team, player)}</td>
       <td class="advancement-cell">${renderPlayerAdvancementControls(team, player)}</td>
@@ -6340,6 +6456,11 @@ function renderSavedPlayerCard(team, draft, player, index, hasFavouredAccess = f
           <input type="checkbox" data-saved-player-captain ${player.isCaptain ? "checked" : ""}>
           <span>${t("roster.captain")}</span>
         </label>
+      </section>
+
+      <section class="mobile-player-section">
+        <h3>${t("roster.extendedContracts")}</h3>
+        ${renderPlayerContractControls(player)}
       </section>
 
       <section class="mobile-player-section">
@@ -6530,6 +6651,7 @@ function selectedRosterPlayers(team, draft) {
         extraSkills: edit.extraSkills ?? [],
         skipNextGame: Boolean(edit.skipNextGame),
         isCaptain: Boolean(edit.isCaptain ?? edit.captain),
+        extendedContracts: countToNumber(edit.extendedContracts),
       };
     });
   });
@@ -6542,6 +6664,7 @@ function ensurePlayerEdit(draft, key, row) {
     extraSkills: [],
     skipNextGame: false,
     isCaptain: false,
+    extendedContracts: 0,
   };
   if (!draft.playerEdits[key].name) {
     const copyIndex = Number(key.split("-")[1] ?? 0);
@@ -6551,6 +6674,7 @@ function ensurePlayerEdit(draft, key, row) {
   draft.playerEdits[key].extraSkills ??= [];
   draft.playerEdits[key].skipNextGame = Boolean(draft.playerEdits[key].skipNextGame);
   draft.playerEdits[key].isCaptain = Boolean(draft.playerEdits[key].isCaptain);
+  draft.playerEdits[key].extendedContracts = countToNumber(draft.playerEdits[key].extendedContracts);
   return draft.playerEdits[key];
 }
 
@@ -7141,6 +7265,7 @@ async function init() {
     applyTheme(event.currentTarget.value);
   });
   view.addEventListener("builderstep", handleBuilderStepEvent);
+  view.addEventListener("click", handleHistoryBack);
   navToggle?.addEventListener("click", () => {
     setNavOpen(!document.body.classList.contains("nav-open"));
   });
