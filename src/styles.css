@@ -3297,6 +3297,22 @@ body.auth-open {
   margin-bottom: 18px;
 }
 
+.season-registration-layout {
+  display: grid;
+  gap: 18px;
+}
+
+.season-registration-top {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.season-registered-panel {
+  min-width: 0;
+}
+
 .season-rounds {
   display: grid;
   gap: 18px;

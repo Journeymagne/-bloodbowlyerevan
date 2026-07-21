@@ -4216,10 +4216,12 @@ async function renderSeason(refresh = true) {
 
 function renderSeasonRegistration(data) {
   return `
-    <div class="season-overview-grid">
-      ${renderSeasonCommitPanel(data)}
-      ${state.auth.currentUser?.isAdmin ? renderSeasonRegistrationAdminPanel(data) : ""}
-      <section class="content-panel season-card">
+    <div class="season-registration-layout">
+      <div class="season-registration-top">
+        ${renderSeasonCommitPanel(data)}
+        ${state.auth.currentUser?.isAdmin ? renderSeasonRegistrationAdminPanel(data) : ""}
+      </div>
+      <section class="content-panel season-card season-registered-panel">
         <h2>${t("season.registeredTeamsHeading")}</h2>
         ${renderSeasonEntriesTable(data, Boolean(state.auth.currentUser?.isAdmin))}
       </section>
