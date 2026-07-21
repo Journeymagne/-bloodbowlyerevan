@@ -4582,7 +4582,6 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
       <td>${escapeHtml(pairingLeaguePoints(pairing))}</td>
       <td>
         <div class="table-actions">
-          <button class="filter-button compact-action" type="button" data-save-season-pairing="${escapeHtml(pairing.id)}">${t("season.saveAction")}</button>
           <button class="filter-button compact-action" type="button" data-delete-season-pairing="${escapeHtml(pairing.id)}">${t("common.delete")}</button>
         </div>
       </td>
@@ -4683,6 +4682,39 @@ function renderSeasonAdminEntries(data) {
 function replaceSeasonData(payload) {
   state.season.data = payload;
   state.season.loaded = true;
+}
+
+function seasonPairingPayload(row) {
+  const homeEntry = row?.querySelector("[data-home-entry]");
+  const awayEntry = row?.querySelector("[data-away-entry]");
+  const payload = {
+    resultType: row?.querySelector("[data-result-type]")?.value ?? "played",
+    homeTouchdowns: row?.querySelector("[data-home-td]")?.value ?? "",
+    awayTouchdowns: row?.querySelector("[data-away-td]")?.value ?? "",
+    homeCasualties: row?.querySelector("[data-home-casualties]")?.value ?? "",
+    awayCasualties: row?.querySelector("[data-away-casualties]")?.value ?? "",
+  };
+  if (homeEntry && !homeEntry.disabled) payload.homeEntryId = homeEntry.value;
+  if (awayEntry && !awayEntry.disabled) payload.awayEntryId = awayEntry.value;
+  return payload;
+}
+
+async function saveSeasonPairingRow(row) {
+  const pairingId = row?.dataset.pairingRow;
+  if (!pairingId || row.dataset.saving === "true") return;
+  clearTimeout(Number(row.dataset.saveTimer || 0));
+  row.dataset.saveTimer = "";
+  row.dataset.saving = "true";
+  try {
+    replaceSeasonData(await apiRequest(`/api/season/admin/pairings/${pairingId}`, {
+      method: "PATCH",
+      body: JSON.stringify(seasonPairingPayload(row)),
+    }));
+    renderSeason(false);
+  } catch (error) {
+    row.dataset.saving = "false";
+    alert(error.message);
+  }
 }
 
 function wireSeason() {
@@ -4815,29 +4847,20 @@ function wireSeason() {
     });
   });
 
-  view.querySelectorAll("[data-save-season-pairing]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const row = button.closest("[data-pairing-row]");
-      const homeEntry = row?.querySelector("[data-home-entry]");
-      const awayEntry = row?.querySelector("[data-away-entry]");
-      const payload = {
-        resultType: row?.querySelector("[data-result-type]")?.value ?? "played",
-        homeTouchdowns: row?.querySelector("[data-home-td]")?.value ?? "",
-        awayTouchdowns: row?.querySelector("[data-away-td]")?.value ?? "",
-        homeCasualties: row?.querySelector("[data-home-casualties]")?.value ?? "",
-        awayCasualties: row?.querySelector("[data-away-casualties]")?.value ?? "",
-      };
-      if (homeEntry && !homeEntry.disabled) payload.homeEntryId = homeEntry.value;
-      if (awayEntry && !awayEntry.disabled) payload.awayEntryId = awayEntry.value;
-      try {
-        replaceSeasonData(await apiRequest(`/api/season/admin/pairings/${button.dataset.saveSeasonPairing}`, {
-          method: "PATCH",
-          body: JSON.stringify(payload),
-        }));
-        renderSeason(false);
-      } catch (error) {
-        alert(error.message);
-      }
+  view.querySelectorAll("[data-pairing-row]").forEach((row) => {
+    const saveNow = () => saveSeasonPairingRow(row);
+    const saveSoon = () => {
+      clearTimeout(Number(row.dataset.saveTimer || 0));
+      row.dataset.saveTimer = String(setTimeout(saveNow, 350));
+    };
+
+    row.querySelectorAll("[data-home-entry], [data-away-entry], [data-result-type]").forEach((field) => {
+      field.addEventListener("change", saveNow);
+    });
+
+    row.querySelectorAll("[data-home-td], [data-away-td], [data-home-casualties], [data-away-casualties]").forEach((field) => {
+      field.addEventListener("input", saveSoon);
+      field.addEventListener("change", saveNow);
     });
   });
 
