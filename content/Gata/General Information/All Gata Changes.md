@@ -21,7 +21,7 @@
 - **Secure the Ball!:** The no-ball-pickup restriction radius is reduced to 1 square.
 - **Bribery and Corruption:** Allows purchasing up to 3 Bribes per team for 50k each. These Bribes increase Team Value.
 - **TV Exceptions:** Cheerleaders and assistant coaches do not count toward Team Value.
-- **Painting Bonus:** A fully painted team receives an additional 30k after a match.
+- **Painting Bonus:** A fully painted team receives an additional 15k after a match.
 - **Throw-Ins:** Throw-ins are resolved using 1D6.
 
 ### Experience (SPP)
