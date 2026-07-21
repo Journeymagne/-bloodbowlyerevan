@@ -338,6 +338,14 @@ def header_index(headers, *needles):
     return -1
 
 
+def sheet_value_by_header(matrix, header_name, value_row=2, header_row=1, default_index=-1):
+    headers = [normalize(value) for value in matrix[header_row]] if header_row < len(matrix) else []
+    index = header_index(headers, normalize(header_name))
+    if index < 0:
+        index = default_index
+    return cell(matrix[value_row], index) if index >= 0 and value_row < len(matrix) else None
+
+
 def build_roster(matrix, data, base_team_override=None, team_name_override=None):
     team_name = str(team_name_override or cell(matrix[0], 0) or "").strip()
     base_team_name = str(base_team_override or cell(matrix[1], 2) or "").strip()
@@ -419,12 +427,12 @@ def build_roster(matrix, data, base_team_override=None, team_name_override=None)
         counts[key] = counts.get(key, 0) + 1
 
     purchased_staff = {
-        "teamRerolls": to_number(cell(matrix[2], 6)),
+        "teamRerolls": to_number(sheet_value_by_header(matrix, "Team Rerolls", default_index=6)),
         "startingRerolls": 0,
         "bribes": 0,
-        "assistantCoaches": to_number(cell(matrix[2], 3)),
-        "cheerleaders": to_number(cell(matrix[2], 4)),
-        "apothecary": to_number(cell(matrix[2], 5)),
+        "assistantCoaches": to_number(sheet_value_by_header(matrix, "Assistants", default_index=3)),
+        "cheerleaders": to_number(sheet_value_by_header(matrix, "Cheerleaders", default_index=4)),
+        "apothecary": to_number(sheet_value_by_header(matrix, "Apothecary", default_index=5)),
         "mortuaryAssistant": 0,
         "plagueDoctor": 0,
     }
@@ -445,14 +453,14 @@ def build_roster(matrix, data, base_team_override=None, team_name_override=None)
             "teamRerolls": purchased_staff["teamRerolls"],
             "startingRerolls": 0,
             "bribes": 0,
-            "dedicatedFans": to_number(cell(matrix[2], 10)),
+            "dedicatedFans": to_number(sheet_value_by_header(matrix, "Fan Factor", default_index=10)),
             "assistantCoaches": purchased_staff["assistantCoaches"],
             "cheerleaders": purchased_staff["cheerleaders"],
             "apothecary": purchased_staff["apothecary"],
             "mortuaryAssistant": 0,
             "plagueDoctor": 0,
             "purchasedStaff": purchased_staff,
-            "treasury": to_number(cell(matrix[2], 9)),
+            "treasury": to_number(sheet_value_by_header(matrix, "Treasury", default_index=9)),
             "coachesSafe": 0,
         },
     }

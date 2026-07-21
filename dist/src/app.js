@@ -4552,11 +4552,12 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
 
   const locked = round.status !== "draft";
   const resultLocked = round.status !== "started";
+  const selectedEntryIds = selectedRoundEntryIds(round);
   return `
     <tr data-pairing-row="${escapeHtml(pairing.id)}">
       <td>${pairing.tableNumber}</td>
-      <td>${renderSeasonEntrySelect(data, "home-entry", pairing.homeEntryId, locked)}</td>
-      <td>${renderSeasonEntrySelect(data, "away-entry", pairing.awayEntryId, locked)}</td>
+      <td>${renderSeasonEntrySelect(data, "home-entry", pairing.homeEntryId, locked, selectedEntryIds)}</td>
+      <td>${renderSeasonEntrySelect(data, "away-entry", pairing.awayEntryId, locked, selectedEntryIds)}</td>
       <td>
         <select class="table-select" data-result-type ${resultLocked ? "disabled" : ""}>
           ${renderOption("played", t("season.resultPlayed"), pairing.resultType)}
@@ -4587,11 +4588,22 @@ function renderSeasonPairingRow(data, round, pairing, adminMode = false) {
   `;
 }
 
-function renderSeasonEntrySelect(data, name, selected, disabled = false) {
+function selectedRoundEntryIds(round) {
+  const selected = new Set();
+  for (const pairing of round.pairings ?? []) {
+    if (pairing.homeEntryId) selected.add(pairing.homeEntryId);
+    if (pairing.awayEntryId) selected.add(pairing.awayEntryId);
+  }
+  return selected;
+}
+
+function renderSeasonEntrySelect(data, name, selected, disabled = false, unavailableEntryIds = new Set()) {
+  const selectedValue = selected ?? "";
+  const options = (data.entries ?? []).filter((entry) => entry.id === selectedValue || !unavailableEntryIds.has(entry.id));
   return `
     <select class="table-select" data-${name} ${disabled ? "disabled" : ""}>
-      ${renderOption("", t("season.emptySlotLabel"), selected ?? "")}
-      ${(data.entries ?? []).map((entry) => renderOption(entry.id, seasonEntryLabel(entry), selected ?? "")).join("")}
+      ${renderOption("", t("season.emptySlotLabel"), selectedValue)}
+      ${options.map((entry) => renderOption(entry.id, seasonEntryLabel(entry), selectedValue)).join("")}
     </select>
   `;
 }

@@ -8,5 +8,5 @@
 
 **Rerolls:** 60K
 **Apothecary:** Apothecary: Available
-**League:** Tier 2
+**League:** Tier 1
 **Special Rules:** Old World Classic, Passing Virtuosos
