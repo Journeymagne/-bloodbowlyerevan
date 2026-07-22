@@ -1431,9 +1431,13 @@ async function handleApi(request, response, url) {
       const login = String(body.login ?? target.login).trim();
       const password = String(body.password ?? "");
       const loginKey = normalizeLogin(login);
+      const nextIsAdmin = Object.hasOwn(body, "isAdmin") ? isAdminUser({ is_admin: body.isAdmin }) : isAdminUser(target);
 
       if (login.length < 3) return sendJson(response, 400, { error: "Login must be at least 3 characters." });
       if (password && password.length < 4) return sendJson(response, 400, { error: "Password must be at least 4 characters." });
+      if (target.id === user.id && !nextIsAdmin) {
+        return sendJson(response, 409, { error: "You cannot remove admin access from your own account." });
+      }
 
       const passwordHash = password ? hashPassword(password) : null;
       const updated = await pool.query(
@@ -1441,10 +1445,11 @@ async function handleApi(request, response, url) {
          SET login = $2,
              login_key = $3,
              password_hash = COALESCE($4, password_hash),
+             is_admin = $5,
              updated_at = now()
          WHERE id = $1
          RETURNING *`,
-        [target.id, login, loginKey, passwordHash],
+        [target.id, login, loginKey, passwordHash, nextIsAdmin],
       ).catch((error) => {
         if (error.code === "23505") return null;
         throw error;

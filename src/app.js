@@ -3505,6 +3505,10 @@ function renderAdminUserManagementPanel(user) {
           <span>${t("admin.newPasswordField")}</span>
           <input name="password" type="password" minlength="4" placeholder="${t("admin.newPasswordPlaceholder")}" autocomplete="new-password">
         </label>
+        <label class="filter-field checkbox-field">
+          <input name="isAdmin" type="checkbox" ${user.isAdmin ? "checked" : ""} ${isCurrentUser ? "disabled" : ""}>
+          <span>${t("admin.adminAccessField")}</span>
+        </label>
         <div class="admin-user-management-actions">
           <button class="primary-button" type="submit">${t("common.save")}</button>
           <button class="filter-button danger-action" type="button" data-admin-delete-user ${isCurrentUser ? "disabled" : ""}>${t("admin.deleteUserAction")}</button>
@@ -3542,10 +3546,12 @@ function wireAdminUserProfile(user) {
     const form = new FormData(event.currentTarget);
     const login = String(form.get("login") ?? "").trim();
     const password = String(form.get("password") ?? "");
+    const isAdminInput = event.currentTarget.querySelector("input[name='isAdmin']");
+    const isAdmin = isAdminInput ? Boolean(isAdminInput.checked) : Boolean(user.isAdmin);
     try {
       const payload = await apiRequest(`/api/admin/users/${encodeURIComponent(user.id)}`, {
         method: "PATCH",
-        body: JSON.stringify({ login, password }),
+        body: JSON.stringify({ login, password, isAdmin }),
       });
       if (payload.user?.id === state.auth.currentUser?.id) {
         state.auth.currentUser = { ...state.auth.currentUser, ...payload.user };
